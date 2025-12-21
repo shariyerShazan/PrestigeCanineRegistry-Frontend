@@ -8,7 +8,7 @@ import ReduxStore from './redux/ReduxStore'
 import {persistStore, type Persistor} from "redux-persist";
 import { PersistGate } from 'redux-persist/integration/react'
 let persistor: Persistor = persistStore(ReduxStore)
-
+import './index.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
