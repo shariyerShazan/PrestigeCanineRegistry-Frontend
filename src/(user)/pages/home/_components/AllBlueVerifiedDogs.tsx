@@ -13,7 +13,7 @@ import owner2 from "@/assets/home/allDogs/owner2.jpg"
 
 const blueVerifiedDogsData = [
   {
-    id: "1",
+    id: "1", 
     name: "Max Thunder",
     breed: "Origin:German Shepherd",
     pcrId: "#PCR-LR-2024-009876",
@@ -95,7 +95,7 @@ const AllBlueVerifiedDogs = () => {
         <div className="flex items-start justify-between mb-8">
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">All Blue Verified</h2>
-            <p className="text-gray-600">Premium DNA & microchip verified</p>
+            <p className="text-gray-600">Standard verified dogs</p>
           </div>
           <div className="flex gap-2">
             <Button
