@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 // import { BadgeCheck } from "lucide-react"
 import banner from "@/assets/home/banner.jpg"
 import frame from "@/assets/home/Frame.svg"
-import BannerSearchBar from "./BannerSearchBar"
+import BannerSearchBar from "./common/BannerSearchBar"
 import shade from "@/assets/home/shade.svg"
 
 const Banner = () => {
