@@ -4,12 +4,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@radix-ui/react-label"
 import { Search } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router"
 
 const BannerSearchBar = () => {
       const [breed, setBreed] = useState("")
   const [tier, setTier] = useState("")
   const [region, setRegion] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
+
+  const navigate = useNavigate()
+  
+  const handleSearch = async ()=> {
+    try {
+      navigate(`search-dogs?search=${searchQuery}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div>
@@ -70,7 +81,7 @@ const BannerSearchBar = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-white border-0 flex-1 placeholder:text-gray-400 h-12 focus:ring-1! w-full"
             />
-            <Button className="bg-[#D4AF37] cursor-pointer hover:bg-yellow-600 text-black h-12 w-32 flex items-center justify-center">
+            <Button onClick={handleSearch} className="bg-[#D4AF37] cursor-pointer hover:bg-yellow-600 text-black h-12 w-32 flex items-center justify-center">
               <Search className="w-4 h-4 mr-2" />
               Search
             </Button>

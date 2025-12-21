@@ -17,7 +17,7 @@ const WebNavbar = () => {
   const [open, setOpen] = useState(false)
 
   return (
-    <nav className="bg-[#2B4C8A] text-white px-6 relative">
+    <nav className="bg-[#2B4C8A] text-white px-6 border-b-2 border-[#D4AF37] relative">
       <div className="container mx-auto flex items-center justify-between h-">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">

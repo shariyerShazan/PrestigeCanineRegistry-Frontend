@@ -6,7 +6,7 @@ import { Link } from "react-router"
 
 const WebFooter = () => {
   return (
-    <footer className="bg-[#2B4C8A] text-white py-12 px-6">
+    <footer className="bg-[#2B4C8A] text-white py-12 px-6 border-t-4 border-[#D4AF37]">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center mb-8">
           {/* Logo and Brand Section */}

@@ -39,7 +39,7 @@ export default function TestimonialSection() {
             className="flex flex-col p-6 rounded-2xl border border-[#2B4C8A] bg-[#2B4C8A09]"
           >
             {/* Quote Icon */}
-            <Quote className="text-yellow-500 mb-4 h-8 w-8 rotate-180 fill-current opacity-50" />
+            <Quote className="text-[#D4AF37] mb-4 h-8 w-8 rotate-180 fill-current opacity-50" />
             
             {/* Testimonial Text */}
             <p className="text-slate-700 text-lg font-medium leading-relaxed mb-4 flex-grow">

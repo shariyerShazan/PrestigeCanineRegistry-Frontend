@@ -77,7 +77,7 @@ const DogDetailsCard = ({
 
         <div className="flex items-center gap-2 mt-2">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={ownerAvatar || "/placeholder.svg"} alt={ownerName} />
+            <AvatarImage src={ownerAvatar || "/placeholder.svg"} alt={ownerName} className=" object-cover"/>
             <AvatarFallback className="text-xs bg-gray-200">
               {ownerName
                 .split(" ")
