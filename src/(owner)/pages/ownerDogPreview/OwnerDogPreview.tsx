@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import dog1 from "@/assets/dogSearchPage/dog1.jpg"
 import dog2 from "@/assets/dogSearchPage/dog2.png"
 import dog3 from "@/assets/dogSearchPage/dog3.jpg"
@@ -14,6 +13,7 @@ import { LuDna } from "react-icons/lu";
 import owner from "@/assets/gogDetails/owner.jpg"
 import { PiMedalThin } from "react-icons/pi";
 import { Progress } from "@/components/ui/progress"
+import HealthSummaryOfOwnerDog from './_components/HealthSummary';
 
 
 
@@ -22,12 +22,12 @@ const OwnerDogPreview = () => {
     <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen font-sans">
       {/* --- TOP NAVIGATION --- */}
       <div className="flex justify-between items-center mb-6">
-        <button className="flex items-center gap-1 text-gray-700 font-semibold hover:opacity-70">
+        <button className="flex items-center gap-1 text-gray-700 font-semibold hover:opacity-70 cursor-pointer">
           <ChevronLeft size={20} /> Back
         </button>
         <div className="flex gap-4 text-gray-500">
-          <button className="flex items-center gap-1 text-sm"><Flag size={16} /> Report</button>
-          <button className="flex items-center gap-1 text-sm"><Share2 size={16} /> Share</button>
+          <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer"><Flag size={16} /> Report</button>
+          <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer"><Share2 size={16} /> Share</button>
         </div>
       </div>
 
@@ -146,24 +146,8 @@ const OwnerDogPreview = () => {
         </div>
 
         {/* HEALTH SUMMARY (BLURRED SECTION) */}
-        <div className="relative bg-[#1A1A1A] text-white rounded-2xl p-6 overflow-hidden">
-          <div className="blur-sm opacity-50 select-none">
-            <div className="flex items-center gap-2 mb-8">
-              <div className="p-2 bg-yellow-600/20 rounded-lg"><ShieldCheck className="text-yellow-500" size={20} /></div>
-              <h4 className="font-bold">Health Summary</h4>
-            </div>
-            <div className="space-y-4">
-              <div className="h-4 w-3/4 bg-gray-700 rounded"></div>
-              <div className="h-4 w-1/2 bg-gray-700 rounded"></div>
-              <div className="h-4 w-full bg-gray-700 rounded"></div>
-            </div>
-          </div>
-          
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Button className="bg-[#D4AF37] hover:bg-[#B8962E] text-gray-900 font-bold px-8 py-6 rounded-xl shadow-lg cursor-pointer" >
-              Request Health Info
-            </Button>
-          </div>
+        <div className="w-full">
+                      <HealthSummaryOfOwnerDog />
         </div>
       </div>
     </div>

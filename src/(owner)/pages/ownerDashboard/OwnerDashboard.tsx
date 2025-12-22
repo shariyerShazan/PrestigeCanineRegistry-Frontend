@@ -7,6 +7,7 @@ import { Bell, Settings, Award, Clock, Ban } from "lucide-react"
 import { LuDog } from "react-icons/lu"
 import AllPublishedDogs from "./_components/AllPublishedDogs"
 import ownerProfile from "@/assets/ownerDetails/profile.jpg"
+import OwnerRecentUpdate from "./_components/OwnerRecentUpdate"
 
 const stats = [
   { label: "Total Published", value: "03", bg: "bg-[#D4F5E9]", border: "border-[#24B57B]", text: "text-[#24B57B]", icon: <LuDog size={28} /> },
@@ -93,8 +94,11 @@ const OwnerDashboard = () => {
             </TabsContent>
           ))}
         </Tabs>
-
+       <div>
+          <OwnerRecentUpdate />
+       </div>
       </div>
+     
     </div>
   )
 }

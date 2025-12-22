@@ -22,12 +22,12 @@ const DogProfilePage = () => {
     <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen font-sans">
       {/* --- TOP NAVIGATION --- */}
       <div className="flex justify-between items-center mb-6">
-        <button className="flex items-center gap-1 text-gray-700 font-semibold hover:opacity-70">
+        <button className="flex items-center gap-1 text-gray-700 font-semibold hover:opacity-70 cursor-pointer">
           <ChevronLeft size={20} /> Back
         </button>
         <div className="flex gap-4 text-gray-500">
-          <button className="flex items-center gap-1 text-sm"><Flag size={16} /> Report</button>
-          <button className="flex items-center gap-1 text-sm"><Share2 size={16} /> Share</button>
+          <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer"><Flag size={16} /> Report</button>
+          <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer"><Share2 size={16} /> Share</button>
         </div>
       </div>
 
