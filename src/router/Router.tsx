@@ -1,5 +1,6 @@
 import Login from "@/(auth)/login/Login";
 import Register from "@/(auth)/register/Register";
+import OwnerDogRegistration from "@/(owner)/pages/dogRegistration/OwnerDogRegistration";
 import OwnerDashboard from "@/(owner)/pages/ownerDashboard/OwnerDashboard";
 import OwnerDogPreview from "@/(owner)/pages/ownerDogPreview/OwnerDogPreview";
 import DogProfilePage from "@/(user)/pages/dogProfile/DogProfilePage";
@@ -51,6 +52,10 @@ export const Router = createBrowserRouter([
             {
                 path: "dog-preview",
                 element: <OwnerDogPreview />
+            },
+            {
+                path: "dog-registration",
+                element: <OwnerDogRegistration />
             }
         ]
     },

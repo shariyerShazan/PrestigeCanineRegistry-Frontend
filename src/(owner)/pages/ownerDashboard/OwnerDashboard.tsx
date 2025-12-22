@@ -60,7 +60,7 @@ const OwnerDashboard = () => {
         {/* STATS */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           {stats.map(({ label, value, bg, border, text, icon }) => (
-            <div key={label} className={`rounded-2xl border-2 p-5 flex justify-between ${bg} ${border}`}>
+            <div key={label} className={`rounded-2xl border-1 p-5 flex justify-between ${bg} ${border}`}>
                               <div className={`${text} w-10 h-10`}>{icon}</div>
               <div className="flex flex-col justify-end items-end mb-2">
                 <div className={`text-3xl font-bold ${text}`}>{value}</div>   
@@ -80,7 +80,7 @@ const OwnerDashboard = () => {
 
         {/* TABS */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="border-b border-gray-300 bg-transparent rounded-none mb-6 p-0">
+          <TabsList className="border-b border-gray-300 bg-transparent rounded-none mt-6 p-0">
             {tabs.map((t) => (
               <TabsTrigger key={t.value} value={t.value} className={tabTriggerClass}>
                 {t.label}

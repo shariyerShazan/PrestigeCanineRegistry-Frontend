@@ -18,7 +18,7 @@ const AllPublishedDogs = ({ filter = "all" }: {filter? :string}) => {
   })
 
   return (
-    <section className="py-8">
+    <section className="pb-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredDogs.length > 0 ? (
           filteredDogs.map((dog) => (
