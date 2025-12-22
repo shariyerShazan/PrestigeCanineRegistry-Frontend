@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import dog1 from "@/assets/dogSearchPage/dog1.jpg"
 import dog2 from "@/assets/dogSearchPage/dog2.png"
 import dog3 from "@/assets/dogSearchPage/dog3.jpg"
@@ -14,10 +13,12 @@ import { LuDna } from "react-icons/lu";
 import owner from "@/assets/gogDetails/owner.jpg"
 import { PiMedalThin } from "react-icons/pi";
 import { Progress } from "@/components/ui/progress"
-import ViewMoreOfThiOwner from './_components/ViewMoreOfThiOwner';
+import HealthSummaryOfOwnerDog from './_components/HealthSummary';
+import { Button } from '@/components/ui/button';
 
 
-const DogProfilePage = () => {
+
+const OwnerDogPreview = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen font-sans">
       {/* --- TOP NAVIGATION --- */}
@@ -81,21 +82,18 @@ const DogProfilePage = () => {
           </div>
 
           {/* OWNER CARD */}
-          <div className="bg-[#2B4C8A] rounded-xl p-6 text-white">
-            <p className="text-sm font-medium opacity-80 mb-4">Owner Information</p>
-            <div className="flex items-center gap-4 mb-4">
-              <Avatar className="h-14 w-14 border-2 border-white/20">
-                <AvatarImage src={owner} className='object-cover'/>
-                <AvatarFallback>SJ</AvatarFallback>
-              </Avatar>
-              <h3 className="text-xl font-bold">Sarah Johnson</h3>
-            </div>
-            <div className="space-y-2 text-sm opacity-90">
-              <p className="flex items-center gap-2"><PiMedalThin size={14} /> Gold Member</p>
-              <p className="flex items-center gap-2"><MapPin size={14} /> San Diego, CA</p>
-              <p className="flex items-center gap-2"><Calendar size={14} /> Member since June 2023</p>
-            </div>
-          </div>
+            <div className="flex gap-2 mt-">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#2B4C8A]/5 text-xs  cursor-pointer"
+                >
+                  Request Certificate
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1 border-[#2B4C8A] text-[#2B4C8A] hover:bg-[#2B4C8A] hover:text-white text-xs bg-transparent cursor-pointer">
+                  Transfer Ownership
+                </Button>
+              </div>
         </div>
       </div>
 
@@ -146,35 +144,17 @@ const DogProfilePage = () => {
         </div>
 
         {/* HEALTH SUMMARY (BLURRED SECTION) */}
-        <div className="relative bg-[#1A1A1A] text-white rounded-lg p-6 overflow-hidden">
-          <div className="blur-sm opacity-50 select-none">
-            <div className="flex items-center gap-2 mb-8">
-              <div className="p-2 bg-yellow-600/20 rounded-lg"><ShieldCheck className="text-yellow-500" size={20} /></div>
-              <h4 className="font-bold">Health Summary</h4>
-            </div>
-            <div className="space-y-4">
-              <div className="h-4 w-3/4 bg-gray-700 rounded"></div>
-              <div className="h-4 w-1/2 bg-gray-700 rounded"></div>
-              <div className="h-4 w-full bg-gray-700 rounded"></div>
-            </div>
-          </div>
-          
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Button className="bg-[#D4AF37] hover:bg-[#B8962E] text-gray-900 font-bold px-8 py-6 rounded-xl shadow-lg cursor-pointer" >
-              Request Health Info
-            </Button>
-          </div>
+        <div className="w-full">
+                      <HealthSummaryOfOwnerDog />
         </div>
       </div>
-
-      <ViewMoreOfThiOwner />
     </div>
   );
 };
 
 // --- SUB-COMPONENTS ---
 
-export const InfoItem = ({ icon, label, value, color = "text-gray-900" } : {icon: any, label : string , value: string, color? : string}) => (
+const InfoItem = ({ icon, label, value, color = "text-gray-900" } : {icon: any, label : string , value: string, color? : string}) => (
   <div className="flex items-center gap-3 text-sm">
     <span className="text-blue-800">{icon}</span>
     <span className="w-24 text-gray-500 font-medium">{label}:</span>
@@ -182,11 +162,11 @@ export const InfoItem = ({ icon, label, value, color = "text-gray-900" } : {icon
   </div>
 );
 
-export const DataBox = ({ label, value, valueColor }: { label : any , value : string , valueColor : string }) => (
+const DataBox = ({ label, value, valueColor }: { label : any , value : string , valueColor : string }) => (
   <div className="bg-gray-100 p-3 rounded-lg">
     <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1">{label}</p>
     <p className={`text-sm font-bold ${valueColor}`}>{value}</p>
   </div>
 );
 
-export default DogProfilePage;
+export default OwnerDogPreview;
