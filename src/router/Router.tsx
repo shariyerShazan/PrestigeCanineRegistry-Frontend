@@ -1,5 +1,7 @@
 import Login from "@/(auth)/login/Login";
 import Register from "@/(auth)/register/Register";
+import OwnerDashboard from "@/(owner)/pages/ownerDashboard/OwnerDashboard";
+import OwnerDogPreview from "@/(owner)/pages/ownerDogPreview/OwnerDogPreview";
 import DogProfilePage from "@/(user)/pages/dogProfile/DogProfilePage";
 import HomePage from "@/(user)/pages/home/HomePage";
 import OwnerDetailsPage from "@/(user)/pages/ownerDetailsPage/OwnerDetailsPage";
@@ -35,12 +37,22 @@ export const Router = createBrowserRouter([
         ]
     },
       {
-        path: "/dashboard",
+        path: "/admin/dashboard",
         element: <AdminLayout />
     },
     {
-        path: "/owner" ,
-        element: <OwnerLayout />
+        path: "/owner/dashboard" ,
+        element: <OwnerLayout />,
+        children: [
+            {
+                index: true ,
+                element: <OwnerDashboard />
+            },
+            {
+                path: "dog-preview",
+                element: <OwnerDogPreview />
+            }
+        ]
     },
     {
         path: "/login" ,

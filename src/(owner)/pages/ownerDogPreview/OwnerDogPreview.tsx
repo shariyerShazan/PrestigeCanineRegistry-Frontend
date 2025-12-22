@@ -14,10 +14,10 @@ import { LuDna } from "react-icons/lu";
 import owner from "@/assets/gogDetails/owner.jpg"
 import { PiMedalThin } from "react-icons/pi";
 import { Progress } from "@/components/ui/progress"
-import ViewMoreOfThiOwner from './_components/ViewMoreOfThiOwner';
 
 
-const DogProfilePage = () => {
+
+const OwnerDogPreview = () => {
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen font-sans">
       {/* --- TOP NAVIGATION --- */}
@@ -166,8 +166,6 @@ const DogProfilePage = () => {
           </div>
         </div>
       </div>
-
-      <ViewMoreOfThiOwner />
     </div>
   );
 };
@@ -189,4 +187,4 @@ const DataBox = ({ label, value, valueColor }: { label : any , value : string , 
   </div>
 );
 
-export default DogProfilePage;
+export default OwnerDogPreview;
