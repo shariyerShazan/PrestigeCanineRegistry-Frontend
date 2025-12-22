@@ -104,7 +104,7 @@ const DogProfilePage = () => {
       {/* --- BOTTOM: DNA & HEALTH --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* DNA REPORT */}
-        <div className="bg-[#1A1A1A] text-white rounded-2xl p-6">
+        <div className="bg-[#1A1A1A] text-white rounded-lg p-6">
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-yellow-600/20 rounded-lg">
@@ -146,7 +146,7 @@ const DogProfilePage = () => {
         </div>
 
         {/* HEALTH SUMMARY (BLURRED SECTION) */}
-        <div className="relative bg-[#1A1A1A] text-white rounded-2xl p-6 overflow-hidden">
+        <div className="relative bg-[#1A1A1A] text-white rounded-lg p-6 overflow-hidden">
           <div className="blur-sm opacity-50 select-none">
             <div className="flex items-center gap-2 mb-8">
               <div className="p-2 bg-yellow-600/20 rounded-lg"><ShieldCheck className="text-yellow-500" size={20} /></div>
@@ -174,7 +174,7 @@ const DogProfilePage = () => {
 
 // --- SUB-COMPONENTS ---
 
-const InfoItem = ({ icon, label, value, color = "text-gray-900" } : {icon: any, label : string , value: string, color? : string}) => (
+export const InfoItem = ({ icon, label, value, color = "text-gray-900" } : {icon: any, label : string , value: string, color? : string}) => (
   <div className="flex items-center gap-3 text-sm">
     <span className="text-blue-800">{icon}</span>
     <span className="w-24 text-gray-500 font-medium">{label}:</span>
@@ -182,7 +182,7 @@ const InfoItem = ({ icon, label, value, color = "text-gray-900" } : {icon: any, 
   </div>
 );
 
-const DataBox = ({ label, value, valueColor }: { label : any , value : string , valueColor : string }) => (
+export const DataBox = ({ label, value, valueColor }: { label : any , value : string , valueColor : string }) => (
   <div className="bg-gray-100 p-3 rounded-lg">
     <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1">{label}</p>
     <p className={`text-sm font-bold ${valueColor}`}>{value}</p>

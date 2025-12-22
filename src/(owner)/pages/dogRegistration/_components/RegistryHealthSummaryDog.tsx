@@ -1,10 +1,11 @@
 
 
+
 import { FaCheck } from 'react-icons/fa6';
 import { RiRadioButtonLine } from 'react-icons/ri';
 import { HiOutlineBolt } from "react-icons/hi2";
 
-const HealthSummaryOfOwnerDog = () => {
+const RegistryHealthSummaryDog = () => {
   const vaccinations = ["Rabies", "DHPP", "Bordetella", "Leptospirosis"];
   const clearances = ["Hip Dysplasia Clear", "Elbow Clear", "Eye Clearance (CERF)"];
 
@@ -56,4 +57,4 @@ const HealthSummaryOfOwnerDog = () => {
   );
 };
 
-export default HealthSummaryOfOwnerDog;
+export default RegistryHealthSummaryDog;

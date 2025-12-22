@@ -104,7 +104,7 @@ const OwnerDogPreview = () => {
       {/* --- BOTTOM: DNA & HEALTH --- */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* DNA REPORT */}
-        <div className="bg-[#1A1A1A] text-white rounded-2xl p-6">
+        <div className="bg-[#1A1A1A] text-white rounded-lg p-6">
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-2">
               <div className="p-2 bg-yellow-600/20 rounded-lg">
