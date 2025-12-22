@@ -5,13 +5,11 @@ import {
   VenusAndMars
 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import dog1 from "@/assets/dogSearchPage/dog1.jpg"
 import dog2 from "@/assets/dogSearchPage/dog2.png"
 import dog3 from "@/assets/dogSearchPage/dog3.jpg"
 import { LuDna } from "react-icons/lu";
-import owner from "@/assets/gogDetails/owner.jpg"
-import { PiMedalThin } from "react-icons/pi";
+
 import { Progress } from "@/components/ui/progress"
 import HealthSummaryOfOwnerDog from './_components/HealthSummary';
 import { Button } from '@/components/ui/button';
@@ -110,8 +108,8 @@ const OwnerDogPreview = () => {
               </div>
               <h4 className="font-bold">DNA Report Breakdown</h4>
             </div>
-            <Badge variant="outline" className="text-[10px] h-6 text-gray-400 border-gray-700">
-               <span className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span> Golden Retriever
+            <Badge variant="outline" className="text-[10px] h-8 px-3 py-1 text-gray-400 border-gray-700 text-sm">
+               <span className="w-2 h-2  rounded-full bg-yellow-500 mr-2"></span> Golden Retriever
             </Badge>
           </div>
 
