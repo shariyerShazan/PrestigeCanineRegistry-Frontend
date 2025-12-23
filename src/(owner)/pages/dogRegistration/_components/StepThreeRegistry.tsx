@@ -86,9 +86,9 @@ export default function StepThreeRegistry({ formData: _formData, prevStep, handl
                 </div>
                 <h4 className="font-bold">DNA Report Breakdown</h4>
               </div>
-              <Badge variant="outline" className="text-[10px] h-6 text-gray-400 border-gray-700">
-                {(form.primaryBreedDNA || "").split(" ")[0] || "Breed"}
-              </Badge>
+              <Badge variant="outline" className="text-[10px] h-8 px-3 py-1 text-gray-400 border-gray-700 text-sm">
+               <span className="w-2 h-2  rounded-full bg-yellow-500 mr-2"></span> Golden Retriever
+            </Badge>
             </div>
 
             <div className="space-y-4">
