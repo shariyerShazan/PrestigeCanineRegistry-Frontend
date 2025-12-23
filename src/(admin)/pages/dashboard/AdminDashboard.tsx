@@ -1,4 +1,4 @@
-import OverViewAdmin from "@/(admin)/_components/OverViewAdmin"
+import OverViewAdmin from "@/(admin)/pages/dashboard/_components/OverViewAdmin"
 
 
 const AdminDashboard = () => {
