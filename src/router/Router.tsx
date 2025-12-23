@@ -1,4 +1,8 @@
 import AdminDashboard from "@/(admin)/pages/dashboard/AdminDashboard";
+import DogRegistrationRequest from "@/(admin)/pages/dogRegistrationRequest/DogRegistrationRequest";
+import RoleAndPermission from "@/(admin)/pages/roleAndPermission/RoleAndPermission";
+import TransferOwnerShip from "@/(admin)/pages/transferOwnerShip/TransferOwnerShip";
+import UserManagement from "@/(admin)/pages/userManagement/UserManagement";
 import Login from "@/(auth)/login/Login";
 import Register from "@/(auth)/register/Register";
 import OwnerDogRegistration from "@/(owner)/pages/dogRegistration/OwnerDogRegistration";
@@ -47,6 +51,22 @@ export const Router = createBrowserRouter([
                 index: true ,
                 element: <AdminDashboard /> 
             },
+            {
+                path : "Registration-Requests",
+                element: <DogRegistrationRequest />
+            },
+            {
+                path: "Transfer-Ownership",
+                element: <TransferOwnerShip />
+            },
+            {
+                path: "User-Management",
+                element: <UserManagement />
+            },
+            {
+                path: "Roles-Permissions",
+                element: <RoleAndPermission />
+            }
         ]
     },
     {

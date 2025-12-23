@@ -21,7 +21,7 @@ export function AdminTopNav({
                 alt={name}
                 className="w-9 h-9 rounded-full object-cover"
                 />
-        <div className="hidden sm:flex flex-col text-right">
+        <div className="hidden sm:flex flex-col text-">
             
           <span className="font-medium text-sm">{name}</span>
           <span className="text-xs text-muted-foreground">{role}</span>
