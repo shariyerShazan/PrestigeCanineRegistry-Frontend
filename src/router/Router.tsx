@@ -1,3 +1,4 @@
+import AdminDashboard from "@/(admin)/pages/dashboard/AdminDashboard";
 import Login from "@/(auth)/login/Login";
 import Register from "@/(auth)/register/Register";
 import OwnerDogRegistration from "@/(owner)/pages/dogRegistration/OwnerDogRegistration";
@@ -40,7 +41,13 @@ export const Router = createBrowserRouter([
     },
       {
         path: "/admin/dashboard",
-        element: <AdminLayout />
+        element: <AdminLayout />, 
+        children: [
+            {
+                index: true ,
+                element: <AdminDashboard /> 
+            },
+        ]
     },
     {
         path: "/owner/dashboard" ,
