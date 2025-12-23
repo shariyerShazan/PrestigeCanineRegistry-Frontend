@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { FiSearch, FiEye, FiEdit3, FiTrash2 } from "react-icons/fi";
+import { FiSearch, FiEye, FiTrash2, FiEdit } from "react-icons/fi";
 import { LuShieldPlus } from "react-icons/lu";
 import type { Role } from './_components/RPtypes';
 import type { Column } from '@/(admin)/_components/CommonTable';
@@ -111,7 +111,7 @@ const rolesData: Role[] = [
       render: (row) => (
         <div className="flex items-center gap-3">
            <FiEye className="text-[#155DFC] cursor-pointer size-4 hover:opacity-70 transition-opacity" />
-          <FiEdit3 
+          <FiEdit 
             className="text-[#155DFC] cursor-pointer size-4" 
             onClick={() => handleEdit(row)}
           />

@@ -56,7 +56,7 @@ const items = [
   },
   {
     title: "Activity Logs",
-    url: "/admin/dashboard/Dog-Registry",
+    url: "/admin/dashboard/Activity-Logs",
     icon: FiActivity,
   },
   {
