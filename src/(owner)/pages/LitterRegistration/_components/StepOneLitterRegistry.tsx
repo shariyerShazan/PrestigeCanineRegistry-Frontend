@@ -65,7 +65,6 @@ export default function StepOneLitterRegistry({ formData, updateFormData, nextSt
 
   return (
     <div className=" ">
-      {/* Form Section */}
 
 
         {/* Form Fields */}
