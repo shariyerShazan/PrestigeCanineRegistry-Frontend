@@ -20,6 +20,7 @@ import DogProfilePage from "@/(user)/pages/dogProfile/DogProfilePage";
 import HomePage from "@/(user)/pages/home/HomePage";
 import OwnerDetailsPage from "@/(user)/pages/ownerDetailsPage/OwnerDetailsPage";
 import DogSearchPage from "@/(user)/pages/searchDog/SearchDogs";
+import GoldCertificate from "@/components/common/certificate/GoldCertificate";
 import NotFoundPage from "@/components/common/error/NotFoundPage";
 import AdminLayout from "@/Layout/AdminLayout";
 import MainLayout from "@/Layout/MainLayout";
@@ -134,4 +135,5 @@ export const Router = createBrowserRouter([
         path: "cert",
         element: <Certificate />
     }
+
 ])
