@@ -13,10 +13,12 @@ import { LuDna } from "react-icons/lu";
 import { Progress } from "@/components/ui/progress"
 import HealthSummaryOfOwnerDog from './_components/HealthSummary';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router';
 
 
 
 const OwnerDogPreview = () => {
+  const navigate = useNavigate()
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen font-sans">
       {/* --- TOP NAVIGATION --- */}
@@ -78,17 +80,17 @@ const OwnerDogPreview = () => {
             <DataBox label="Date of Birth" value="March 15, 2021" valueColor="text-[#2B4C8A]" />
             <DataBox label="Weight" value="65 lbs" valueColor="text-[#2B4C8A]" />
           </div>
-
           {/* OWNER CARD */}
             <div className="flex gap-2 mt-">
                 <Button
+                      onClick={()=> navigate("/owner/dashboard/certificate/123")}
                   variant="outline"
                   size="sm"
                   className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#2B4C8A]/5 text-xs  cursor-pointer"
                 >
                   Request Certificate
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1 border-[#2B4C8A] text-[#2B4C8A] hover:bg-[#2B4C8A] hover:text-white text-xs bg-transparent cursor-pointer">
+                <Button  onClick={()=> navigate("/owner/dashboard/transfer-owner")} variant="outline" size="sm" className="flex-1 border-[#2B4C8A] text-[#2B4C8A] hover:bg-[#2B4C8A] hover:text-white text-xs bg-transparent cursor-pointer">
                   Transfer Ownership
                 </Button>
               </div>

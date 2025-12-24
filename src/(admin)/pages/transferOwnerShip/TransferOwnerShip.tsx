@@ -25,7 +25,7 @@ interface OwnershipTransferData {
   actionStatus: "Pending" | "Decline" | "Approve";
 }
 
-const TransferOwnerShip: React.FC = () => {
+const DTransferOwnerShip: React.FC = () => {
   // Sample data from screenshot
   const data: OwnershipTransferData[] = [
     {
@@ -177,4 +177,4 @@ const TransferOwnerShip: React.FC = () => {
   );
 };
 
-export default TransferOwnerShip;
+export default DTransferOwnerShip;

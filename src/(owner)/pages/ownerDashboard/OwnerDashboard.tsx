@@ -8,6 +8,7 @@ import { LuDog } from "react-icons/lu"
 import AllPublishedDogs from "./_components/AllPublishedDogs"
 import ownerProfile from "@/assets/ownerDetails/profile.jpg"
 import OwnerRecentUpdate from "./_components/OwnerRecentUpdate"
+import { useNavigate } from "react-router"
 
 const stats = [
   { label: "Total Published", value: "03", bg: "bg-[#D4F5E9]", border: "border-[#24B57B]", text: "text-[#24B57B]", icon: <LuDog size={28} /> },
@@ -27,11 +28,17 @@ const tabs = [
   { label: "Transferred Ownership", value: "transferred" },
 ]
 
+const actions = [
+  { Icon: Bell, path: "/owner/dashboard/profile/123" },
+  { Icon: Settings, path: "/owner/dashboard/profile/123" },
+];
+
 const tabTriggerClass =
   "rounded-none border-0 border-b-2 border-transparent px-4 pb-3 pt-0 font-medium text-gray-600 " +
   "data-[state=active]:border-b-[#2B4C8A] data-[state=active]:text-[#2B4C8A] data-[state=active]:bg-transparent"
 
 const OwnerDashboard = () => {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("all")
 
   return (
@@ -49,12 +56,19 @@ const OwnerDashboard = () => {
           </div>
 
           <div className="flex gap-2">
-            {[Bell, Settings].map((Icon, i) => (
-              <Button key={i} size="icon" variant="ghost" className="w-10 h-10 bg-black text-white hover:bg-gray-800 cursor-pointer hover:text-white">
-                <Icon className="w-8 h-8" />
-              </Button>
-            ))}
-          </div>
+          {actions.map(({ Icon, path }, i) => (
+            <Button
+              key={i}
+              size="icon"
+              variant="ghost"
+              onClick={() => navigate(path)}
+              className="w-10 h-10 bg-black text-white hover:bg-gray-800 hover:text-white cursor-pointer"
+            >
+              <Icon className="w-8 h-8" />
+            </Button>
+          ))}
+        </div>
+
         </div>
 
         {/* STATS */}
@@ -73,11 +87,10 @@ const OwnerDashboard = () => {
 
         {/* ACTIONS */}
         <div className="flex justify-end gap-3 mb-6">
-          <Button variant="outline" className="border-[#2B4C8A] text-[#2B4C8A] cursor-pointer">Transfer Ownership</Button>
-          <Button className="bg-[#2B4C8A] text-white cursor-pointer">Register Litter</Button>
-          <Button className="bg-[#D4AF37] text-black font-semibold cursor-pointer hover:text-white">Register New Dog ⊕</Button>
+          <Button onClick={() => navigate("/owner/dashboard/transfer-owner")} variant="outline" className="border-[#2B4C8A] text-[#2B4C8A] cursor-pointer">Transfer Ownership</Button>
+          <Button onClick={() => navigate("/owner/dashboard/litter-registration")} className="bg-[#2B4C8A] text-white cursor-pointer">Register Litter</Button>
+          <Button  onClick={() => navigate("/owner/dashboard/dog-registration")} className="bg-[#D4AF37] text-black font-semibold cursor-pointer hover:text-white">Register New Dog ⊕</Button>
         </div>
-
         {/* TABS */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="border-b border-gray-300 bg-transparent rounded-none mt-6 p-0">

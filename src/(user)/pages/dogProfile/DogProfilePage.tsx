@@ -15,9 +15,11 @@ import owner from "@/assets/gogDetails/owner.jpg"
 import { PiMedalThin } from "react-icons/pi";
 import { Progress } from "@/components/ui/progress"
 import ViewMoreOfThiOwner from './_components/ViewMoreOfThiOwner';
+import { useNavigate } from 'react-router';
 
 
 const DogProfilePage = () => {
+  const navigate = useNavigate()
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen font-sans">
       {/* --- TOP NAVIGATION --- */}
@@ -82,13 +84,13 @@ const DogProfilePage = () => {
 
           {/* OWNER CARD */}
           <div className="bg-[#2B4C8A] rounded-xl p-6 text-white">
-            <p className="text-sm font-medium opacity-80 mb-4">Owner Information</p>
+            <p  className="text-sm font-medium opacity-80 mb-4">Owner Information</p>
             <div className="flex items-center gap-4 mb-4">
-              <Avatar className="h-14 w-14 border-2 border-white/20">
+              <Avatar onClick={()=> navigate("/owner-details/123")} className="h-14 w-14 border-2 border-white/20 cursor-pointer hover:scale-101">
                 <AvatarImage src={owner} className='object-cover'/>
                 <AvatarFallback>SJ</AvatarFallback>
               </Avatar>
-              <h3 className="text-xl font-bold">Sarah Johnson</h3>
+              <h3 onClick={()=> navigate("/owner-details/123")} className="text-xl font-bold cursor-pointer hover:underline">Sarah Johnson</h3>
             </div>
             <div className="space-y-2 text-sm opacity-90">
               <p className="flex items-center gap-2"><PiMedalThin size={14} /> Gold Member</p>

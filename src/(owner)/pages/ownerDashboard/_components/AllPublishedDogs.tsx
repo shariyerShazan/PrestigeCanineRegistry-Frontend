@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { dogsData } from "../data/dogsData"
 import OwnerDogDetailsCard from "../../_components/OwnerDogDetailsCard"
+import { useNavigate } from "react-router"
 
 
 
@@ -17,6 +18,8 @@ const AllPublishedDogs = ({ filter = "all" }: {filter? :string}) => {
     return false // For canceled, certificates, transferred - no data yet
   })
 
+  const navigate = useNavigate()
+
   return (
     <section className="pb-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -26,13 +29,14 @@ const AllPublishedDogs = ({ filter = "all" }: {filter? :string}) => {
               <OwnerDogDetailsCard {...dog} />
               <div className="flex gap-2 mt-">
                 <Button
+                  onClick={()=> navigate("/owner/dashboard/certificate/123")}
                   variant="outline"
                   size="sm"
                   className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#2B4C8A]/5 text-xs  cursor-pointer"
                 >
                   Request Certificate
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1 border-[#2B4C8A] text-[#2B4C8A] hover:bg-[#2B4C8A] hover:text-white text-xs bg-transparent cursor-pointer">
+                <Button onClick={()=> navigate("/owner/dashboard/transfer-owner")} variant="outline" size="sm" className="flex-1 border-[#2B4C8A] text-[#2B4C8A] hover:bg-[#2B4C8A] hover:text-white text-xs bg-transparent cursor-pointer">
                   Transfer Ownership
                 </Button>
               </div>

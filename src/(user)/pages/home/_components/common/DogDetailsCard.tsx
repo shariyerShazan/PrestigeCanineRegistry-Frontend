@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { MdVerifiedUser } from "react-icons/md"
+import { useNavigate } from "react-router"
 
 interface DogDetailsCardProps {
   id: string
@@ -40,13 +41,15 @@ const DogDetailsCard = ({
       ? "Blue Verified"
       : ""
 
+      const navigate = useNavigate()
   return (
-    <div className="bg-white rounded-lg overflow-hidden ">
+    <div  className="bg-white group rounded-lg  overflow-hidden ">
       <div className="relative aspect-[4/3] h-[60%] w-full">
         <img
+          onClick={()=> navigate("/dogs/123")}
           src={imageUrl || "/placeholder.svg"}
           alt={name}
-          className="object-cover rounded-md h-full w-full"
+          className="object-cover overflow-hidden duration-400 cursor-pointer group-hover:rounded-md transition-all rounded-md h-full w-full group-hover:scale-105"
         />
 
         {verifyType && (
@@ -76,7 +79,7 @@ const DogDetailsCard = ({
         </div>
 
         <div className="flex items-center gap-2 mt-2">
-          <Avatar className="h-8 w-8">
+          <Avatar onClick={() => navigate("/owner-details/123")} className="h-8 w-8 cursor-pointer hover:scale-102">
             <AvatarImage src={ownerAvatar || "/placeholder.svg"} alt={ownerName} className=" object-cover"/>
             <AvatarFallback className="text-xs bg-gray-200">
               {ownerName
@@ -85,7 +88,7 @@ const DogDetailsCard = ({
                 .join("")}
             </AvatarFallback>
           </Avatar>
-          <span className={`text-md font-semibold `}>{ownerName}</span>
+          <span onClick={() => navigate("/owner-details/123")} className={`text-md font-semibold cursor-pointer hover:underline`}>{ownerName}</span>
         </div>
       </div>
     </div>

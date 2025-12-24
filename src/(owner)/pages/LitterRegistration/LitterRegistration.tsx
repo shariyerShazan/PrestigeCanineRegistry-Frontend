@@ -17,6 +17,8 @@ export default function LitterRegistration() {
     dateOfBirth: "",
     color: "",
     weight: "",
+    motherPCRid: "",
+    fatherPCRid : "",
     location: "",
     uploadedImages: [],
     microchipId: "",
