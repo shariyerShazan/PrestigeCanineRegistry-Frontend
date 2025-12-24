@@ -1,3 +1,4 @@
+import AdminProfile from "./_components/AdminProfile"
 import PasswordAndNotification from "./_components/PasswordAndNotification"
 
 
@@ -5,6 +6,7 @@ import PasswordAndNotification from "./_components/PasswordAndNotification"
 const ADsetting = () => {
   return (
     <div>
+        <AdminProfile />
         <PasswordAndNotification />
     </div>
   )
