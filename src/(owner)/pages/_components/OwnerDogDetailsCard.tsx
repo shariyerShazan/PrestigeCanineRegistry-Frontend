@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { MdVerifiedUser } from "react-icons/md"
+import { useNavigate } from "react-router"
 
 interface DogDetailsCardProps {
   id: string
@@ -13,6 +14,8 @@ interface DogDetailsCardProps {
   verifyType?: string 
 }
 
+
+
 const OwnerDogDetailsCard = ({
   name,
   breed,
@@ -22,6 +25,8 @@ const OwnerDogDetailsCard = ({
 //   ownerAvatar,
   verifyType,
 }: DogDetailsCardProps) => {
+
+const navigate = useNavigate()
 
   const badgeColor =
     verifyType === "gold"
@@ -42,11 +47,12 @@ const OwnerDogDetailsCard = ({
 
   return (
     <div className="bg-white rounded-lg overflow-hidden ">
-      <div className="relative aspect-[4/3] h-[60%] w-full">
+      <div className="relative aspect-[4/3] group h-[60%] w-full">
         <img
+          onClick={()=> navigate("/owner/dashboard/dog-preview/123")}
           src={imageUrl || "/placeholder.svg"}
           alt={name}
-          className="object-cover rounded-md h-full w-full"
+          className="object-cover rounded-md h-full w-full group-hover:scale-103 duration-400 transition-all cursor-pointer "
         />
 
         {verifyType && (
@@ -75,18 +81,7 @@ const OwnerDogDetailsCard = ({
           <p className="text-md text-gray-600">PRC ID: {pcrId}</p>
         </div>
 
-        {/* <div className="flex items-center gap-2 mt-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={ownerAvatar || "/placeholder.svg"} alt={ownerName} className=" object-cover"/>
-            <AvatarFallback className="text-xs bg-gray-200">
-              {ownerName
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
-          </Avatar>
-          <span className={`text-md font-semibold `}>{ownerName}</span>
-        </div> */}
+
       </div>
     </div>
   )

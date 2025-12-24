@@ -29,7 +29,7 @@ const AdminProfile: React.FC = () => {
               <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=250" className='object-cover' />
               <AvatarFallback>AD</AvatarFallback>
             </Avatar>
-            <button className="absolute bottom-9 cursor-pointer right-1 p-2 bg-[#2B4C8A] rounded-full text-white border-4 border-white shadow-lg hover:scale-105 transition-transform">
+            <button className="absolute bottom-9 cursor-pointer right-1 p-2 bg-[#2B4C8A] rounded-full text-white border-4 border-white shadow-lg hover:scale-103 transition-transform">
               <Camera className="size-4" />
             </button>
           </div>

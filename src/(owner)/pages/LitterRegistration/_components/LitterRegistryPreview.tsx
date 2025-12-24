@@ -1,5 +1,5 @@
-import dog1 from "@/assets/home/allDogs/dog1.png"
-import dog2 from "@/assets/home/allDogs/dog2.png"
+import dog1 from "@/assets/litter/litter.png"
+import owner from "@/assets/ownerDetails/profile.jpg"
 import { FiX } from "react-icons/fi"
 
 type Props = {
@@ -34,7 +34,7 @@ export default function LitterRegistryPreview({ formData }: Props) {
 
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden">
-              <img src={dog2} className="w-full h-full object-cover" />
+              <img src={owner} className="w-full h-full object-cover" />
             </div>
             <span className="text-sm font-medium text-gray-900">
               Sarah Johnson

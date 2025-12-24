@@ -2,8 +2,10 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FiEye, FiTrash2, FiMail } from "react-icons/fi";
-import { HiOutlineFlag } from "react-icons/hi";
+// import { HiOutlineFlag } from "react-icons/hi";
 import { LuCheckCheck, LuClock3 } from "react-icons/lu";
+import { useNavigate } from 'react-router';
+import { GrFlag } from 'react-icons/gr';
 
 interface ReportProps {
   id: string;
@@ -21,6 +23,8 @@ interface ReportProps {
   date: string;
 }
 
+
+
 const ReportManagementCard: React.FC<ReportProps> = ({
   id, status, priority, category, title, description,
   reporterName, reporterEmail, dogName, dogId, ownerName, ownerId, date
@@ -30,6 +34,7 @@ const ReportManagementCard: React.FC<ReportProps> = ({
     Read: "bg-blue-50 text-[#193CB8]",
     Resolved: "bg-green-50 text-[#016630]",
   };
+const navigate = useNavigate()
 
   return (
     <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white">
@@ -38,7 +43,7 @@ const ReportManagementCard: React.FC<ReportProps> = ({
         <div className="flex justify-between items-start">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2  font-bold">
-              <HiOutlineFlag className="size-5 text-[#F54900]" />
+              <GrFlag className="size-5 text-[#F54900]" />
               <span>{id}</span>
             </div>
             <div className="flex gap-2">
@@ -64,7 +69,7 @@ const ReportManagementCard: React.FC<ReportProps> = ({
         </div>
 
         {/* Reporter Section */}
-        <div className="p-4 bg-[#F9FAFB rounded-2xl border border-gray-200">
+        <div className="p-4 bg-[#F9FAFB] rounded-2xl border border-gray-200">
           <p className="text-xs text-slate-600 font-medium mb-1 uppercase tracking-wider">Reporter</p>
           <p className="font-bold text-slate-800 text-md">{reporterName}</p>
           <p className="text-sm text-slate-600">{reporterEmail}</p>
@@ -94,7 +99,7 @@ const ReportManagementCard: React.FC<ReportProps> = ({
             <span>{date}</span>
           </div>
           <div className="flex gap-2">
-            <Button variant="ghost" className="h-9 px-6 flex-1 cursor-pointer bg-blue-50 text-[#155DFC] hover:bg-blue-100 rounded-xl font-bold gap-2">
+            <Button onClick={() => navigate("/admin/dashboard/Reports-Management/123")} variant="ghost" className="h-9 px-6 flex-1 cursor-pointer bg-blue-50 text-[#155DFC] hover:bg-blue-100 rounded-xl font-bold gap-2">
               <FiEye className="size-4" /> View
             </Button>
             {status === "Unread" && (

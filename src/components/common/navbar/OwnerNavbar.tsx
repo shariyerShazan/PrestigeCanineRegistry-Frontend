@@ -5,7 +5,7 @@ import {
   X,
   LucideUserRound,
 } from "lucide-react"
-import { NavLink, Link } from "react-router"
+import { NavLink, Link, useNavigate } from "react-router"
 import logo from "@/assets/login/logo.png"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import ownerDP from "@/assets/ownerDetails/profile.jpg"
@@ -17,6 +17,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     : "hover:text-[#D4AF37] transition-colors"
 
 const OwnerNavbar = () => {
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
   return (
@@ -58,7 +59,7 @@ const OwnerNavbar = () => {
                  </Button>
 
                   <div className="relative">
-                  <Avatar className="h-10 w-10 border-1 border-white shadow-xl">
+                  <Avatar onClick={()=> navigate("/owner/dashboard/profile/1234")} className="h-10 w-10 cursor-pointer border-1 border-white shadow-xl">
                                 <AvatarImage src={ownerDP}  className=' object-cover'/>
                                 <AvatarFallback className="bg-[#2B4C8A] text-white text-xl">SJ</AvatarFallback>
                             </Avatar>
@@ -115,8 +116,8 @@ const OwnerNavbar = () => {
             </NavLink>
 
              <div className="flex  items-center  gap-2">
-                                  <div className="relative">
-                  <Avatar className="h-10 w-10 border-1 border-white shadow-xl">
+                                  <div className="relative cursor-pointer">
+                                <Avatar onClick={()=> navigate("/owner/dashboard/profile/1234")} className="h-10 w-10 cursor-pointer border-1 border-white shadow-xl">
                                 <AvatarImage src={ownerDP}  className=' object-cover'/>
                                 <AvatarFallback className="bg-[#2B4C8A] text-white text-xl">SJ</AvatarFallback>
                             </Avatar>

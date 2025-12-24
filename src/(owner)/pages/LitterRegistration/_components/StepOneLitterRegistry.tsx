@@ -124,8 +124,8 @@ export default function StepOneLitterRegistry({ formData, updateFormData, nextSt
               <div className="flex relative gap-2">
                 <input
                   type="text"
-                  value={formData.primaryBreedDNAPercent}
-                  onChange={(e) => updateFormData({ primaryBreedDNAPercent: e.target.value })}
+                  value={formData.motherPCRid}
+                  onChange={(e) => updateFormData({ motherPCRid: e.target.value })}
                   placeholder="Enter mother PCR ID"
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
                 />
@@ -138,8 +138,8 @@ export default function StepOneLitterRegistry({ formData, updateFormData, nextSt
               <div className="flex gap-2 relative">
                 <input
                   type="text"
-                  value={formData.secondaryBreedDNAPercent}
-                  onChange={(e) => updateFormData({ secondaryBreedDNAPercent: e.target.value })}
+                  value={formData.fatherPCRid}
+                  onChange={(e) => updateFormData({ fatherPCRid: e.target.value })}
                   placeholder="Enter father PCR ID"
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent"
                 />
