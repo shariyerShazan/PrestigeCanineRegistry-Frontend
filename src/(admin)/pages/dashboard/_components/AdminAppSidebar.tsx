@@ -1,5 +1,5 @@
 
-import { useLocation } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import { LuCircleCheck, LuDog, LuShield, LuUsers } from "react-icons/lu";
 import { FaRegChartBar } from "react-icons/fa6";
 // import { CiCircleCheck } from "react-icons/ci";
@@ -98,8 +98,8 @@ export function AdminAppSidebar({ collapsed = false }: { collapsed?: boolean }) 
 
               return (
                 <li key={item.title} className="relative">
-                  <a
-                    href={item.url}
+                  <Link
+                    to={item.url}
                     className={`flex items-center gap-3  px-4 py-2 text-sm transition-colors ${
                       collapsed ? 'justify-center' : ''
                     } ${
@@ -118,7 +118,7 @@ export function AdminAppSidebar({ collapsed = false }: { collapsed?: boolean }) 
                     {isActive && (
                       <span className="absolute right-0 top-0 h-full w-1 bg-[#D4AF37]" />
                     )}
-                  </a>
+                  </Link>
                 </li>
               )
             })}
