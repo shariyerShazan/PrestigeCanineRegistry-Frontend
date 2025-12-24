@@ -12,6 +12,7 @@ import UserManagement from "@/(admin)/pages/userManagement/UserManagement";
 import Login from "@/(auth)/login/Login";
 import Register from "@/(auth)/register/Register";
 import OwnerDogRegistration from "@/(owner)/pages/dogRegistration/OwnerDogRegistration";
+import LitterRegistration from "@/(owner)/pages/LitterRegistration/LitterRegistration";
 import OwnerDashboard from "@/(owner)/pages/ownerDashboard/OwnerDashboard";
 import OwnerDogPreview from "@/(owner)/pages/ownerDogPreview/OwnerDogPreview";
 import OwnerProfile from "@/(owner)/pages/ownerProfile/OwnerProfile";
@@ -114,6 +115,10 @@ export const Router = createBrowserRouter([
             {
                 path: "profile" ,
                 element: <OwnerProfile />
+            },
+            {
+                path: "litter-registration",
+                element: <LitterRegistration />
             }
         ]
     },

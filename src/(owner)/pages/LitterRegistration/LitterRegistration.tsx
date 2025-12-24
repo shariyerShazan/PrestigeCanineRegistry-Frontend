@@ -1,12 +1,11 @@
 
 
 import { useState } from "react"
-import StepOneRegistry from "./_components/StepOneRegistry"
-import StepTwoRegistry from "./_components/StepTwoRegistry"
-import StepThreeRegistry from "./_components/StepThreeRegistry"
-import RegistryStepIndicator from "./_components/RegistryStepIndicator"
-import RegistryPreview from "./_components/RegistryPreview"
+import RegistryPreview from "./_components/LitterRegistryPreview"
 import subtract from "@/assets/search/Subtract.svg"
+import LitterRegistryStepIndicator from "./_components/LitterRegistryStepIndicator"
+import StepOneLitterRegistry from "./_components/StepOneLitterRegistry"
+import StepThreeLitterRegistry from "./_components/StepThreeLitterRegistry"
 
 
 export default function LitterRegistration() {
@@ -60,10 +59,10 @@ export default function LitterRegistration() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* LEFT */}
           <div className="md:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <RegistryStepIndicator currentStep={currentStep} />
+            <LitterRegistryStepIndicator currentStep={currentStep} />
 
             {currentStep === 1 && (
-              <StepOneRegistry
+              <StepOneLitterRegistry
                 formData={formData}
                 updateFormData={updateFormData}
                 nextStep={() => setCurrentStep(2)}
@@ -71,16 +70,7 @@ export default function LitterRegistration() {
             )}
 
             {currentStep === 2 && (
-              <StepTwoRegistry
-                formData={formData}
-                updateFormData={updateFormData}
-                prevStep={() => setCurrentStep(1)}
-                nextStep={() => setCurrentStep(3)}
-              />
-            )}
-
-            {currentStep === 3 && (
-              <StepThreeRegistry
+              <StepThreeLitterRegistry
                 formData={formData}
                    prevStep={() => setCurrentStep(1)}
                    handleSubmit={handleSubmit}
