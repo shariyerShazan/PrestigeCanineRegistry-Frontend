@@ -1,6 +1,18 @@
+import ActivityLog from "@/(admin)/pages/activityLog/ActivityLog";
+import Certificate from "@/(admin)/pages/certificate/Certificate";
+import CertificateRequest from "@/(admin)/pages/certificateRequest/CertificateRequest";
+import AdminDashboard from "@/(admin)/pages/dashboard/AdminDashboard";
+import DogRegistrationRequest from "@/(admin)/pages/dogRegistrationRequest/DogRegistrationRequest";
+import DogRegistryPage from "@/(admin)/pages/dogRegistryPage/DogRegistryPage";
+import ReportManagement from "@/(admin)/pages/reportManagement/ReportManagement";
+import RoleAndPermission from "@/(admin)/pages/roleAndPermission/RoleAndPermission";
+import ADsetting from "@/(admin)/pages/setting/ADsetting";
+import TransferOwnerShip from "@/(admin)/pages/transferOwnerShip/TransferOwnerShip";
+import UserManagement from "@/(admin)/pages/userManagement/UserManagement";
 import Login from "@/(auth)/login/Login";
 import Register from "@/(auth)/register/Register";
 import OwnerDogRegistration from "@/(owner)/pages/dogRegistration/OwnerDogRegistration";
+import LitterRegistration from "@/(owner)/pages/LitterRegistration/LitterRegistration";
 import OwnerDashboard from "@/(owner)/pages/ownerDashboard/OwnerDashboard";
 import OwnerDogPreview from "@/(owner)/pages/ownerDogPreview/OwnerDogPreview";
 import OwnerProfile from "@/(owner)/pages/ownerProfile/OwnerProfile";
@@ -41,7 +53,49 @@ export const Router = createBrowserRouter([
     },
       {
         path: "/admin/dashboard",
-        element: <AdminLayout />
+        element: <AdminLayout />, 
+        children: [
+            {
+                index: true ,
+                element: <AdminDashboard /> 
+            },
+            {
+                path : "Registration-Requests",
+                element: <DogRegistrationRequest />
+            },
+            {
+                path: "Transfer-Ownership",
+                element: <TransferOwnerShip />
+            },
+            {
+                path: "User-Management",
+                element: <UserManagement />
+            },
+            {
+                path: "Roles-Permissions",
+                element: <RoleAndPermission />
+            },
+            {
+                path: "Activity-Logs" ,
+                element: <ActivityLog />
+            },
+            {
+                path: "Certificate-Requests" ,
+                element: <CertificateRequest />
+            },
+            {
+                path: "Dog-Registry",
+                element: <DogRegistryPage />
+            },
+            {
+                path: "Reports-Management" ,
+                element: <ReportManagement />
+            },
+            {
+                path: "settings" ,
+                element: <ADsetting />
+            }
+        ]
     },
     {
         path: "/owner/dashboard" ,
@@ -62,6 +116,10 @@ export const Router = createBrowserRouter([
             {
                 path: "profile" ,
                 element: <OwnerProfile />
+            },
+            {
+                path: "litter-registration",
+                element: <LitterRegistration />
             }
         ]
     },
@@ -74,8 +132,8 @@ export const Router = createBrowserRouter([
         element: <Register />
     },
     {
-        path: "/certificate" ,
-        element: <GoldCertificate />
-    },
+        path: "cert",
+        element: <Certificate />
+    }
 
 ])

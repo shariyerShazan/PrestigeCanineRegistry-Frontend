@@ -122,3 +122,30 @@
   }
 }
 
+
+
+
+@font-face {
+  font-family: "SignPainter";
+  src: url("/fonts/SignPainter.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PalatinoLinotype";
+  src: local("Palatino Linotype");
+}
+
+@font-face {
+  font-family: "PlayfairDisplay";
+  src: url("/fonts/PlayfairDisplay-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Regular.ttf") format("truetype");
+}
+
+.font-signpainter { font-family: "SignPainter", cursive; }
+.font-palatino { font-family: "PalatinoLinotype", serif; }
+.font-playfair { font-family: "PlayfairDisplay", serif; }
+.font-inter { font-family: "Inter", sans-serif; }
