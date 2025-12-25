@@ -2,11 +2,18 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TransferOtherOwner from "./_components/TransferOtherOwner";
 import AddOtherOwner from "./_components/AddOtherOwner";
-
+import subtract from "@/assets/search/Subtract.svg"
 
 const TransferOwner = () => {
   return (
    <div className="min-h-[65vh] ">
+
+          <div
+            aria-hidden="true"
+            className="fixed inset-0 bg-contain  bg-no-repeat pointer-events-none -z-10 opacity-30"
+            style={{ backgroundImage: `url(${subtract})` }}
+          />
+
     <div className="w-full max-w-2xl  mx-auto mt-10 p-6 bg-white rounded-xl shadow-md border border-gray-100">
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
         Transfer Ownership Between PCR Members
