@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RefreshCcw, Send, Copy } from "lucide-react";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 export const TransferOtherOwner = () => {
   const [transferCode, setTransferCode] = useState("");
@@ -18,14 +18,18 @@ export const TransferOtherOwner = () => {
   const handleClear = () => {
     setTransferCode("");
   };
-
+const [copyed , setCopyed] = useState(false)
 const handleCopy = () => {
-  if (transferCode) {
+  // if (transferCode) {
     navigator.clipboard.writeText(transferCode);
-    toast.success("Generated code copied");
-  } else {
-    toast.error("No code to copy!");
-  }
+    setCopyed(true)
+    setTimeout(() => {
+      setCopyed(false)
+    }, 2000);
+    // toast.success("Generated code copied");
+  // } else {
+  //   toast.error("No code to copy!");
+  // }
 };
 
   return (
@@ -59,8 +63,8 @@ const handleCopy = () => {
               <Button variant="outline" size="sm" className="flex gap-2  bg-gray-50 text-[#2B4C8A] border-[#2B4C8A] cursor-pointer">
                 <Send size={16} /> Send
               </Button>
-              <Button variant="outline" size="sm" className="flex gap-2 bg-gray-50 text-[#2B4C8A] border-[#2B4C8A] cursor-pointer" onClick={handleCopy}>
-                <Copy size={16} /> Copy
+              <Button variant="outline" disabled={copyed} size="sm" className="flex gap-2 disabled:cursor-not-allowed bg-gray-50 text-[#2B4C8A] border-[#2B4C8A] cursor-pointer" onClick={handleCopy}>
+                <Copy size={16} /> {copyed? "Copied" : "Copy"}
               </Button>
             </div>
           </div>
