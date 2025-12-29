@@ -1,5 +1,6 @@
 import type React from "react"
 import { useState } from "react"
+import { useNavigate } from "react-router" 
 import {
   Tabs,
   TabsList,
@@ -7,55 +8,72 @@ import {
   TabsContent,
 } from "@/components/ui/tabs"
 
-import { User } from "lucide-react"
+import { User, UserPlus } from "lucide-react"
 import logo from "@/assets/login/logo.png"
 import { LoginFields } from "./LoginFields"
+import { RegisterFields } from "./RegisterFields"
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 
 const LoginForm = () => {
+  const navigate = useNavigate(); 
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [role, setRole] = useState<"owner" | "admin">("owner")
+  const [role, setRole] = useState<"owner" | "admin" | "register">("owner")
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Login attempt:", { email, role })
+    
+    if (role === "owner") {
+      console.log("Owner Logging in...");
+      navigate("/owner/dashboard"); 
+    } 
+    else if (role === "admin") {
+      console.log("Admin Logging in...");
+      navigate("/admin/dashboard");
+    } 
+    else if (role === "register") {
+      console.log("Registration Successful!");
+      setRole("owner"); 
+      alert("Registration Successful! Please login.");
+    }
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-2xl p-5 w-full">
+    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-[500px] mx-auto">
       {/* Header */}
-      <div className="  rounded-lg mb-6 text-center">
-        <div className="flex justify-center ">
-          <img src={logo} alt="Logo" className="w-42 h-40 object-cover" />
+      <div className="rounded-lg mb-6 text-center">
+        <div className="flex justify-center mb-2">
+          <img src={logo} alt="Logo" className="w-32 h-32 object-contain" />
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-1">
-          Welcome <span className="">Back</span>
+          {role === "register" ? "Create Account" : "Welcome Back"}
         </h1>
         <p className="text-sm text-gray-600">
-          Sign in to your account to continue
+          {role === "register" ? "Create your account to continue" : "Sign in to your account to continue"}
         </p>
       </div>
 
-      {/* Role Tabs */}
       <Tabs
-        defaultValue="owner"
-        className="mb-6"
-        onValueChange={(value) => setRole(value as "owner" | "admin")}
+        value={role}
+        onValueChange={(value) => setRole(value as any)}
+        className="w-full"
       >
-        <TabsList className="grid grid-cols-2 w-full mb-6">
-          <TabsTrigger value="owner" className="flex gap-2 cursor-pointer">
+        <TabsList className="grid grid-cols-3 w-full mb-8 bg-gray-100/50 p-1">
+          <TabsTrigger value="owner" className="flex gap-2 cursor-pointer text-xs md:text-sm">
             <User className="w-4 h-4" />
             Owner Login
           </TabsTrigger>
-          <TabsTrigger value="admin" className="flex gap-2 cursor-pointer">
+          <TabsTrigger value="admin" className="flex gap-2 cursor-pointer text-xs md:text-sm">
             <MdOutlineAdminPanelSettings className="w-4 h-4" />
             Admin Login
           </TabsTrigger>
+          <TabsTrigger value="register" className="flex gap-2 cursor-pointer text-xs md:text-sm">
+            <UserPlus className="w-4 h-4" />
+            New Register
+          </TabsTrigger>
         </TabsList>
 
-        {/* Shared Form (same UI, different role) */}
         <TabsContent value="owner">
           <LoginFields
             email={email}
@@ -78,6 +96,10 @@ const LoginForm = () => {
             setShowPassword={setShowPassword}
             onSubmit={handleSubmit}
           />
+        </TabsContent>
+
+        <TabsContent value="register">
+          <RegisterFields onSubmit={handleSubmit} />
         </TabsContent>
       </Tabs>
     </div>

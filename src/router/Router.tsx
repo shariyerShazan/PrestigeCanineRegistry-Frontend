@@ -1,5 +1,5 @@
 import ActivityLog from "@/(admin)/pages/activityLog/ActivityLog";
-import Certificate from "@/(admin)/pages/certificate/Certificate";
+import PrestigeCertificate from "@/(admin)/pages/certificate/Certificate";
 import CertificateRequest from "@/(admin)/pages/certificateRequest/CertificateRequest";
 import AdminDashboard from "@/(admin)/pages/dashboard/AdminDashboard";
 import DogRegistrationRequest from "@/(admin)/pages/dogRegistrationRequest/DogRegistrationRequest";
@@ -131,10 +131,6 @@ export const Router = createBrowserRouter([
                 path: "transfer-owner" ,
                 element: <TransferOwner />
             },
-            {
-                path: "certificate/:certificateId",
-                element: <Certificate />
-            }
         ]
     },
     {
@@ -144,6 +140,10 @@ export const Router = createBrowserRouter([
     {
         path: "/register" ,
         element: <Register />
+    },
+    {
+        path: "cert" ,
+        element: <PrestigeCertificate />
     }
 
 ])

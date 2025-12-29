@@ -61,7 +61,7 @@ const AddOtherOwner = () => {
                   <td className="px-4 py-4 text-gray-600">Ownership Transfer</td>
                   <td className="px-4 py-4 text-gray-600">11/27/2024</td>
                   <td className="px-4 py-4 text-center">
-                    <Badge variant="secondary" className="bg-gray-200 text-gray-600 hover:bg-gray-200 font-normal px-3">
+                    <Badge variant="secondary" className="bg-[#01663030] text-[#016630] hover:bg-gray-200 font-normal px-3">
                       Pending
                     </Badge>
                   </td>
@@ -70,8 +70,8 @@ const AddOtherOwner = () => {
             </table>
           </div>
           
-          <p className="mt-4 text-sm text-yellow-600 font-medium italic">
-            Your ownership transfer request has been sent to PCR Admin. You will get notified when it's done.
+          <p className="mt-4 text-sm text-[#016630] font-medium italic">
+            Your ownership transfer has been completed successfully and new canine added to your list.
           </p>
         </div>
       )}
