@@ -5,6 +5,7 @@ import CommonTable, { type Column } from '@/(admin)/_components/CommonTable';
 import dog1 from "@/assets/dogSearchPage/dog1.jpg"
 import dog2 from "@/assets/dogSearchPage/dog2.png"
 import owner from "@/assets/ownerDetails/profile.jpg"
+import { useNavigate } from 'react-router';
 
 interface CertRequest {
   id: string;
@@ -20,6 +21,8 @@ interface CertRequest {
 }
 
 const CertificateRequest: React.FC = () => {
+  const navigate = useNavigate()
+
   const requestData: CertRequest[] = [
     {
       id: "CERT-001",
@@ -97,7 +100,7 @@ const CertificateRequest: React.FC = () => {
       header: "ACTIONS", 
       render: () => (
         <div className="flex items-center gap-3">
-            <FiEye className="text-[#155DFC] cursor-pointer size-4 hover:opacity-70 transition-opacity" />
+            <FiEye onClick={() => navigate("/admin/dashboard/Certificate-Requests/123")} className="text-[#155DFC] cursor-pointer size-4 hover:opacity-70 transition-opacity" />
             <FiEdit size={22} className="text-[#155DFC] cursor-pointer size-4" />
             <FiTrash2 className="text-[#E7000B] cursor-pointer size-4 hover:opacity-70 transition-opacity" />
         </div>
