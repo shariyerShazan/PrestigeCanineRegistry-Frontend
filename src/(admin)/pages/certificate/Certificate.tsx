@@ -16,7 +16,7 @@ const PrestigeCertificate = ({ width = 1200 , data = {
     sex: "Male",
     microchip: "985112345678901",
     dob: "October 12, 2023",
-    tier: "Platinum",
+    tier: "Gold",
     owner: "Julian Thompson",
     kennel: "IRON CLAD KENNELS",
     issueDate: "December 30, 2025",
@@ -30,7 +30,7 @@ const PrestigeCertificate = ({ width = 1200 , data = {
     position: "relative",
     width: `${width}px`,
     height: `${height}px`,
-    backgroundColor: "#fff",
+    backgroundColor: "transparent",
     fontFamily: "'Times New Roman', serif",
     color: "#000",
     overflow: "hidden",
@@ -45,7 +45,7 @@ const PrestigeCertificate = ({ width = 1200 , data = {
   return (
     <div style={containerStyle}>
       <img src={thinBorderSvg} alt="Border" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }} />
-      <img src={thickBorderSvg} alt="Border" style={{ position: "absolute", top: 30 * s, left: 30 * s, width: `calc(100% - ${60 * s}px)`, height: `calc(100% - ${60 * s}px)` }} />
+      <img src={thickBorderSvg} alt="Border" style={{ position: "absolute", top: 35 * s, left: 35 * s, width: `calc(100% - ${70 * s}px)`, height: `calc(100% - ${70 * s}px)` }} />
       <img src={vectorBorder} alt="Border" style={{ position: "absolute", top: 50 * s, left: 50 * s, width: `calc(100% - ${100 * s}px)`, height: `calc(100% - ${100 * s}px)` }} />
 
       <img

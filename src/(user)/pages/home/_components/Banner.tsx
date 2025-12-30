@@ -11,7 +11,7 @@ const Banner = () => {
 
 
   return (
-    <div className="relative min-h-[70vh]  mb-40 ">
+    <div className="relative min-h-[70vh]  ">
       {/* Background Image */}
       <div className="absolute inset-0">
         <img src={banner} alt="Woman with dog" className="w-full h-full object-cover" />
