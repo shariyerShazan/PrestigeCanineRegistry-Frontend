@@ -37,13 +37,13 @@ const OwnerNavbar = () => {
           <NavLink to="/owner/dashboard" end className={navLinkClass}>
             Home
           </NavLink>
-          <NavLink to="/owner/dashboard/breed-archive" className={navLinkClass}>
+          <NavLink to="/search-dogs" className={navLinkClass}>
             Breed Archive
           </NavLink>
-          <NavLink to="/owner/dashboard/about" className={navLinkClass}>
+          <NavLink to="/about" className={navLinkClass}>
             About
           </NavLink>
-          <NavLink to="/owner/dashboard/contact" className={navLinkClass}>
+          <NavLink to="/contact" className={navLinkClass}>
             Contact
           </NavLink>
         </div>
@@ -92,7 +92,7 @@ const OwnerNavbar = () => {
             </NavLink>
 
             <NavLink
-              to="/owner/dashboard/breed-archive"
+              to="/search-dogs"
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
@@ -100,7 +100,7 @@ const OwnerNavbar = () => {
             </NavLink>
 
             <NavLink
-              to="/owner/dashboard/about"
+              to="/about"
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
@@ -108,7 +108,7 @@ const OwnerNavbar = () => {
             </NavLink>
 
             <NavLink
-              to="/owner/dashboard/contact"
+              to="/contact"
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >

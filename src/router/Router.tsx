@@ -19,6 +19,8 @@ import OwnerDashboard from "@/(owner)/pages/ownerDashboard/OwnerDashboard";
 import OwnerDogPreview from "@/(owner)/pages/ownerDogPreview/OwnerDogPreview";
 import OwnerProfile from "@/(owner)/pages/ownerProfile/OwnerProfile";
 import TransferOwner from "@/(owner)/pages/transferOwnership/TransferOwner";
+import AboutPage from "@/(user)/pages/about/About";
+import ContactPage from "@/(user)/pages/contact/ContactPage";
 import DogProfilePage from "@/(user)/pages/dogProfile/DogProfilePage";
 import HomePage from "@/(user)/pages/home/HomePage";
 import OwnerDetailsPage from "@/(user)/pages/ownerDetailsPage/OwnerDetailsPage";
@@ -51,6 +53,14 @@ export const Router = createBrowserRouter([
             {
                 path: "owner-details/:ownerId" , 
                 element: <OwnerDetailsPage />
+            } ,
+            {
+                path: "about" ,
+                element : <AboutPage />
+            },
+            {
+                path: "contact" ,
+                element: <ContactPage />
             }
         ]
     },
