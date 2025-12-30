@@ -43,9 +43,16 @@ const LoginForm = () => {
     <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-[500px] mx-auto">
       {/* Header */}
       <div className="rounded-lg mb-6 text-center">
-        <div className="flex justify-center mb-2">
-          <img src={logo} alt="Logo" className="w-32 h-32 object-contain" />
-        </div>
+              <div className="flex justify-center mb-2">
+                <div className="w-32 h-32 overflow-hidden flex items-center justify-center">
+                  <img
+                    src={logo}
+                    alt="Logo"
+                    className="w-full h-full object-contain scale-[2]"
+                  />
+                </div>
+              </div>
+
         <h1 className="text-2xl font-bold text-gray-900 mb-1">
           {role === "register" ? "Create Account" : "Welcome Back"}
         </h1>
