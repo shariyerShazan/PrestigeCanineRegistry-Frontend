@@ -33,7 +33,7 @@ const WebNavbar = () => {
           <NavLink to="/" end className={navLinkClass}>
             Home
           </NavLink>
-          <NavLink to="/breed-archive" className={navLinkClass}>
+          <NavLink to="/search-dogs" className={navLinkClass}>
             Breed Archive
           </NavLink>
           <NavLink to="/about" className={navLinkClass}>
@@ -85,7 +85,7 @@ const WebNavbar = () => {
             </NavLink>
 
             <NavLink
-              to="/breed-archive"
+              to="/search-dogs"
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
