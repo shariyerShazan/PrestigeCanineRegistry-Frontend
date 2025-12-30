@@ -66,34 +66,56 @@ const PrestigeCertificate = ({ width = 1200 , data = {
       }}>
         
         <div style={{ marginBottom: "0" }}>
-          <img src={logo} alt="PCR Logo" style={{ width: `${150 * s}px`, display: "block", margin: "0 auto 0px auto" }} />
-<h2 className={`flex justify-center items-center `} style={{ margin: "0", lineHeight: 1, textAlign: "center", textTransform: "uppercase" , gap: `${12 * s}px`}}>
-  <span style={{ 
-    display: "block",
-    color: "#1C1C1C", 
-    fontSize: `${28 * s}px`, 
-    fontFamily: "'SignPainter', 'Brush Script MT', cursive", 
-    fontWeight: "550", 
-    lineHeight: `${36 * s}px`,
-    textTransform: "none", 
-    marginBottom: `${8 * s}px`
-  }}>
-    Prestige Canine
-  </span>
+          <div
+            style={{
+              width: `${120 * s}px`,
+              height: `${120 * s}px`,
+              margin: "0 auto",
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src={logo}
+              alt="PCR Logo"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                transform: "scale(2)",
+              }}
+            />
+          </div>
 
-  {/* REGISTRY - Serif Style */}
-  <span style={{ 
-    display: "block",
-    color: "#1C1C1C", 
-    fontSize: `${24 * s}px`, 
-    fontFamily: "'Palatino Linotype', 'Book Antiqua', Palatino, serif", 
-    fontWeight: "400", 
-    lineHeight: `${36 * s}px`,
-    letterSpacing: `${8 * s}px` 
-  }}>
-    REGISTRY
-  </span>
-</h2>
+            <h2 className={`flex justify-center items-center `} style={{ margin: "0", lineHeight: 1, textAlign: "center", textTransform: "uppercase" , gap: `${12 * s}px`}}>
+              <span style={{ 
+                display: "block",
+                color: "#1C1C1C", 
+                fontSize: `${28 * s}px`, 
+                fontFamily: "'SignPainter', 'Brush Script MT', cursive", 
+                fontWeight: "550", 
+                lineHeight: `${36 * s}px`,
+                textTransform: "none", 
+                marginBottom: `${8 * s}px`
+              }}>
+                Prestige Canine
+              </span>
+
+              {/* REGISTRY - Serif Style */}
+              <span style={{ 
+                display: "block",
+                color: "#1C1C1C", 
+                fontSize: `${24 * s}px`, 
+                fontFamily: "'Palatino Linotype', 'Book Antiqua', Palatino, serif", 
+                fontWeight: "400", 
+                lineHeight: `${36 * s}px`,
+                letterSpacing: `${8 * s}px` 
+              }}>
+                REGISTRY
+              </span>
+            </h2>
         </div>
 
         {/* Banner */}
