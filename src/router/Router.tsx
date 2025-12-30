@@ -1,5 +1,6 @@
 import ActivityLog from "@/(admin)/pages/activityLog/ActivityLog";
 import PrestigeCertificate from "@/(admin)/pages/certificate/Certificate";
+import CertificateReqDetails from "@/(admin)/pages/certificateRequest/_components/CertificateReqDetails";
 import CertificateRequest from "@/(admin)/pages/certificateRequest/CertificateRequest";
 import AdminDashboard from "@/(admin)/pages/dashboard/AdminDashboard";
 import DogRegistrationRequest from "@/(admin)/pages/dogRegistrationRequest/DogRegistrationRequest";
@@ -84,6 +85,10 @@ export const Router = createBrowserRouter([
             {
                 path: "Certificate-Requests" ,
                 element: <CertificateRequest />
+            },
+            {
+               path: "Certificate-Requests/:requestId" ,
+               element: <CertificateReqDetails />
             },
             {
                 path: "Dog-Registry",
