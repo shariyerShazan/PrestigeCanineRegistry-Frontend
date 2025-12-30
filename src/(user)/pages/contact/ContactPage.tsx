@@ -1,14 +1,14 @@
+"use client";
+
 import { useEffect } from "react";
 
-
-export default function AboutPage() {
-
-    useEffect(() => {
-      window.location.replace("https://pcr-97abfd.webflow.io/about");
-    }, []);
+export default function ContactPage() {
+  useEffect(() => {
+    window.location.replace("https://pcr-97abfd.webflow.io/faq");
+  }, []);
 
   return (
-     <div className="w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center bg-gray-50">
+ <div className="w-full h-[calc(100vh-80px)] flex flex-col items-center justify-center bg-gray-50">
   <div className="flex flex-col items-center gap-4">
     {/* Spinner */}
     <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -20,7 +20,7 @@ export default function AboutPage() {
     <p className="text-gray-500 text-sm">
       If you are not redirected automatically,{" "}
       <a
-        href="https://pcr-97abfd.webflow.io/about"
+        href="https://pcr-97abfd.webflow.io/faq"
         className="text-blue-600 underline"
       >
         click here
@@ -28,5 +28,6 @@ export default function AboutPage() {
     </p>
   </div>
 </div>
+
   );
 }
