@@ -1,116 +1,122 @@
-import type React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router" 
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs"
-
-import { User, UserPlus } from "lucide-react"
-import logo from "@/assets/login/logo.png"
-import { LoginFields } from "./LoginFields"
-import { RegisterFields } from "./RegisterFields"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { User, UserPlus } from "lucide-react";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { toast } from "react-toastify";
+
+import logo from "@/assets/login/logo.png";
+import { LoginFields } from "./LoginFields";
+import { RegisterFields } from "./RegisterFields";
+import { useLoginMutation, useRegisterMutation } from "@/redux/features/auth/authApi";
+
 
 const LoginForm = () => {
-  const navigate = useNavigate(); 
-  const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [role, setRole] = useState<"owner" | "admin" | "register">("owner")
+  const navigate = useNavigate();
+  const [role, setRole] = useState<"owner" | "admin" | "register">("owner");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (role === "owner") {
-      console.log("Owner Logging in...");
-      navigate("/owner/dashboard"); 
-    } 
-    else if (role === "admin") {
-      console.log("Admin Logging in...");
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
+
+  // Handle Login (Admin & Owner)
+const handleLoginSubmit = async (data: any) => {
+  try {
+    const res = await login(data).unwrap();
+
+    toast.success(res.message || "Login successful");
+
+    const userRole: any = res.user?.roleType;
+    if (userRole === "ADMIN" || userRole === "SUPER_ADMIN") {
       navigate("/admin/dashboard");
-    } 
-    else if (role === "register") {
-      console.log("Registration Successful!");
-      setRole("owner"); 
-      alert("Registration Successful! Please login.");
+    } else if (userRole === "OWNER") {
+      navigate("/owner/dashboard");
+    } else if (userRole === "USER") {
+      navigate("/");
+    } else {
+      navigate("/");
     }
+  } catch (err: any) {
+    toast.error(err?.data?.message || "Login failed");
   }
+};
+
+// Handle Register
+const handleRegisterSubmit = async (data: any) => {
+  try {
+    const res = await register(data).unwrap();
+    toast.success(res.message || "Verification code sent to your email");
+
+    navigate("/verify-otp", { state: { email: data.email } });
+  } catch (err: any) {
+    toast.error(err?.data?.message[0] || "Registration failed");
+  }
+};
 
   return (
     <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-[500px] mx-auto">
-      {/* Header */}
       <div className="rounded-lg mb-6 text-center">
-              <div className="flex justify-center mb-2">
-                <div className="w-32 h-32 overflow-hidden flex items-center justify-center">
-                  <img
-                    src={logo}
-                    alt="Logo"
-                    className="w-full h-full object-contain scale-[2]"
-                  />
-                </div>
-              </div>
-
+        <div className="flex justify-center mb-2">
+          <div className="w-32 h-32 overflow-hidden flex items-center justify-center">
+            <img
+              src={logo}
+              alt="Logo"
+              className="w-full h-full object-contain scale-[2]"
+            />
+          </div>
+        </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-1">
           {role === "register" ? "Create Account" : "Welcome Back"}
         </h1>
-        <p className="text-sm text-gray-600">
-          {role === "register" ? "Create your account to continue" : "Sign in to your account to continue"}
-        </p>
       </div>
 
       <Tabs
         value={role}
-        onValueChange={(value) => setRole(value as any)}
+        onValueChange={(v) => setRole(v as any)}
         className="w-full"
       >
         <TabsList className="grid grid-cols-3 w-full mb-8 bg-gray-100/50 p-1">
-          <TabsTrigger value="owner" className="flex gap-2 cursor-pointer text-xs md:text-sm">
-            <User className="w-4 h-4" />
-            Owner Login
+          <TabsTrigger
+            value="owner"
+            className="flex gap-2 cursor-pointer text-xs md:text-sm"
+          >
+            <User className="w-4 h-4" /> Owner Login
           </TabsTrigger>
-          <TabsTrigger value="admin" className="flex gap-2 cursor-pointer text-xs md:text-sm">
-            <MdOutlineAdminPanelSettings className="w-4 h-4" />
-            Admin Login
+          <TabsTrigger
+            value="admin"
+            className="flex gap-2 cursor-pointer text-xs md:text-sm"
+          >
+            <MdOutlineAdminPanelSettings className="w-4 h-4" /> Admin Login
           </TabsTrigger>
-          <TabsTrigger value="register" className="flex gap-2 cursor-pointer text-xs md:text-sm">
-            <UserPlus className="w-4 h-4" />
-            New Register
+          <TabsTrigger
+            value="register"
+            className="flex gap-2 cursor-pointer text-xs md:text-sm"
+          >
+            <UserPlus className="w-4 h-4" /> New Register
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="owner">
           <LoginFields
-            email={email}
-            password={password}
-            showPassword={showPassword}
-            setEmail={setEmail}
-            setPassword={setPassword}
-            setShowPassword={setShowPassword}
-            onSubmit={handleSubmit}
+            onSubmit={handleLoginSubmit}
+            isLoading={isLoginLoading}
           />
         </TabsContent>
-
         <TabsContent value="admin">
           <LoginFields
-            email={email}
-            password={password}
-            showPassword={showPassword}
-            setEmail={setEmail}
-            setPassword={setPassword}
-            setShowPassword={setShowPassword}
-            onSubmit={handleSubmit}
+            onSubmit={handleLoginSubmit}
+            isLoading={isLoginLoading}
           />
         </TabsContent>
-
         <TabsContent value="register">
-          <RegisterFields onSubmit={handleSubmit} />
+          <RegisterFields
+            onSubmit={handleRegisterSubmit}
+            isLoading={isRegisterLoading}
+          />
         </TabsContent>
       </Tabs>
     </div>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;
