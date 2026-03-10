@@ -1,63 +1,118 @@
-
-import { useState } from "react"
-import StepOneRegistry from "./_components/StepOneRegistry"
-import StepTwoRegistry from "./_components/StepTwoRegistry"
-import StepThreeRegistry from "./_components/StepThreeRegistry"
-import RegistryStepIndicator from "./_components/RegistryStepIndicator"
-import RegistryPreview from "./_components/RegistryPreview"
-import subtract from "@/assets/search/Subtract.svg"
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import StepOneRegistry from "./_components/StepOneRegistry";
+import StepTwoRegistry from "./_components/StepTwoRegistry";
+import StepThreeRegistry from "./_components/StepThreeRegistry";
+import RegistryStepIndicator from "./_components/RegistryStepIndicator";
+import RegistryPreview from "./_components/RegistryPreview";
+import subtract from "@/assets/search/Subtract.svg";
+import { toast } from "react-toastify";
+import { useRegisterCanineMutation } from "@/redux/features/canine/canine.api";
 
 export default function OwnerDogRegistration() {
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(1);
+  const [registerCanine, { isLoading: isSubmitting }] =
+    useRegisterCanineMutation();
+
   const [formData, setFormData] = useState<any>({
-    dogName: "",
-    breed: "",
-    sex: "",
+    name: "",
+    breedId: "",
+    breedName: "",
+    gender: "",
     dateOfBirth: "",
     color: "",
     weight: "",
-    location: "",
-    uploadedImages: [],
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "USA",
     microchipId: "",
-    primaryBreedDNAPercent: "",
-    secondaryBreedDNAPercent: "",
-    healthStatus: "",
+    generation: "",
+    primaryBreedDNA: "",
+    secondaryBreedDNA: "",
+    healthStatus: "Excellent",
     vaccinations: [],
     healthClearances: [],
     healthNotes: "",
-    uploadedDocuments: [],
-  })
+    uploadedImages: [],
+    rawImages: [],
+    uploadedDocs: [],
+    rawDocs: [],
+    selectedBreed: null, // Breed type check korar jonno
+  });
 
   const updateFormData = (data: any) =>
-    setFormData((prev: any) => ({ ...prev, ...data }))
+    setFormData((prev: any) => ({ ...prev, ...data }));
+  const handleSubmit = async () => {
+    const data = new FormData();
 
-  const handleSubmit = ()=> {
-    //
-  }
+    // Standard fields
+    data.append("name", formData.name);
+    data.append("breedId", formData.breedId);
+    data.append("gender", formData.gender.toUpperCase());
+    data.append("dateOfBirth", formData.dateOfBirth);
+    data.append("color", formData.color);
+    data.append("weight", formData.weight.toString());
+    data.append("city", formData.city);
+    data.append("state", formData.state);
+    data.append("zipCode", formData.zipCode);
+    data.append("country", formData.country);
+    data.append("microchipId", formData.microchipId);
+    data.append("primaryBreedDNA", formData.primaryBreedDNA);
+    data.append("secondaryBreedDNA", formData.secondaryBreedDNA || "");
+    data.append("healthStatus", formData.healthStatus);
+    data.append("healthNotes", formData.healthNotes || "");
 
+    if (formData.selectedBreed?.type === "DESIGNER" && formData.generation) {
+      data.append("generation", formData.generation);
+    }
+
+    // --- FIX STARTS HERE ---
+    // JSON.stringify bad diye loop kore append korte hobe
+    if (formData.vaccinations && formData.vaccinations.length > 0) {
+      formData.vaccinations.forEach((v: string) =>
+        data.append("vaccinations[]", v),
+      );
+      // Note: Jodi backend 'vaccinations[]' na chine sudhu 'vaccinations' chine,
+      // tobe append("vaccinations", v) use korun.
+    }
+
+    if (formData.healthClearances && formData.healthClearances.length > 0) {
+      formData.healthClearances.forEach((h: string) =>
+        data.append("healthClearances[]", h),
+      );
+    }
+    // --- FIX ENDS HERE ---
+
+    // Files
+    if (formData.rawImages) {
+      formData.rawImages.forEach((file: File) => data.append("images", file));
+    }
+    if (formData.rawDocs) {
+      formData.rawDocs.forEach((file: File) => data.append("docs", file));
+    }
+
+    try {
+      const res = await registerCanine(data).unwrap();
+      toast.success(res?.message || "Canine registered successfully!");
+    } catch (error: any) {
+      const errorData = error?.data?.message;
+      const errorMsg = Array.isArray(errorData)
+        ? errorData[0]
+        : errorData || "Registration failed";
+
+      toast.error(errorMsg);
+    }
+  };
   return (
     <div className="min-h-screen relative py-8 px-4">
-      {/* decorative SVG fixed behind content; use contain so it doesn't get zoomed */}
       <div
         aria-hidden="true"
-        className="fixed inset-0 bg-contain  bg-no-repeat pointer-events-none -z-10 opacity-30"
+        className="fixed inset-0 bg-contain bg-no-repeat pointer-events-none -z-10 opacity-30"
         style={{ backgroundImage: `url(${subtract})` }}
       />
-
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text- mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Real dogs, real verification, real trust
-          </h1>
-          <p className="text-gray-600">
-            Complete the form below to receive your verified PCR ID
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* LEFT */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
           <div className="md:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <RegistryStepIndicator currentStep={currentStep} />
 
@@ -81,16 +136,18 @@ export default function OwnerDogRegistration() {
             {currentStep === 3 && (
               <StepThreeRegistry
                 formData={formData}
-                   prevStep={() => setCurrentStep(1)}
-                   handleSubmit={handleSubmit}
+                prevStep={() => setCurrentStep(2)}
+                handleSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
               />
             )}
           </div>
 
-          {/* RIGHT */}
-          <RegistryPreview formData={formData} />
+          <div className="md:col-span-1">
+            <RegistryPreview formData={formData} />
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
