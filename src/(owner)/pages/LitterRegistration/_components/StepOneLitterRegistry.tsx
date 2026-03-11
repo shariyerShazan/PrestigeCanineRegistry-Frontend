@@ -22,7 +22,7 @@ export default function StepOneLitterRegistry({
 
   const breeds = breedsRes || [];
 
-  // FIX: Find the breed object from the array using the selected breedId
+  // FIX: Find the breed object from the array using the selected 
  const handleBreedChange = (e: ChangeEvent<HTMLSelectElement>) => {
    const selectedId = e.target.value;
    const selectedBreedObj = breeds.find((b: any) => b.id === selectedId);
