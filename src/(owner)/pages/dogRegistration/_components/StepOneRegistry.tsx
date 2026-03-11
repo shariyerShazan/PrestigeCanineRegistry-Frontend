@@ -209,7 +209,7 @@ export default function StepOneRegistry({
             Zip Code
           </label>
           <input
-            type="text"
+            type="number"
             value={formData.zipCode}
             onChange={(e) => updateFormData({ zipCode: e.target.value })}
             placeholder="75201"

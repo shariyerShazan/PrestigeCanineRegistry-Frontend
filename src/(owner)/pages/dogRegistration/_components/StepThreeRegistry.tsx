@@ -243,7 +243,7 @@ export default function StepThreeRegistry({
           <button
             type="button"
             onClick={prevStep}
-            className="px-8 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+            className="px-8 py-2 cursor-pointer border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
           >
             Back to Edit
           </button>
@@ -251,7 +251,7 @@ export default function StepThreeRegistry({
             type="button"
             disabled={isSubmitting}
             onClick={handleSubmit}
-            className="px-10 py-2 bg-[#D4AF37] disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-bold hover:bg-[#C19B2E] shadow-lg transition-all transform hover:-translate-y-0.5"
+            className="px-10 py-2 cursor-pointer bg-[#D4AF37] disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-bold hover:bg-[#C19B2E] shadow-lg transition-all transform hover:-translate-y-0.5"
           >
             {isSubmitting ? "Submiting..." : " Submit Application"}
           </button>
