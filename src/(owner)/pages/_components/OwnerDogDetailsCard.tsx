@@ -1,91 +1,86 @@
-import { Badge } from "@/components/ui/badge"
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { MdVerifiedUser } from "react-icons/md"
-import { useNavigate } from "react-router"
+import { Badge } from "@/components/ui/badge";
+import { MdVerifiedUser } from "react-icons/md";
+import { useNavigate } from "react-router";
 
 interface DogDetailsCardProps {
-  id: string
-  name: string
-  breed: string
-  pcrId: string
-  imageUrl: string
-  ownerName: string
-  ownerAvatar?: string
-  verifyType?: string 
+  id: string;
+  name: string;
+  breed: string;
+  pcrId: string;
+  imageUrl: string;
+  verifyType?: string;
+  status?: string
 }
 
-
-
-const OwnerDogDetailsCard = ({
+export const OwnerDogDetailsCard = ({
+  id,
   name,
   breed,
   pcrId,
   imageUrl,
-//   ownerName,
-//   ownerAvatar,
   verifyType,
+  status,
 }: DogDetailsCardProps) => {
+  const navigate = useNavigate();
 
-const navigate = useNavigate()
+  const isGold = verifyType === "gold";
+  const isBlue = verifyType === "blue";
 
-  const badgeColor =
-    verifyType === "gold"
-      ? "bg-white text-gray-800"
-      : verifyType === "blue"
-      ? "bg-white text-[#2B4C8A]"
-      : "hidden"
-
-  const iconColor = verifyType === "gold" ? "#D4AF37" : "#2B4C8A" 
-  const textColor = verifyType === "gold" ? "text-[#D4AF37]" : verifyType === "blue" ? "text-[#2B4C8A]" : "text-gray-600"
-
-  const badgeText =
-    verifyType === "gold"
-      ? "Gold Verified"
-      : verifyType === "blue"
-      ? "Blue Verified"
-      : ""
+  const badgeColor = isGold
+    ? "bg-white text-[#D4AF37]"
+    : "bg-white text-[#2B4C8A]";
+  const iconColor = isGold ? "#D4AF37" : "#2B4C8A";
+  const textColor = isGold
+    ? "text-[#D4AF37]"
+    : isBlue
+      ? "text-[#2B4C8A]"
+      : "text-gray-600";
+  const badgeText = isGold ? "Gold" : isBlue ? "Blue" : "";
+  const verifyText = status === "APPROVED" ? "Verified" :  ""
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden ">
-      <div className="relative aspect-[4/3] group h-[60%] w-full">
+    <div className="bg-white rounded-lg overflow-hidden">
+      <div className="relative aspect-[4/3] group w-full">
         <img
-          onClick={()=> navigate("/owner/dashboard/dog-preview/123")}
-          src={imageUrl || "/placeholder.svg"}
+          onClick={() => navigate(`/owner/dashboard/dog-preview/${id}`)}
+          src={imageUrl || "/placeholder-dog.png"}
           alt={name}
-          className="object-cover rounded-md h-full w-full group-hover:scale-103 duration-400 transition-all cursor-pointer "
+          className="object-cover rounded-md h-full w-full group-hover:scale-105 duration-500 transition-all cursor-pointer"
         />
 
-        {verifyType && (
+        {(isGold || isBlue) && (
           <Badge
             className={`
               absolute top-3 left-3
-              border-none shadow-sm
+              border-none shadow-md
               hover:bg-white
               h-9 px-3
               flex items-center gap-2
               ${badgeColor}
             `}
           >
-            <span className="flex-none">
-              <MdVerifiedUser className={`text-[${iconColor}]`} style={{ width: 22, height: 22 }} />
+            {status === "APPROVED" && (
+              <MdVerifiedUser
+                style={{ color: iconColor, width: 22, height: 22 }}
+              />
+            )}
+
+            <span className="text-sm font-medium">
+              {badgeText + " "+ verifyText}
             </span>
-            <span className="text-sm font-medium">{badgeText}</span>
           </Badge>
         )}
       </div>
 
       <div className="py-4">
-        <div className="mb-3">
-          <h3 className="font-semibold text-xl text-gray-900 mb-2">Name: {name}</h3>
+        <div className="mb-1">
+          <h3 className="font-semibold text-xl text-gray-900 mb-1">
+            Name: {name}
+          </h3>
           <p className={`text-md font-medium mb-1 ${textColor}`}>{breed}</p>
-          <p className="text-md text-gray-600">PRC ID: {pcrId}</p>
+          <p className="text-md text-gray-600 font-mono">PCR ID: {pcrId}</p>
         </div>
-
-
       </div>
     </div>
-  )
-}
-
-export default OwnerDogDetailsCard
-
+  );
+};

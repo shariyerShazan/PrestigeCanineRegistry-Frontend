@@ -5,6 +5,7 @@ import { useGetAllBreedsQuery } from "@/redux/features/breed/breed.api";
 import type { ChangeEvent } from "react";
 import { FiX } from "react-icons/fi";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { useNavigate } from "react-router";
 
 type StepOneProps = {
   formData: any;
@@ -40,7 +41,7 @@ export default function StepOneLitterRegistry({
          .split(",")
          .map((g: string) => g.trim())
      : [];
- 
+ const navigate = useNavigate()
 
   const vaccinations = [
     { label: "Rabies", value: "RABIES" },
@@ -535,6 +536,7 @@ export default function StepOneLitterRegistry({
 
       <div className="flex justify-between pt-6 border-t">
         <button
+          onClick={() => navigate(-1)}
           type="button"
           className="px-8 py-2 border rounded-lg text-gray-600 font-medium hover:bg-gray-50 transition-all"
         >

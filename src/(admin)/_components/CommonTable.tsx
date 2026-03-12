@@ -1,4 +1,5 @@
 
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -18,17 +19,18 @@ export interface Column<T> {
 interface CommonTableProps<T> {
   columns: Column<T>[];
   data: T[];
+  loading?: boolean
 }
 
-const CommonTable = <T,>({ columns, data }: CommonTableProps<T>) => {
+const CommonTable = <T,>({ columns, data, loading }: CommonTableProps<T>) => {
   return (
     <div className="rounded-xl border bg-white overflow-hidden">
       <Table>
         <TableHeader className="bg-slate-50/50">
           <TableRow>
             {columns.map((col, index) => (
-              <TableHead 
-                key={index} 
+              <TableHead
+                key={index}
                 className="text-md font-bold uppercase  bg-[#F9FAFB] py-4"
               >
                 {col.header}
@@ -37,19 +39,40 @@ const CommonTable = <T,>({ columns, data }: CommonTableProps<T>) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.length > 0 ? (
+          {loading ? (
+            [...Array(10)].map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {columns.map((_, colIndex) => (
+                  <TableCell key={colIndex} className="py-4">
+                    <Skeleton className="h-6 w-full rounded-md" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : data.length > 0 ? (
             data.map((row, rowIndex) => (
-              <TableRow key={rowIndex} className="hover:bg-slate-50/30 border-b">
+              <TableRow
+                key={rowIndex}
+                className="hover:bg-slate-50/30 border-b"
+              >
                 {columns.map((col, colIndex) => (
-                  <TableCell key={colIndex} className="py-4 text-sm text-slate-700">
-                    {col.render ? col.render(row) : (row[col.key as keyof T] as ReactNode)}
+                  <TableCell
+                    key={colIndex}
+                    className="py-4 text-sm text-slate-700"
+                  >
+                    {col.render
+                      ? col.render(row)
+                      : (row[col.key as keyof T] as ReactNode)}
                   </TableCell>
                 ))}
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="text-center py-10 text-slate-400">
+              <TableCell
+                colSpan={columns.length}
+                className="text-center py-10 text-slate-400"
+              >
                 No data available.
               </TableCell>
             </TableRow>

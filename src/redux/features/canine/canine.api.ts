@@ -3,7 +3,6 @@ import { baseApi } from "@/redux/api/baseApi";
 
 export const canineApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    
     // ৪. Register Canine (Multipart/Form-data)
     registerCanine: builder.mutation({
       query: (data) => ({
@@ -54,6 +53,24 @@ export const canineApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Canine"],
     }),
+
+    getMyCanines: builder.query({
+      query: (params) => ({
+        url: "/canines/owner/my-canines",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["Canine"],
+    }),
+
+    // Canine Statistics for Owner
+    getOwnerStats: builder.query({
+      query: () => ({
+        url: "/canines/owner/stats",
+        method: "GET",
+      }),
+      providesTags: ["Canine"],
+    }),
   }),
 });
 
@@ -63,4 +80,6 @@ export const {
   useGetCanineByIdQuery,
   useUpdateCanineMutation,
   useDeleteCanineMutation,
+  useGetMyCaninesQuery,
+  useGetOwnerStatsQuery
 } = canineApi;

@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from 'react-router'
-import { LuCircleCheck, LuDog, LuShield, LuUsers } from "react-icons/lu";
+import { LuDog, LuShield, LuUsers } from "react-icons/lu";
 import { FaRegChartBar } from "react-icons/fa6";
 // import { CiCircleCheck } from "react-icons/ci";
 import { AiOutlineUserSwitch } from "react-icons/ai";
@@ -19,10 +19,9 @@ const items = [
     icon: FaRegChartBar,
   },
   {
-    title: "Registration Requests",
-    url: "/admin/dashboard/Registration-Requests",
-    icon: LuCircleCheck
-,
+    title: "Canine Management",
+    url: "/admin/dashboard/canine-management",
+    icon: LuDog,
   },
   {
     title: "User Management",
@@ -30,8 +29,8 @@ const items = [
     icon: LuUsers,
   },
   {
-    title: "Dog Registry",
-    url: "/admin/dashboard/Dog-Registry",
+    title: "Litter Management ",
+    url: "/admin/dashboard/Litter-management",
     icon: LuDog,
   },
   {
@@ -39,7 +38,7 @@ const items = [
     url: "/admin/dashboard/Transfer-Ownership",
     icon: AiOutlineUserSwitch,
   },
-   {
+  {
     title: "Certificate Requests",
     url: "/admin/dashboard/Certificate-Requests",
     icon: PiMedal,
@@ -64,7 +63,7 @@ const items = [
     url: "/admin/dashboard/Settings",
     icon: IoSettingsOutline,
   },
-]
+];
 
 
 

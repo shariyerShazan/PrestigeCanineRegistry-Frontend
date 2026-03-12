@@ -11,18 +11,18 @@ import {
 } from "@/components/ui/select";
 import { FiSearch, FiDownload, FiEye, FiTrash2, FiEdit } from "react-icons/fi";
 import CommonTable, { type Column } from "@/(admin)/_components/CommonTable";
-import { 
-  useDeleteAdminCanineMutation, 
-  useGetAdminCaninesQuery, 
-  useUpdateAdminCanineMutation 
-} from "@/redux/features/admin-canine/admin.canine.api";
+import {
+  useDeleteAdminLitterMutation,
+  useGetAdminLittersQuery,
+  useUpdateAdminLitterMutation,
+} from "@/redux/features/admin-litter/admin.litter.api";
 import { toast } from "react-toastify";
 import CommonPagination from "@/components/common/pagination/CommonPagination";
-import CanineViewDialog from "./_components/CanineViewDialog";
-import CanineEditDialog from "./_components/CanineEditDialog";
 import Swal from "sweetalert2";
+import LitterViewDialog from "./_components/LitterViewDialog";
+import LitterEditDialog from "./_components/LitterEditDialog";
 
-const DogRegistrationRequest: React.FC = () => {
+const LitterRegistrationRequest: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,47 +31,46 @@ const DogRegistrationRequest: React.FC = () => {
   const limit = 10;
 
   // 1. RTK Query hooks
-  const { data, isLoading } = useGetAdminCaninesQuery({
+  const { data, isLoading } = useGetAdminLittersQuery({
     page: currentPage,
     limit,
     search: searchTerm,
     status: statusFilter !== "all" ? statusFilter : undefined,
   });
 
-  const [updateCanine] = useUpdateAdminCanineMutation();
-  const [deleteCanine] = useDeleteAdminCanineMutation();
+  const [updateLitter] = useUpdateAdminLitterMutation();
+  const [deleteLitter] = useDeleteAdminLitterMutation();
 
   // 3. Handlers
   const handleUpdate = async (id: string, payload: any) => {
     try {
-      await updateCanine({ id, ...payload }).unwrap();
+      await updateLitter({ id, data: payload }).unwrap();
       toast.success("Successfully updated!");
     } catch (err) {
-      console.log(err)
+      console.error(err);
       toast.error("Failed to update.");
     }
   };
 
   const handleDelete = async (id: string) => {
-
     const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#E7000B",
-          cancelButtonColor: "#64748b",
-          confirmButtonText: "Yes, delete it!",
-        });
-    
-        if (result.isConfirmed) {
-          try {
-            await deleteCanine(id).unwrap();
-            Swal.fire("Deleted!", "User has been removed.", "success");
-          } catch (err: any) {
-            toast.error(err.data?.message || "Delete failed");
-          }
-        }
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#E7000B",
+      cancelButtonColor: "#64748b",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteLitter(id).unwrap();
+        Swal.fire("Deleted!", "Litter record has been removed.", "success");
+      } catch (err: any) {
+        toast.error(err.data?.message || "Delete failed");
+      }
+    }
   };
 
   // 4. Column Definitions
@@ -81,12 +80,12 @@ const DogRegistrationRequest: React.FC = () => {
       render: (row) => <span className="font-medium">{row.pcrId}</span>,
     },
     {
-      header: "Dog Name",
+      header: "Litter Name",
       render: (row) => (
         <div>
           <p className="font-bold text-slate-800">{row.name}</p>
           <p className="text-xs text-slate-400">
-            {row.breedRelation?.name || "Unknown Breed"}
+            {row.breedRelation?.name || "Unknown Breed"} ({row.generation})
           </p>
         </div>
       ),
@@ -101,12 +100,12 @@ const DogRegistrationRequest: React.FC = () => {
       ),
     },
     {
-      header: "Color",
-      render: (row) => <span className="font-medium">{row.color}</span>,
-    },
-    {
-      header: "Gender",
-      render: (row) => <span className="font-medium">{row.gender=== "MALE" ? "Male" : "Female"}</span>,
+      header: "Puppies",
+      render: (row) => (
+        <span className="font-medium bg-slate-100 px-2 py-1 rounded text-xs">
+          {row._count?.puppies || 0} Puppies
+        </span>
+      ),
     },
     {
       header: "Assign Tier",
@@ -133,16 +132,10 @@ const DogRegistrationRequest: React.FC = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem
-                value="GOLD"
-                className="text-[#D4AF37] font-bold focus:text-[#D4AF37]"
-              >
+              <SelectItem value="GOLD" className="text-[#D4AF37] font-bold">
                 GOLD
               </SelectItem>
-              <SelectItem
-                value="BLUE"
-                className="text-[#2B4C8A] font-bold focus:text-[#2B4C8A] "
-              >
+              <SelectItem value="BLUE" className="text-[#2B4C8A] font-bold">
                 BLUE
               </SelectItem>
             </SelectContent>
@@ -179,28 +172,19 @@ const DogRegistrationRequest: React.FC = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem
-                value="PENDING"
-                className="text-amber-600 font-bold focus:text-amber-600"
-              >
+              <SelectItem value="PENDING" className="text-amber-600 font-bold">
                 PENDING
               </SelectItem>
               <SelectItem
                 value="UNDER_REVIEW"
-                className="text-blue-600 font-bold focus:text-blue-600"
+                className="text-blue-600 font-bold"
               >
                 UNDER REVIEW
               </SelectItem>
-              <SelectItem
-                value="APPROVED"
-                className="text-green-600 font-bold focus:text-green-600"
-              >
+              <SelectItem value="APPROVED" className="text-green-600 font-bold">
                 APPROVE
               </SelectItem>
-              <SelectItem
-                value="DECLINE"
-                className="text-red-600 font-bold focus:text-red-600"
-              >
+              <SelectItem value="DECLINE" className="text-red-600 font-bold">
                 DECLINE
               </SelectItem>
             </SelectContent>
@@ -231,24 +215,26 @@ const DogRegistrationRequest: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Search and Filters */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="relative">
+            
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <Input
               className="pl-10 w-full md:w-64 h-10 border-[#2B4C8A] focus-visible:ring-[#2B4C8A]/30"
               placeholder="Search by name/pcrId..."
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1); // Reset to first page on search
+                setCurrentPage(1);
               }}
             />
           </div>
-          <Select onValueChange={(val) => {
-            setStatusFilter(val);
-            setCurrentPage(1);
-          }}>
+          <Select
+            onValueChange={(val) => {
+              setStatusFilter(val);
+              setCurrentPage(1);
+            }}
+          >
             <SelectTrigger className="w-32 h-10 border-[#2B4C8A] text-[#2B4C8A] font-medium">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -269,35 +255,30 @@ const DogRegistrationRequest: React.FC = () => {
         </Button>
       </div>
 
-      {/* Main Table */}
       <CommonTable
         columns={columns}
         data={data?.data || []}
         loading={isLoading}
       />
 
-      {/* Pagination */}
       <CommonPagination
         currentPage={currentPage}
         totalPages={data?.meta?.totalPages || 1}
         onPageChange={(p) => setCurrentPage(p)}
       />
 
-      {/* View Dialog */}
-      <CanineViewDialog
-        id={viewId} 
-        open={!!viewId} 
-        onOpenChange={(open) => !open && setViewId(null)} 
+      <LitterViewDialog
+        id={viewId}
+        open={!!viewId}
+        onOpenChange={(open: any) => !open && setViewId(null)}
       />
-
-      {/* Edit Dialog */}
-      <CanineEditDialog
-        canine={editData} 
-        open={!!editData} 
-        onOpenChange={(open) => !open && setEditData(null)} 
+      <LitterEditDialog
+        litter={editData}
+        open={!!editData}
+        onOpenChange={(open: any) => !open && setEditData(null)}
       />
     </div>
   );
 };
 
-export default DogRegistrationRequest;
+export default LitterRegistrationRequest;

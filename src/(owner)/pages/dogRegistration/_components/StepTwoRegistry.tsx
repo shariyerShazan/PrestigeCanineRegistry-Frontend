@@ -63,7 +63,6 @@ export default function StepTwoRegistry({
       : [...current, val];
     updateFormData({ healthClearances: updated });
   };
-  
 const removeDoc = (idx: any) => {
   console.log("upcomming", idx);
 };
@@ -114,6 +113,22 @@ const removeDoc = (idx: any) => {
         </p>
       </div>
 
+      {/* Dynamic Generation - Designer Breeds Only */}
+      {/* {isDesigner && (
+        <div className="pt-2">
+          <label className="block text-sm font-semibold text-gray-700 mb-1">Generation *</label>
+          <select
+            value={formData.generation}
+            onChange={(e) => updateFormData({ generation: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37]"
+          >
+            <option value="">Select Generation</option>
+            {eligibleGens.map((gen: string) => (
+              <option key={gen} value={gen}>{gen}</option>
+            ))}
+          </select>
+        </div>
+      )} */}
 
       {/* Health Status */}
       <div>

@@ -1,53 +1,103 @@
-
-import { 
-  ChevronLeft, Flag, Share2, Dna, MapPin, 
-  Calendar, ShieldCheck, Camera,  Palette, 
-  VenusAndMars
-} from 'lucide-react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  ChevronLeft,
+  Flag,
+  Share2,
+  Dna,
+  MapPin,
+  Calendar,
+  ShieldCheck,
+  Camera,
+  Palette,
+  VenusAndMars,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import dog1 from "@/assets/dogSearchPage/dog1.jpg"
-import dog2 from "@/assets/dogSearchPage/dog2.png"
-import dog3 from "@/assets/dogSearchPage/dog3.jpg"
 import { LuDna } from "react-icons/lu";
-
-import { Progress } from "@/components/ui/progress"
-import HealthSummaryOfOwnerDog from './_components/HealthSummary';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router';
-
-
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { useNavigate, useParams } from "react-router";
+// import { useGetCanineByIdQuery } from "@/redux/api/canineApi";
+import { Skeleton } from "@/components/ui/skeleton";
+// import HealthSummaryOfOwnerDog from "./_components/HealthSummary";
+import { useGetCanineByIdQuery } from "@/redux/features/canine/canine.api";
+import { HealthSummaryOfOwnerDog } from "./_components/HealthSummary";
 
 const OwnerDogPreview = () => {
-  const navigate = useNavigate()
+  const { canineId } = useParams();
+  const navigate = useNavigate();
+
+  const { data: canine, isLoading, isError } = useGetCanineByIdQuery(canineId);
+
+  if (isLoading)
+    return (
+      <div className="p-10">
+        <Skeleton className="h-[600px] w-full" />
+      </div>
+    );
+  if (isError || !canine)
+    return <div className="p-10 text-center">Canine not found.</div>;
+
+  const mainImage = canine.images?.[0]?.url || "/placeholder.svg";
+  const formattedDate = new Date(canine.dateOfBirth).toLocaleDateString(
+    "en-US",
+    {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    },
+  );
+  const registeredDate = new Date(canine.createdAt).toLocaleDateString(
+    "en-US",
+    {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    },
+  );
+
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen font-sans">
       {/* --- TOP NAVIGATION --- */}
       <div className="flex justify-between items-center mb-6">
-        <button className="flex items-center gap-1 text-gray-700 font-semibold hover:opacity-70 cursor-pointer">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1 text-gray-700 font-semibold hover:opacity-70 cursor-pointer"
+        >
           <ChevronLeft size={20} /> Back
         </button>
         <div className="flex gap-4 text-gray-500">
-          <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer"><Flag size={16} /> Report</button>
-          <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer"><Share2 size={16} /> Share</button>
+          <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer">
+            <Flag size={16} /> Report
+          </button>
+          <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer">
+            <Share2 size={16} /> Share
+          </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* --- LEFT: IMAGE GALLERY --- */}
         <div>
-          <div className="rounded-2xl overflow-hidden mb-4 aspect-square">
-            <img 
-              src={dog1} 
-              alt="Bella Daisy" 
+          <div className="rounded-2xl overflow-hidden mb-4 aspect-square border shadow-sm">
+            <img
+              src={mainImage}
+              alt={canine.name}
               className="w-full h-full object-cover"
             />
           </div>
           <div className="flex gap-3">
-            <img src={dog2}  className="w-20 h-20 rounded-lg object-cover border" />
-            <img src={dog3}  className="w-20 h-20 rounded-lg object-cover border" />
+            {canine.images?.slice(0, 2).map((img: any) => (
+              <img
+                key={img.id}
+                src={img.url}
+                className="w-20 h-20 rounded-lg object-cover border"
+              />
+            ))}
             <div className="w-20 h-20 rounded-lg bg-gray-100 flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200">
               <Camera size={20} />
-              <span className="text-xs font-medium">3 photos</span>
+              <span className="text-xs font-medium">
+                {canine.images?.length || 0} photos
+              </span>
             </div>
           </div>
         </div>
@@ -56,44 +106,106 @@ const OwnerDogPreview = () => {
         <div className="flex flex-col gap-6">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <h1 className="text-4xl font-bold text-gray-900">Bella Daisy</h1>
-              
-              <Badge className="bg-[#2B4C8A] hover:bg-[#2B4C8A] flex gap-1 items-center py-1">
-                <ShieldCheck size={20} className="text-yellow-500" /> Gold Verified
+              <h1 className="text-4xl font-bold text-gray-900 capitalize">
+                {canine.name}
+              </h1>
+
+              <Badge
+                className={`${canine.tier === "GOLD" ? "bg-[#D4AF37]" : "bg-[#2B4C8A]"} hover:opacity-90 flex gap-1 items-center py-1`}
+              >
+                {canine.status === "APPROVED" && (
+                  <ShieldCheck
+                    size={20}
+                    className={
+                      canine.tier === "GOLD" ? "text-white" : "text-yellow-500"
+                    }
+                  />
+                )}
+                {canine.tier === "GOLD"
+                  ? `Gold ${canine.status === "APPROVED" ? "Verified" : ""}`
+                  : `Blue ${canine.status === "APPROVED" ? "Verified" : ""}`}
               </Badge>
             </div>
 
             <div className="grid grid-cols-1 gap-y-3 text-gray-600">
-              <InfoItem icon={<LuDna size={18} />} label="Breed" value="Golden Retriever" />
-              <InfoItem icon={<Palette size={18} />} label="Color" value="Golden" />
-              <InfoItem icon={<VenusAndMars size={18} />} label="Sex" value="Male" />
-              <InfoItem icon={<MapPin size={18} />} label="Location" value="San Diego, CA" />
-              <InfoItem icon={<Calendar size={18} />} label="Registered" value="January 15, 2024" />
-              <InfoItem icon={<ShieldCheck size={18} />} label="Status" value="Verified & Active" color="text-[#2B4C8A]" />
+              <InfoItem
+                icon={<LuDna size={18} />}
+                label="Breed"
+                value={canine.breedRelation?.name || "N/A"}
+              />
+              <InfoItem
+                icon={<Palette size={18} />}
+                label="Color"
+                value={canine.color}
+              />
+              <InfoItem
+                icon={<VenusAndMars size={18} />}
+                label="Sex"
+                value={canine.gender === "MALE" ? "Male" : "Female"}
+              />
+              <InfoItem
+                icon={<MapPin size={18} />}
+                label="Location"
+                value={`${canine.city}, ${canine.country}`}
+              />
+              <InfoItem
+                icon={<Calendar size={18} />}
+                label="Registered"
+                value={registeredDate}
+              />
+              <InfoItem
+                icon={<ShieldCheck size={18} />}
+                label="Status"
+                value={canine.status}
+                color="text-[#2B4C8A]"
+              />
             </div>
           </div>
 
           {/* DATA GRID */}
           <div className="grid grid-cols-2 gap-3">
-            <DataBox label="PCR ID" value="PCR-GR-2024-001234" valueColor="text-[#2B4C8A]" />
-            <DataBox label="Microchip" value="985112001234567" valueColor="text-[#2B4C8A]" />
-            <DataBox label="Date of Birth" value="March 15, 2021" valueColor="text-[#2B4C8A]" />
-            <DataBox label="Weight" value="65 lbs" valueColor="text-[#2B4C8A]" />
+            <DataBox
+              label="PCR ID"
+              value={canine.pcrId}
+              valueColor="text-[#2B4C8A]"
+            />
+            <DataBox
+              label="Microchip"
+              value={canine.microchipId}
+              valueColor="text-[#2B4C8A]"
+            />
+            <DataBox
+              label="Date of Birth"
+              value={formattedDate}
+              valueColor="text-[#2B4C8A]"
+            />
+            <DataBox
+              label="Weight"
+              value={`${canine.weight} lbs`}
+              valueColor="text-[#2B4C8A]"
+            />
           </div>
-          {/* OWNER CARD */}
-            <div className="flex gap-2 mt-">
-                <Button
-                      onClick={()=> navigate("/owner/dashboard/certificate/123")}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#2B4C8A]/5 text-xs  cursor-pointer"
-                >
-                  Request Certificate
-                </Button>
-                <Button  onClick={()=> navigate("/owner/dashboard/transfer-owner")} variant="outline" size="sm" className="flex-1 border-[#2B4C8A] text-[#2B4C8A] hover:bg-[#2B4C8A] hover:text-white text-xs bg-transparent cursor-pointer">
-                  Transfer Ownership
-                </Button>
-              </div>
+
+          <div className="flex gap-2 mt-4">
+            <Button
+              onClick={() =>
+                navigate(`/owner/dashboard/certificate/${canine.id}`)
+              }
+              variant="outline"
+              size="sm"
+              className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#1e355f] text-xs cursor-pointer"
+            >
+              Request Certificate
+            </Button>
+            <Button
+              onClick={() => navigate("/owner/dashboard/transfer-owner")}
+              variant="outline"
+              size="sm"
+              className="flex-1 border-[#2B4C8A] text-[#2B4C8A] hover:bg-[#2B4C8A] hover:text-white text-xs bg-transparent cursor-pointer"
+            >
+              Transfer Ownership
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -110,8 +222,12 @@ const OwnerDogPreview = () => {
               </div>
               <h4 className="font-bold">DNA Report Breakdown</h4>
             </div>
-            <Badge variant="outline" className="text-[10px] h-8 px-3 py-1 text-gray-400 border-gray-700 text-sm">
-               <span className="w-2 h-2  rounded-full bg-yellow-500 mr-2"></span> Golden Retriever
+            <Badge
+              variant="outline"
+              className="text-[10px] h-8 px-3 py-1 text-gray-400 border-gray-700 text-sm"
+            >
+              <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>{" "}
+              {canine.breedRelation?.name}
             </Badge>
           </div>
 
@@ -121,31 +237,46 @@ const OwnerDogPreview = () => {
                 <span className="text-gray-400">Primary breeds:</span>
               </div>
               <div className="flex justify-between font-bold mb-1">
-                <span>Golden Retriever</span>
-                <span className="text-yellow-500">98.5%</span>
+                <span>{canine.breedRelation?.name}</span>
+                <span className="text-yellow-500">
+                  {canine.primaryBreedDNA}%
+                </span>
               </div>
-           <Progress value={95.5} indicatorClassName="bg-[#D4AF37]" />
-
-
-
+              <Progress
+                value={Number(canine.primaryBreedDNA)}
+                className="h-2 bg-gray-800"
+                indicatorClassName="bg-[#D4AF37]"
+              />
             </div>
 
-            <div>
-              <div className="flex justify-between text-sm mb-2 text-gray-400">
-                <span>Secondary breeds:</span>
+            {canine.secondaryBreedDNA && (
+              <div>
+                <div className="flex justify-between text-sm mb-2 text-gray-400">
+                  <span>Secondary breeds:</span>
+                </div>
+                <div className="flex justify-between font-bold mb-1">
+                  <span>Mixed/Other</span>
+                  <span className="text-blue-400 text-sm">
+                    {canine.secondaryBreedDNA}%
+                  </span>
+                </div>
+                <Progress
+                  value={Number(canine.secondaryBreedDNA)}
+                  className="h-2 bg-gray-800"
+                  indicatorClassName="bg-[#2B4C8A]"
+                />
               </div>
-              <div className="flex justify-between font-bold mb-1">
-                <span>Labrador Retriever</span>
-                <span className="text-blue-400 text-sm">1.5%</span>
-              </div>
-              <Progress value={4.5} className="h-2 bg-gray-800" indicatorClassName="bg-[#2B4C8A]" />
-            </div>
+            )}
           </div>
         </div>
 
-        {/* HEALTH SUMMARY (BLURRED SECTION) */}
+        {/* HEALTH SUMMARY */}
         <div className="w-full">
-                      <HealthSummaryOfOwnerDog />
+          <HealthSummaryOfOwnerDog
+            status={canine.healthStatus}
+            vaccinations={canine.vaccinations}
+            clearances={canine.healthClearances}
+          />
         </div>
       </div>
     </div>
@@ -153,18 +284,37 @@ const OwnerDogPreview = () => {
 };
 
 // --- SUB-COMPONENTS ---
-
-const InfoItem = ({ icon, label, value, color = "text-gray-900" } : {icon: any, label : string , value: string, color? : string}) => (
+const InfoItem = ({
+  icon,
+  label,
+  value,
+  color = "text-gray-900",
+}: {
+  icon: any;
+  label: string;
+  value: string;
+  color?: string;
+}) => (
   <div className="flex items-center gap-3 text-sm">
     <span className="text-blue-800">{icon}</span>
     <span className="w-24 text-gray-500 font-medium">{label}:</span>
-    <span className={`font-semibold ${color}`}>{value}</span>
+    <span className={`font-semibold capitalize ${color}`}>{value}</span>
   </div>
 );
 
-const DataBox = ({ label, value, valueColor }: { label : any , value : string , valueColor : string }) => (
+const DataBox = ({
+  label,
+  value,
+  valueColor,
+}: {
+  label: any;
+  value: string;
+  valueColor: string;
+}) => (
   <div className="bg-gray-100 p-3 rounded-lg">
-    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1">{label}</p>
+    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1">
+      {label}
+    </p>
     <p className={`text-sm font-bold ${valueColor}`}>{value}</p>
   </div>
 );

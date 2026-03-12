@@ -3,6 +3,7 @@ import { useGetAllBreedsQuery } from "@/redux/features/breed/breed.api";
 import type { ChangeEvent } from "react";
 import { FiX } from "react-icons/fi";
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { useNavigate } from "react-router";
 
 type StepOneProps = {
   formData: any;
@@ -18,7 +19,7 @@ export default function StepOneRegistry({
   // RTK Query for dynamic breeds
   const { data: breedsRes, isLoading: loadingBreeds } =
     useGetAllBreedsQuery(undefined);
-
+const navigate = useNavigate()
   const breeds = breedsRes || [];
 
   const handleBreedChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -209,7 +210,7 @@ export default function StepOneRegistry({
             Zip Code
           </label>
           <input
-            type="number"
+            type="text"
             value={formData.zipCode}
             onChange={(e) => updateFormData({ zipCode: e.target.value })}
             placeholder="75201"
@@ -276,6 +277,7 @@ export default function StepOneRegistry({
 
       <div className="flex justify-between mt-8 pt-4 border-t border-gray-100">
         <button
+          onClick={() => navigate(-1)}
           type="button"
           className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
         >

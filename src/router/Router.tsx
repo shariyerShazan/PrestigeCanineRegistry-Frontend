@@ -4,7 +4,8 @@ import CertificateReqDetails from "@/(admin)/pages/certificateRequest/_component
 import CertificateRequest from "@/(admin)/pages/certificateRequest/CertificateRequest";
 import AdminDashboard from "@/(admin)/pages/dashboard/AdminDashboard";
 import DogRegistrationRequest from "@/(admin)/pages/dogRegistrationRequest/DogRegistrationRequest";
-import DogRegistryPage from "@/(admin)/pages/dogRegistryPage/DogRegistryPage";
+// import DogRegistryPage from "@/(admin)/pages/dogRegistryPage/DogRegistryPage";
+import LitterRegistrationRequest from "@/(admin)/pages/litter-registry-req/LitterRegistrationRequest";
 import ReportManagement from "@/(admin)/pages/reportManagement/ReportManagement";
 import ReportManagementView from "@/(admin)/pages/reportManagement/reportView/ReportManagementView";
 import RoleAndPermission from "@/(admin)/pages/roleAndPermission/RoleAndPermission";
@@ -75,7 +76,7 @@ export const Router = createBrowserRouter([
         element: <AdminDashboard />,
       },
       {
-        path: "Registration-Requests",
+        path: "canine-management",
         element: <DogRegistrationRequest />,
       },
       {
@@ -103,8 +104,8 @@ export const Router = createBrowserRouter([
         element: <CertificateReqDetails />,
       },
       {
-        path: "Dog-Registry",
-        element: <DogRegistryPage />,
+        path: "Litter-management",
+        element: <LitterRegistrationRequest />,
       },
       {
         path: "Reports-Management",
@@ -129,7 +130,7 @@ export const Router = createBrowserRouter([
         element: <OwnerDashboard />,
       },
       {
-        path: "dog-preview/:dogId",
+        path: "dog-preview/:canineId",
         element: <OwnerDogPreview />,
       },
       {
@@ -160,11 +161,11 @@ export const Router = createBrowserRouter([
   },
   {
     path: "forgot-password",
-    element: <ForgotPasswordFlow />
+    element: <ForgotPasswordFlow />,
   },
   {
     path: "verify-otp",
-    element: <VerifyOtp />
+    element: <VerifyOtp />,
   },
   {
     path: "cert",
