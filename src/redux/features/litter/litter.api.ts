@@ -42,7 +42,7 @@ export const litterApi = baseApi.injectEndpoints({
     // 3. Get Single Litter Details
     getLitterDetails: builder.query({
       query: (litterId) => `/litters/${litterId}`,
-      providesTags: ( id) => [{ type: "Litter", id }],
+      providesTags: (id) => [{ type: "Litter", id }],
     }),
 
     // 4. Update Litter
@@ -66,6 +66,20 @@ export const litterApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Litter"],
     }),
+
+    getMyLitters: builder.query({
+      query: (params) => ({
+        url: "/litters/my-litters",
+        method: "GET",
+        params: {
+          page: params?.page || 1,
+          limit: params?.limit || 10,
+          search: params?.search || undefined,
+          breedCode: params?.breedCode || undefined,
+        },
+      }),
+      providesTags: ["Litter"],
+    }),
   }),
 });
 
@@ -75,4 +89,5 @@ export const {
   useGetLitterDetailsQuery,
   useUpdateLitterMutation,
   useDeleteLitterMutation,
+  useGetMyLittersQuery,
 } = litterApi;

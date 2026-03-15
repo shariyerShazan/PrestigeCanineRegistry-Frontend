@@ -155,8 +155,8 @@ const UserDialog = ({ open, setOpen, editData }: AddUserDialogProps) => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="OWNER">Owner / Breeder</SelectItem>
-                      <SelectItem value="ADMIN">System Admin</SelectItem>
+                      <SelectItem value="OWNER">Owner</SelectItem>
+                      <SelectItem value="ADMIN">Admin</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormGroup>

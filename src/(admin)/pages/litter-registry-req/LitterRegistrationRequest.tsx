@@ -100,10 +100,14 @@ const LitterRegistrationRequest: React.FC = () => {
       ),
     },
     {
-      header: "Puppies",
+      header: "Color",
+      render: (row) => <span className="font-medium">{row.color}</span>,
+    },
+    {
+      header: "Gender",
       render: (row) => (
-        <span className="font-medium bg-slate-100 px-2 py-1 rounded text-xs">
-          {row._count?.puppies || 0} Puppies
+        <span className="font-medium">
+          {row.gender === "MALE" ? "Male" : "Female"}
         </span>
       ),
     },

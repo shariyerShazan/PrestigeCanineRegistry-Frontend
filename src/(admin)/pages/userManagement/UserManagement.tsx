@@ -31,6 +31,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import CommonPagination from "@/components/common/pagination/CommonPagination";
 
+
 const UserManagement: React.FC = () => {
   const [page, setPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -49,6 +50,8 @@ const UserManagement: React.FC = () => {
   });
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
+
+
 
   const handleEdit = (user: any) => {
     setSelectedUser(user);
@@ -201,15 +204,15 @@ const UserManagement: React.FC = () => {
               setViewUserId(row.id);
               setIsViewOpen(true);
             }}
-            className="text-[#155DFC] cursor-pointer size-4 hover:opacity-70 transition-opacity"
+            className="text-[#155DFC] cursor-pointer size-4 hover:scale-110 transition-transform"
           />
           <FiEdit
             onClick={() => handleEdit(row)}
-            className="text-amber-500 cursor-pointer size-4 hover:opacity-70 transition-opacity"
+            className="text-amber-500 cursor-pointer size-4 hover:scale-110 transition-transform"
           />
           <FiTrash2
             onClick={() => handleDelete(row.id)}
-            className="text-[#E7000B] cursor-pointer size-4 hover:opacity-70 transition-opacity"
+            className="text-[#E7000B] cursor-pointer size-4 hover:scale-110 transition-transform"
           />
         </div>
       ),

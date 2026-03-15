@@ -1,178 +1,296 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { FiSearch } from "react-icons/fi";
-import CommonTable, { type Column } from '@/(admin)/_components/CommonTable';
-
-
-interface OwnershipTransferData {
-  dogName: string;
-  dogId: string;
-  oldOwner: string;
-  oldOwnerId: string;
-  newOwner: string;
-  newOwnerId: string;
-  requestType: string;
-  requestCode: string;
-  codeStatus: "Verified" | "Invalid";
-  submitted: string;
-  actionStatus: "Pending" | "Decline" | "Approve";
-}
+import { FiSearch, FiEye } from "react-icons/fi";
+import CommonTable, { type Column } from "@/(admin)/_components/CommonTable";
+import Swal from "sweetalert2";
+import {
+  useApproveTransferMutation,
+  useDeclineTransferMutation,
+  useGetAllTransfersQuery,
+  useGetTransferByIdQuery,
+} from "@/redux/features/admin-ow-transfer/adminOwnerTransferApi";
+import { Button } from "@/components/ui/button";
+import CommonPagination from "@/components/common/pagination/CommonPagination";
+import TransferDetailsModal from "./_components/TransferDetailsModal";
 
 const DTransferOwnerShip: React.FC = () => {
-  // Sample data from screenshot
-  const data: OwnershipTransferData[] = [
-    {
-      dogName: "Buddy",
-      dogId: "#PCR-LR-009876",
-      oldOwner: "Sarah Johnson",
-      oldOwnerId: "PCR-OW-009876",
-      newOwner: "Michael Chen",
-      newOwnerId: "PCR-OW-008765",
-      requestType: "Ownership Transfer",
-      requestCode: "Code: 10562",
-      codeStatus: "Verified",
-      submitted: "11/28/2024",
-      actionStatus: "Pending",
-    },
-    {
-      dogName: "Buddy",
-      dogId: "#PCR-LR-009876",
-      oldOwner: "Sarah Johnson",
-      oldOwnerId: "PCR-OW-009876",
-      newOwner: "Emma Davis",
-      newOwnerId: "PCR-OW-007654",
-      requestType: "Ownership Transfer",
-      requestCode: "Code: 10562",
-      codeStatus: "Invalid",
-      submitted: "11/28/2024",
-      actionStatus: "Decline",
-    },
-    {
-      dogName: "Rocky",
-      dogId: "#PCR-LR-009876",
-      oldOwner: "Emma Davis",
-      oldOwnerId: "PCR-OW-007654",
-      newOwner: "Sarah Johnson",
-      newOwnerId: "PCR-OW-009876",
-      requestType: "Ownership Transfer",
-      requestCode: "Code: 10562",
-      codeStatus: "Verified",
-      submitted: "11/25/2024",
-      actionStatus: "Approve",
-    },
-  ];
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("all");
+  const [page, setPage] = useState(1);
+  const [selectedTransferId, setSelectedTransferId] = useState<string | null>(
+    null,
+  );
 
-  const columns: Column<OwnershipTransferData>[] = [
+  const limit = 10;
+
+  // List Query
+  const { data: response, isLoading } = useGetAllTransfersQuery({
+    search,
+    status: status === "all" ? undefined : status,
+    page,
+    limit,
+  });
+
+  // Single Detail Query
+  const { data: detailsResponse, isLoading: isDetailsLoading } =
+    useGetTransferByIdQuery(selectedTransferId as string, {
+      skip: !selectedTransferId,
+    });
+
+  const details = detailsResponse;
+
+  const [approveTransfer] = useApproveTransferMutation();
+  const [declineTransfer] = useDeclineTransferMutation();
+
+  // Approve Logic
+  const handleApprove = async (userId: string, userName: string) => {
+    const modalElement =
+      document.querySelector('[role="dialog"]') || document.body;
+    const result = await Swal.fire({
+      title: `Approve for ${userName}?`,
+      text: "Ownership will be transferred permanently!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#00A63E",
+      confirmButtonText: "Yes, Approve",
+      target: modalElement as HTMLElement,
+      willOpen: () => {
+        const container = Swal.getContainer();
+        if (container) {
+          container.style.zIndex = "99999";
+          container.style.position = "absolute";
+        }
+      },
+    });
+
+    if (result.isConfirmed && selectedTransferId) {
+      try {
+        await approveTransfer({
+          id: selectedTransferId,
+          selectedUserId: userId,
+        }).unwrap();
+        Swal.fire("Success", "Ownership transferred!", "success");
+        setSelectedTransferId(null);
+      } catch (error) {
+        console.log(error);
+        Swal.fire("Error", "Action failed", "error");
+      }
+    }
+  };
+
+  // Decline Logic
+  const handleDeclineTransfer = async (transferId: string) => {
+    const result = await Swal.fire({
+      title: "Reject Transfer?",
+      text: "This will invalidate this transfer code for everyone.",
+      icon: "error",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes, Reject All",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await declineTransfer(transferId).unwrap();
+        Swal.fire(
+          "Rejected",
+          "The transfer request has been cancelled.",
+          "success",
+        );
+        setSelectedTransferId(null);
+      } catch (error) {
+        console.log(error);
+        Swal.fire("Error", "Failed to cancel transfer", "error");
+      }
+    }
+  };
+
+  const columns: Column<any>[] = [
     {
-      header: "Dog Name",
-      render: (row : any) => (
-        <div>
-          <p className="font-bold text-slate-800">{row.dogName}</p>
-          <p className="text-xs text-slate-400">{row.dogId}</p>
+      header: "Asset / Code",
+      render: (row) => (
+        <div className="py-1">
+          <p className="font-bold text-slate-800 text-[14px]">
+            {row.canine?.name || row.litter?.name || "N/A"}
+          </p>
+          <p className="text-[12px] font-mono text-blue-600 font-bold uppercase tracking-wider">
+            {row.canine?.pcrId || row.litter?.pcrId || "N/A"}
+          </p>
         </div>
       ),
     },
     {
-      header: "Old Owner",
-      render: (row : any) => (
-        <div>
-          <p className="font-semibold text-slate-700">{row.oldOwner}</p>
-          <p className="text-xs text-slate-400">{row.oldOwnerId}</p>
+      header: "Owner Details",
+      render: (row) => (
+        <div className="py-1">
+          <p className="text-[10px] uppercase text-slate-400 font-black tracking-tighter">
+            {row.status === "APPROVE" ? "Previous Owner" : "Current Owner"}
+          </p>
+          <p className="font-bold text-slate-700 text-[13px] leading-tight">
+            {row.currentOwner?.fullName || "N/A"}
+          </p>
+          <p className="text-[11px] text-blue-600/70 font-medium mt-0.5">
+            {row.currentOwner?.pcrId || "No ID"}
+          </p>
         </div>
       ),
     },
     {
       header: "New Owner",
-      render: (row : any) => (
-        <div>
-          <p className="font-semibold text-slate-700">{row.newOwner}</p>
-          <p className="text-xs text-slate-400">{row.newOwnerId}</p>
+      render: (row) => (
+        <div className="py-1">
+          {row.status === "APPROVE" && row.newOwner ? (
+            <div>
+              <p className="text-[10px] uppercase text-green-600 font-black tracking-tighter">
+                Transfer Complete
+              </p>
+              <p className="font-extrabold text-slate-900 text-[13px] leading-tight">
+                {row.newOwner?.fullName}
+              </p>
+              <p className="text-[11px] text-green-700/70 font-medium mt-0.5">
+                {row.newOwner?.pcrId}
+              </p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-slate-300 italic">
+              <span className="h-1.5 w-1.5 rounded-full bg-slate-200" />
+              <span className="text-[12px]">Pending Approval</span>
+            </div>
+          )}
         </div>
       ),
     },
     {
-      header: "Request Type",
-      render: (row : any) => (
-        <div>
-          <p className="text-slate-700 font-medium">{row.requestType}</p>
-          <p className="text-xs text-slate-400">{row.requestCode}</p>
-        </div>
-      ),
-    },
-    {
-      header: "Code Status",
-      render: (row : any) => (
-        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-          row.codeStatus === 'Verified' 
-          ? 'bg-green-100 text-green-600' 
-          : 'bg-red-100 text-red-600'
-        }`}>
-          {row.codeStatus}
+      header: "Requests",
+      render: (row) => (
+        <span className="bg-blue-50 text-[#2B4C8A] px-3 py-1 rounded-md text-[11px] font-bold border border-blue-100">
+          {row.requesters?.length || 0} Claimants
         </span>
       ),
     },
     {
-      header: "Submitted",
-      key: "submitted",
+      header: "Security Code",
+      render: (row) => (
+        <span className="bg-blue-50 text-[#2B4C8A] px-3 py-1 rounded-md text-[11px] font-bold border border-blue-100 font-mono">
+          {row.transferCode}
+        </span>
+      ),
+    },
+    {
+      header: "Status",
+      render: (row) => {
+        const getStatusStyles = (status: string) => {
+          switch (status) {
+            case "APPROVE":
+              return "text-green-600 bg-green-50 border-green-100";
+            case "PENDING":
+              return "text-amber-600 bg-amber-50 border-amber-100";
+            case "DECLINE":
+              return "text-red-600 bg-red-50 border-red-100";
+            default:
+              return "text-slate-600 bg-slate-50 border-slate-100";
+          }
+        };
+        return (
+          <span
+            className={`px-3 py-1 rounded-md text-[11px] font-bold border ${getStatusStyles(row.status)}`}
+          >
+            {row.status}
+          </span>
+        );
+      },
     },
     {
       header: "Action",
-      render: (row) => {
-        // Status styling for the Select trigger
-        const statusStyles = {
-          Pending: "bg-slate-100 text-slate-600",
-          Decline: "bg-orange-100 text-[#E17100]",
-          Approve: "bg-green-100 text-[#00A63E]",
-        };
-
-        return (
-          <Select defaultValue={row.actionStatus}>
-            <SelectTrigger className={`w-[110px] h-8 text-xs font-medium rounded-full border-none cursor-pointer ${statusStyles[row.actionStatus]}`}>
-              <SelectValue placeholder="Action" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Pending">Pending</SelectItem>
-              <SelectItem value="Approve">Approve</SelectItem>
-              <SelectItem value="Decline">Decline</SelectItem>
-            </SelectContent>
-          </Select>
-        );
-      },
+      render: (row) => (
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-9 px-4 cursor-pointer border-[#2B4C8A] text-[#2B4C8A] hover:bg-blue-50 font-bold flex gap-2 transition-all active:scale-95"
+          onClick={() => setSelectedTransferId(row.id)}
+        >
+          <FiEye size={16} /> View Claims
+        </Button>
+      ),
     },
   ];
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Search and Filters */}
-      <div className="flex items-center gap-3">
-        <div className="relative">
-          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <Input 
-            className="pl-10 w-64 h-10 border-[#2B4C8A] focus-visible:ring-[#2B4C8A]/30 cursor-pointer" 
-            placeholder="Search requests..." 
-          />
+    <div className="p-6 space-y-6 bg-white min-h-[600px]">
+      {/* Header & Filters */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Input
+              className="pl-10 w-full md:w-72 h-10 border-[#2B4C8A] focus-visible:ring-[#2B4C8A]/30 text-[13px]"
+              placeholder="Search code or owner..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+            />
+          </div>
+          <Select
+            value={status}
+            onValueChange={(val) => {
+              setStatus(val);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="w-36 h-10 border-[#2B4C8A] text-[#2B4C8A] font-bold text-[13px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="PENDING">Pending</SelectItem>
+              <SelectItem value="APPROVE">Approved</SelectItem>
+              <SelectItem value="DECLINE">Declined</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <Select defaultValue="all">
-          <SelectTrigger className="w-32 h-10 cursor-pointer border-[#2B4C8A] text-slate-700 font-medium">
-            <SelectValue placeholder="All" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="verified">Verified</SelectItem>
-            <SelectItem value="invalid">Invalid</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="hidden md:block text-right">
+          <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">
+            Total Transfers
+          </p>
+          <p className="text-2xl font-black text-[#2B4C8A]">
+            {response?.meta?.total || 0}
+          </p>
+        </div>
       </div>
 
       {/* Table Section */}
-      <CommonTable columns={columns} data={data} />
+      <CommonTable
+        columns={columns}
+        data={response?.data || []}
+        loading={isLoading}
+      />
+
+      {/* Pagination */}
+      <CommonPagination
+        currentPage={page}
+        totalPages={response?.meta?.lastPage || 1}
+        onPageChange={(p) => setPage(p)}
+      />
+
+      {/* Details Modal */}
+      <TransferDetailsModal
+        isOpen={!!selectedTransferId}
+        onClose={() => setSelectedTransferId(null)}
+        isLoading={isDetailsLoading}
+        details={details}
+        onApprove={handleApprove}
+        onDeclineTransfer={handleDeclineTransfer}
+      />
     </div>
   );
 };

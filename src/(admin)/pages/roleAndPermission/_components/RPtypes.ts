@@ -1,15 +1,21 @@
-export interface Permission {
-  category: string;
-  actions: ("view" | "create" | "edit")[];
-  extra?: number;
+export interface BackendPermission {
+  resource:
+    | "USER"
+    | "CANINE"
+    | "CERTIFICATE"
+    | "REPORT"
+    | "TRANSFER_OWNERSHIP"
+    | "MEMBERSHIP_PLAN";
+  canView: boolean;
+  canCreate: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
 }
 
-export interface Role {
+export interface AdminUser {
   id: string;
-  name: string;
-  roleType: string;
+  fullName: string;
   email: string;
-  password: string; // Masked in table
-  lastLogin: string;
-  permissions: Permission[];
+  roleType: string;
+  permissions: BackendPermission[];
 }
