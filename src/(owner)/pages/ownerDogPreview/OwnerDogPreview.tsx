@@ -188,9 +188,9 @@ const OwnerDogPreview = () => {
 
           <div className="flex gap-2 mt-4">
             <Button
-              onClick={() =>
-                navigate(`/owner/dashboard/certificate/${canine.id}`)
-              }
+              // onClick={() =>
+              //   navigate(`/owner/dashboard/certificate/${canine.id}`)
+              // }
               variant="outline"
               size="sm"
               className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#1e355f] text-xs cursor-pointer"

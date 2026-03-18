@@ -50,7 +50,7 @@ export const Router = createBrowserRouter([
         element: <DogSearchPage />,
       },
       {
-        path: "dogs/:dogId",
+        path: "dogs/:canineId",
         element: <DogProfilePage />,
       },
       {

@@ -29,7 +29,7 @@ export const canineApi = baseApi.injectEndpoints({
         url: `/canines/${canineId}`,
         method: "GET",
       }),
-      providesTags: (result, error, arg) => [{ type: "Canine", id: arg }],
+      providesTags: ( arg) => [{ type: "Canine", id: arg }],
     }),
 
     // ৭. Update Canine
@@ -39,7 +39,7 @@ export const canineApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (result, error, arg) => [
+      invalidatesTags: ( arg) => [
         "Canine",
         { type: "Canine", id: arg.canineId },
       ],

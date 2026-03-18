@@ -6,7 +6,7 @@ import { LuDog } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import AllPublishedDogs from "./_components/AllPublishedDogs";
 import ownerProfile from "@/assets/ownerDetails/profile.jpg";
-import OwnerRecentUpdate from "./_components/OwnerRecentUpdate";
+import OwnerRecentUpdate from "./_components/recent-update/OwnerRecentUpdate";
 import { useGetOwnerStatsQuery } from "@/redux/features/canine/canine.api";
 
 const tabs = [

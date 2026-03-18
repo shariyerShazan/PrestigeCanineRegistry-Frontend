@@ -20,6 +20,8 @@ export const baseApi = createApi({
     "AdminList",
     "Transfer",
     "OwnershipTransfer",
+    "Reports",
+    "HealthRequest",
   ],
   endpoints: () => ({}),
 });

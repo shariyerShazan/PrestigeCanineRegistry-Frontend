@@ -2,36 +2,37 @@ import { baseApi } from "@/redux/api/baseApi";
 
 
 export const adminApi = baseApi.injectEndpoints({
-
   endpoints: (builder) => ({
     // --- Canine Endpoints ---
     getAdminCanines: builder.query({
       query: (params) => ({
-        url: '/admin-canine/get-canines',
+        url: "/admin-canine/get-canines",
         params,
       }),
-      providesTags: ['Canine'],
+      providesTags: ["Canine"],
     }),
     getAdminCanineById: builder.query({
       query: (id) => `/admin-canine/${id}`,
-      providesTags: ( id) => [{ type: 'Canine', id }],
+      providesTags: (id) => [{ type: "Canine", id }],
     }),
     updateAdminCanine: builder.mutation({
-      query: ({ id, ...body }) => ({
+      query: ({ id, data }) => ({
         url: `/admin-canine/${id}`,
-        method: 'PATCH',
-        body,
+        method: "PATCH",
+        body: data,
       }),
-      invalidatesTags: ( { id }) => ['Canine', { type: 'Canine', id }],
+      invalidatesTags: ({ id }) => [
+        "Canine",
+        { type: "Canine", id },
+      ],
     }),
     deleteAdminCanine: builder.mutation({
       query: (id) => ({
         url: `/admin-canine/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['Canine'],
+      invalidatesTags: ["Canine"],
     }),
-
   }),
 });
 

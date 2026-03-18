@@ -58,9 +58,9 @@ const AllPublishedDogs = ({
               />
               <div className="flex gap-2 mt-2">
                 <Button
-                  onClick={() =>
-                    navigate(`/owner/dashboard/certificate/${dog.id}`)
-                  }
+                  // onClick={() =>
+                  //   navigate(`/owner/dashboard/certificate/${dog.id}`)
+                  // }
                   variant="outline"
                   size="sm"
                   className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#1e355f] text-xs cursor-pointer"
