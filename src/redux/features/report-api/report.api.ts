@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/api/baseApi";
 
+/** Report Status Options */
 export type ReportStatus = "UNREAD" | "READ" | "RESOLVED";
 
-export type PriorityLevel = "LOW" | "MEDIUM" | "HIGH" ;
+/** Priority Levels */
+export type PriorityLevel = "LOW" | "MEDIUM" | "HIGH";
+
+/** Single Report Type */
 export interface IReport {
   id: string;
   reportId: string;
@@ -17,13 +21,32 @@ export interface IReport {
   reporterId?: string;
   canineId?: string;
   litterId?: string;
-  canine?: { name: string; pcrId: string; ownerId: string };
-  litter?: { name: string; pcrId: string; ownerId: string };
-  reporter?: { fullName: string; email: string; pcrId: string };
   createdAt: string;
   updatedAt: string;
+
+  /** Optional relational objects */
+  canine?: {
+    name: string;
+    pcrId: string;
+    ownerId: string;
+    breedRelation?: { name: string };
+    owner?: { fullName: string; email: string; pcrId: string };
+  };
+  litter?: {
+    name: string;
+    pcrId: string;
+    ownerId: string;
+    breedRelation?: { name: string };
+    owner?: { fullName: string; email: string; pcrId: string };
+  };
+  reporter?: {
+    fullName: string;
+    email: string;
+    pcrId: string;
+  };
 }
 
+/** Pagination + Filters for Admin Reports */
 export interface ReportQuery {
   page?: number;
   limit?: number;
@@ -31,8 +54,10 @@ export interface ReportQuery {
   priority?: PriorityLevel;
 }
 
+/** RTK Query API Definition */
 export const reportApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    /** Submit a new report */
     submitReport: builder.mutation<IReport, Partial<IReport>>({
       query: (data) => ({
         url: "/reports/submit",
@@ -42,6 +67,7 @@ export const reportApi = baseApi.injectEndpoints({
       invalidatesTags: ["Reports"],
     }),
 
+    /** Get all reports with pagination */
     getAllReports: builder.query<{ data: IReport[]; meta: any }, ReportQuery>({
       query: (params) => ({
         url: "/reports/admin/all",
@@ -51,6 +77,7 @@ export const reportApi = baseApi.injectEndpoints({
       providesTags: ["Reports"],
     }),
 
+    /** Get single report by ID */
     getSingleReport: builder.query<IReport, string>({
       query: (id) => ({
         url: `/reports/admin/${id}`,
@@ -59,23 +86,26 @@ export const reportApi = baseApi.injectEndpoints({
       providesTags: (id) => [{ type: "Reports", id }] as any,
     }),
 
+    /** Resolve a report or perform admin actions */
     resolveReportAction: builder.mutation<
       IReport,
       {
         id: string;
         status: ReportStatus;
         priority?: PriorityLevel;
-        action?: string;
+        action?: "SUSPEND_OWNER" | "MARK_AS_RESOLVED";
       }
     >({
       query: ({ id, action, ...body }) => ({
         url: `/reports/admin/${id}/action`,
         method: "PATCH",
         params: { action },
-        body: body,
+        body,
       }),
-      invalidatesTags: ({ id }: any) => ["Reports", { type: "Reports", id }],
+      invalidatesTags: ({id}: any) => ["Reports", { type: "Reports", id }],
     }),
+
+    /** Delete a report */
     deleteReport: builder.mutation<{ success: boolean; id: string }, string>({
       query: (id) => ({
         url: `/reports/admin/${id}`,
@@ -86,6 +116,7 @@ export const reportApi = baseApi.injectEndpoints({
   }),
 });
 
+/** RTK Query Hooks */
 export const {
   useSubmitReportMutation,
   useGetAllReportsQuery,

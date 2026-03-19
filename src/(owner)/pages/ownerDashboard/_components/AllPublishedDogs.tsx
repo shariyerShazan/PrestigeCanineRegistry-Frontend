@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
-// import { useGetMyCaninesQuery } from "@/redux/api/canineApi";
-// import OwnerDogDetailsCard from "../../_components/OwnerDogDetailsCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMyCaninesQuery } from "@/redux/features/canine/canine.api";
 import { OwnerDogDetailsCard } from "../../_components/OwnerDogDetailsCard";
+import { useCreateCertificateRequestMutation } from "@/redux/features/certificate-request/certificate.req.api";
+import { toast } from "react-toastify";
+
 
 const AllPublishedDogs = ({
   activeFilter = "all",
@@ -13,8 +14,10 @@ const AllPublishedDogs = ({
   activeFilter?: string;
 }) => {
   const navigate = useNavigate();
+  
+  // RTK Mutation Hook
+  const [createRequest, { isLoading: isRequesting }] = useCreateCertificateRequestMutation();
 
-  // API query parameters setup based on tab value
   const queryParams: any = {
     page: 1,
     limit: 10,
@@ -27,6 +30,16 @@ const AllPublishedDogs = ({
 
   const { data: canineResponse, isLoading } = useGetMyCaninesQuery(queryParams);
   const dogs = canineResponse?.data || [];
+
+  // Handler function for certificate request
+  const handleRequestCertificate = async (canineId: string) => {
+    try {
+      await createRequest({ canineId }).unwrap();
+      toast.success("Certificate request submitted successfully!");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to submit request");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -58,14 +71,13 @@ const AllPublishedDogs = ({
               />
               <div className="flex gap-2 mt-2">
                 <Button
-                  // onClick={() =>
-                  //   navigate(`/owner/dashboard/certificate/${dog.id}`)
-                  // }
+                  onClick={() => handleRequestCertificate(dog.id)}
+                  disabled={isRequesting}
                   variant="outline"
                   size="sm"
-                  className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#1e355f] text-xs cursor-pointer"
+                  className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#1e355f] text-xs cursor-pointer disabled:opacity-50"
                 >
-                  Request Certificate
+                  {isRequesting ? "Requesting..." : "Request Certificate"}
                 </Button>
                 <Button
                   onClick={() => navigate("/owner/dashboard/transfer-owner")}

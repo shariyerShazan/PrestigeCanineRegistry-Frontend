@@ -1,18 +1,23 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useGetHealthRequestsQuery } from "@/redux/features/health-request/healthRequest.api";
 import RecentUpdateCard from "./RecentUpdateCard";
 import { Loader2 } from "lucide-react";
+import { useGetMyCertificateRequestsQuery } from "@/redux/features/certificate-request/certificate.req.api";
 
 export default function OwnerRecentUpdate() {
-  // 1. Fetch data from API
+  // 1. Fetch both Health and Certificate requests
   const {
-    data: response,
-    isLoading,
-    isError,
+    data: healthResponse,
+    isLoading: isHealthLoading,
   } = useGetHealthRequestsQuery(undefined);
 
-  // 2. Loading state
-  if (isLoading) {
+  const {
+    data: certResponse,
+    isLoading: isCertLoading,
+  } = useGetMyCertificateRequestsQuery(undefined);
+
+  // 2. Loading state (Wait for both)
+  if (isHealthLoading || isCertLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-2">
         <Loader2 className="animate-spin text-[#D4AF37]" size={40} />
@@ -21,78 +26,56 @@ export default function OwnerRecentUpdate() {
     );
   }
 
-  // 3. Error state
-  if (isError) {
-    return (
-      <div className="text-center py-10">
-        <p className="text-red-500">
-          Failed to load recent updates. Please try again.
-        </p>
-      </div>
-    );
-  }
-
-  // 4. Transform API data to match RecentUpdateCard props
-  const allData = response || [];
-console.log(response)
-  // Jehetu apnar response-e explicit 'type' nai, amra data structure dekhe filter korbo.
-  // Health Requests filter (based on the presence of 'requester' and 'canine')
-  const healthRequests = allData.map((item: any) => ({
+  // 3. Transform Health Requests
+  const healthUpdates = (healthResponse || []).map((item: any) => ({
     id: item.id,
     type: "health",
     dogName: item.canine?.name || "Unknown Dog",
-    image: item.canine?.images?.[0].url || "/placeholder.svg",
+    image: item.canine?.images?.[0]?.url || "/placeholder.svg",
     pcrId: item.canine?.pcrId || "N/A",
-    microchip: item.canine?.microchipId || "N/A",
+    microchipId: item.canine?.microchipId || "N/A",
     submittedAt: item.createdAt
       ? new Date(item.createdAt).toLocaleDateString()
       : "N/A",
-    status: item.status, // "PENDING", "APPROVED", etc.
+    status: item.status,
     requester: item.requester?.fullName,
   }));
 
-  // Note: Registration ebong Certificate er jonno jodi alada endpoint thake
-  // tobe segulo ekhane filter logic-e add korte hobe.
-  // Bartaman response onujayi shudhu health requests dekhano hochhe.
-  const registrationUpdates = healthRequests.filter(
-    (item: any) => item.type === "registration",
-  );
-  const certificateUpdates = healthRequests.filter(
-    (item: any) => item.type === "certificate",
-  );
-  const healthUpdates = healthRequests.filter(
-    (item: any) => item.type === "health",
-  );
+  // 4. Transform Certificate Requests
+  const certificateUpdates = (certResponse || []).map((item: any) => ({
+    id: item.id,
+    type: "certificate",
+    dogName: item.canine?.name || item.litter?.pcrId || "Certificate Request",
+    image: item.canine?.images?.[0]?.url || "/placeholder.svg", // Fallback for litter
+    pcrId: item.canine?.pcrId || item.litter?.pcrId || "N/A",
+    microchipId: item.canine?.microchipId || "N/A",
+    submittedAt: item.createdAt
+      ? new Date(item.createdAt).toLocaleDateString()
+      : "N/A",
+    status: item.status,
+  }));
 
   return (
     <section className="space-y-8 py-6">
       <h2 className="text-2xl font-bold text-black">Recent Updates</h2>
 
-      {/* New Registration Section */}
-      {registrationUpdates.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-base font-light text-black">New Registration</h3>
-          <div className="space-y-4">
-            {registrationUpdates.map((item: any) => (
-              <RecentUpdateCard key={item.id} data={item} variant="gray" />
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Certificate Requests Section */}
-      {certificateUpdates.length > 0 && (
+      <div className="space-y-4">
+        <h3 className="text-base font-light text-black">
+          Request for certificate
+        </h3>
         <div className="space-y-4">
-          <h3 className="text-base font-light text-black">
-            Request for certificate
-          </h3>
-          <div className="space-y-4">
-            {certificateUpdates.map((item: any) => (
+          {certificateUpdates.length > 0 ? (
+            certificateUpdates.map((item: any) => (
               <RecentUpdateCard key={item.id} data={item} variant="yellow" />
-            ))}
-          </div>
+            ))
+          ) : (
+            <div className="p-8 border-2 border-dashed border-gray-100 rounded-2xl text-center">
+              <p className="text-gray-400">No certificate requests found.</p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
       {/* Health Information Requests Section */}
       <div className="space-y-4">

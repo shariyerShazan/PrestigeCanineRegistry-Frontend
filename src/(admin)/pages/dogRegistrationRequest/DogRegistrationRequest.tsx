@@ -44,7 +44,7 @@ const DogRegistrationRequest: React.FC = () => {
   // 3. Handlers
   const handleUpdate = async (id: string, payload: any) => {
     try {
-      await updateCanine({ id, ...payload }).unwrap();
+      await updateCanine({ id, data: payload }).unwrap();
       toast.success("Successfully updated!");
     } catch (err) {
       console.log(err)

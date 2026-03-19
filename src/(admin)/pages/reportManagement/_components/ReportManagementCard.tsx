@@ -80,54 +80,52 @@ const ReportManagementCard: React.FC<ReportProps> = ({
     }
   };
 
+  const handleDelete = async () => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this report!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#EF4444", // red-500
+      cancelButtonColor: "#64748B", // slate-500
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      customClass: {
+        popup: "rounded-3xl",
+        confirmButton: "rounded-xl px-6 py-2 font-bold",
+        cancelButton: "rounded-xl px-6 py-2 font-bold",
+      },
+    });
 
-const handleDelete = async () => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this report!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#EF4444", // red-500
-    cancelButtonColor: "#64748B",  // slate-500
-    confirmButtonText: "Yes, delete it!",
-    cancelButtonText: "Cancel",
-    customClass: {
-      popup: 'rounded-3xl',
-      confirmButton: 'rounded-xl px-6 py-2 font-bold',
-      cancelButton: 'rounded-xl px-6 py-2 font-bold'
-    }
-  });
+    if (result.isConfirmed) {
+      try {
+        await deleteReport(id).unwrap();
 
-  if (result.isConfirmed) {
-    try {
-      await deleteReport(id).unwrap();
-      
-      // Success Alert
-      await Swal.fire({
-        title: "Deleted!",
-        text: "The report has been deleted.",
-        icon: "success",
-        timer: 1500,
-        showConfirmButton: false,
-        customClass: {
-          popup: 'rounded-3xl',
-        }
-      });
-      
-    } catch (err: any) {
-      Swal.fire({
-        title: "Error!",
-        text: err?.data?.message || "Failed to delete report.",
-        icon: "error",
-        confirmButtonColor: "#155DFC",
-        customClass: {
-          popup: 'rounded-3xl',
-          confirmButton: 'rounded-xl px-6 py-2 font-bold'
-        }
-      });
+        // Success Alert
+        await Swal.fire({
+          title: "Deleted!",
+          text: "The report has been deleted.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+          customClass: {
+            popup: "rounded-3xl",
+          },
+        });
+      } catch (err: any) {
+        Swal.fire({
+          title: "Error!",
+          text: err?.data?.message || "Failed to delete report.",
+          icon: "error",
+          confirmButtonColor: "#155DFC",
+          customClass: {
+            popup: "rounded-3xl",
+            confirmButton: "rounded-xl px-6 py-2 font-bold",
+          },
+        });
+      }
     }
-  }
-};
+  };
   return (
     <Card className="border-none shadow-sm rounded-3xl overflow-hidden bg-white">
       <CardContent className="p-6 space-y-4">

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import { PiClockCountdownLight } from "react-icons/pi";
@@ -13,7 +12,13 @@ type RecentUpdate = {
   pcrId: string;
   microchipId: string;
   submittedAt: string;
-  status?: "PENDING" | "APPROVED" | "REJECTED" | "REVOKED";
+  status?:
+    | "PENDING"
+    | "APPROVED"
+    | "REJECTED"
+    | "REVOKED"
+    | "UNDER_REVIEW"
+    | "DECLINE";
   requester?: string;
 };
 
@@ -119,22 +124,57 @@ export default function RecentUpdateCard({ data, variant }: Props) {
             </div>
           </div>
 
-          {/* Requester Message */}
-          {data.type === "health" && data.requester && (
-            <div className="mb-3 bg-[#DBEAFE] rounded-lg p-3 border border-blue-100">
-              <p className="text-sm text-gray-700">
-                User{" "}
-                <span className="font-bold text-blue-700 underline">
-                  {data.requester}
-                </span>{" "}
-                requested for the health information of your dog.
-              </p>
+          {/* Certificate Specific Logic */}
+          {data.type === "certificate" && (
+            <div className="space-y-3">
+              <div
+                className={`rounded-lg p-3 border ${
+                  data.status === "PENDING"
+                    ? "bg-amber-50 border-amber-100 text-amber-800"
+                    : data.status === "UNDER_REVIEW"
+                      ? "bg-blue-50 border-blue-100 text-blue-800"
+                      : data.status === "APPROVED"
+                        ? "bg-green-50 border-green-100 text-green-800"
+                        : "bg-red-50 border-red-100 text-red-800"
+                }`}
+              >
+                <p className="text-sm">
+                  {data.status === "PENDING" &&
+                    "Your certificate request is currently under review by our team."}
+                  {data.status === "UNDER_REVIEW" &&
+                    "Your request is being processed. We are reviewing the dog's information."}
+                  {data.status === "APPROVED" &&
+                    "Congratulations! Your certificate has been approved and is ready for download."}
+                  {(data.status === "DECLINE" || data.status === "REJECTED") &&
+                    "Unfortunately, your certificate request was declined. Please check the details and try again."}
+                </p>
+              </div>
+
+              {/* Download button ONLY shows when status is APPROVED */}
+              {data.status === "APPROVED" && (
+                <Button className="bg-[#D4AF37] cursor-pointer hover:bg-[#C19B28] text-black font-semibold rounded-lg h-10 px-6 flex items-center gap-2 shadow-sm transition-transform active:scale-95">
+                  <span>Download Certificate</span>
+                  <Download className="w-4 h-4" />
+                </Button>
+              )}
             </div>
           )}
 
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            {data.type === "health" && (
+          {/* Health Specific Logic */}
+          {data.type === "health" && (
+            <div className="space-y-3">
+              {data.requester && (
+                <div className="bg-[#DBEAFE] rounded-lg p-3 border border-blue-100">
+                  <p className="text-sm text-gray-700">
+                    User{" "}
+                    <span className="font-bold text-blue-700 underline">
+                      {data.requester}
+                    </span>{" "}
+                    requested for the health information of your dog.
+                  </p>
+                </div>
+              )}
+
               <div className="flex gap-2">
                 <Button
                   disabled={isUpdating || data.status !== "PENDING"}
@@ -166,15 +206,8 @@ export default function RecentUpdateCard({ data, variant }: Props) {
                   {data.status === "REJECTED" ? "Rejected" : "Decline"}
                 </Button>
               </div>
-            )}
-
-            {data.type === "certificate" && (
-              <Button className="bg-[#D4AF37] hover:bg-[#C19B28] text-black font-semibold rounded-lg h-10 px-6 flex items-center gap-2 shadow-sm">
-                <span>Download Certificate</span>
-                <Download className="w-4 h-4" />
-              </Button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
