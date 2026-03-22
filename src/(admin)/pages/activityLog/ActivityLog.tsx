@@ -1,80 +1,206 @@
-import React from 'react';
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { FiSearch, FiDownload } from "react-icons/fi";
-import type { Column } from '@/(admin)/_components/CommonTable';
-import CommonTable from '@/(admin)/_components/CommonTable';
+import { FiSearch, FiTrash2, FiCheckCircle } from "react-icons/fi";
+import CommonTable, { type Column } from "@/(admin)/_components/CommonTable";
+import CommonPagination from "@/components/common/pagination/CommonPagination";
 
-interface LogEntry {
-  time: string;
-  user: string;
-  role: string;
-  action: "Approved" | "Assigned" | "Created" | "Submitted" | "Updated";
-  target: string;
-  details: string;
-}
+import Swal from "sweetalert2";
+import { format } from "date-fns";
+import {
+  useDeleteNotificationMutation,
+  useGetNotificationsQuery,
+  useMarkAllReadMutation,
+  useMarkSingleReadMutation,
+} from "@/redux/features/notification/notificationsApi";
 
 const ActivityLog: React.FC = () => {
-  const logData: LogEntry[] = [
-    { time: "11/28/2024, 9:45:00 AM", user: "Admin User", role: "Admin", action: "Approved", target: "Verification Request VR004", details: "Approved DNA retest for Rocky" },
-    { time: "11/27/2024, 3:30:00 PM", user: "Jane Reviewer", role: "Reviewer", action: "Assigned", target: "Verification Request VR002", details: "Self-assigned tier upgrade request" },
-    { time: "11/26/2024, 11:20:00 AM", user: "Admin User", role: "Admin", action: "Created", target: "User Account U005", details: "Created new reviewer account" },
-    { time: "11/27/2024, 10:30:00 AM", user: "Michael Chen", role: "Owner", action: "Submitted", target: "Verification Request VR001", details: "New gold tier registration" },
-    { time: "11/25/2024, 2:15:00 PM", user: "Admin User", role: "Admin", action: "Updated", target: "Dog Profile DOG-002", details: "Updated health records" },
-  ];
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("all"); // 'all', 'read', 'unread'
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
-  const columns: Column<LogEntry>[] = [
-    { header: "TIME", key: "time" },
-    { 
-      header: "USER", 
+  // 1. RTK Query for List (Real-time update logic slice e thakle ekhane auto hobe)
+  const { data: response, isLoading } = useGetNotificationsQuery({
+    searchTerm: search,
+    isRead: status === "all" ? undefined : status === "read",
+    page,
+    limit,
+  });
+// console.log(response.data)
+  const [markAllRead] = useMarkAllReadMutation();
+  const [markSingleRead] = useMarkSingleReadMutation();
+  const [deleteNotification] = useDeleteNotificationMutation();
+
+  // 2. Handle Actions
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllRead().unwrap();
+      Swal.fire("Success", "All notifications marked as read", "success");
+    } catch (err) {
+      Swal.fire("Error", "Action failed", "error");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This notification will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      await deleteNotification(id).unwrap();
+    }
+  };
+
+  // 3. Table Columns Definition
+  const columns: Column<any>[] = [
+    {
+      header: "TIME",
       render: (row) => (
-        <div>
-          <p className="font-bold text-slate-800">{row.user}</p>
-          <p className="text-xs text-slate-400">{row.role}</p>
-        </div>
-      )
-    },
-    { 
-      header: "ACTION", 
-      render: (row) => (
-        <span className="bg-blue-100 text-[#2B4C8A] px-6 py-1 rounded-full text-[11px] font-semibold border border-blue-200">
-          {row.action}
+        <span className="text-slate-500 text-[13px]">
+          {format(new Date(row.createdAt), "MM/dd/yyyy, p")}
         </span>
-      )
+      ),
     },
-    { header: "TARGET", key: "target" },
-    { header: "DETAILS", key: "details" },
+    {
+      header: "NOTIFICATION",
+      render: (row) => (
+        <div className="py-1 max-w-[400px]">
+          <div className="flex items-center gap-2">
+            {!row.isRead && (
+              <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse flex-shrink-0" />
+            )}
+            <p
+              className={`text-[14px] ${row.isRead ? "font-medium text-slate-600" : "font-bold text-slate-900"}`}
+            >
+              {row.title}
+            </p>
+          </div>
+          <p className="text-[12px] text-slate-400 mt-1 line-clamp-1">
+            {row.message}
+          </p>
+        </div>
+      ),
+    },
+    {
+      header: "CATEGORY",
+      render: (row) => (
+        <span className="bg-blue-50 text-[#2B4C8A] px-3 py-1 rounded-full text-[11px] font-bold border border-blue-100 uppercase tracking-tight">
+          {row.category || "System"}
+        </span>
+      ),
+    },
+    {
+      header: "STATUS",
+      render: (row) => (
+        <span
+          className={`px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border ${
+            row.isRead
+              ? "text-slate-400 bg-slate-50 border-slate-100"
+              : "text-green-600 bg-green-50 border-green-100"
+          }`}
+        >
+          {row.isRead ? "Read" : "New"}
+        </span>
+      ),
+    },
+    {
+      header: "ACTION",
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          {!row.isRead && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 cursor-pointer text-green-600 hover:bg-green-50"
+              onClick={() => markSingleRead(row.id)}
+              title="Mark as read"
+            >
+              <FiCheckCircle size={16} />
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 cursor-pointer text-red-500 hover:bg-red-50"
+            onClick={() => handleDelete(row.id)}
+          >
+            <FiTrash2 size={16} />
+          </Button>
+        </div>
+      ),
+    },
   ];
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-6 space-y-6 bg-white min-h-[600px]">
+      {/* Header & Filters */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="relative">
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <Input className="pl-10 w-64 h-10 border-[#2B4C8A]/20" placeholder="Search user" />
+            <Input
+              className="pl-10 w-full md:w-72 h-10 border-[#2B4C8A]/20 focus-visible:ring-[#2B4C8A]/30"
+              placeholder="Search notifications..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+            />
           </div>
-          <Select defaultValue="all">
-            <SelectTrigger className="w-32 h-10 border-[#2B4C8A]/20 text-slate-700 font-medium cursor-pointer">
+          <Select
+            value={status}
+            onValueChange={(val) => {
+              setStatus(val);
+              setPage(1);
+            }}
+          >
+            <SelectTrigger className="w-36 h-10 border-[#2B4C8A]/20 text-[#2B4C8A] font-bold">
               <SelectValue placeholder="All" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
+              <SelectItem value="unread">Unread</SelectItem>
+              <SelectItem value="read">Read</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <Button variant="outline" className="border-[#2B4C8A] text-[#2B4C8A] gap-2 h-10 cursor-pointer">
-          <FiDownload /> Export
+
+        <Button
+          onClick={handleMarkAllRead}
+          variant="outline"
+          className="border-[#2B4C8A] cursor-pointer text-[#2B4C8A] gap-2 h-10 font-bold hover:bg-blue-50 transition-all"
+        >
+          <FiCheckCircle /> Mark All as Read
         </Button>
       </div>
-      <CommonTable columns={columns} data={logData} />
+
+      {/* Table Section */}
+      <CommonTable
+        columns={columns}
+        data={response?.data || []}
+        loading={isLoading}
+      />
+
+      {/* Pagination */}
+      <CommonPagination
+        currentPage={page}
+        totalPages={response?.meta?.totalPage || 1}
+        onPageChange={(p) => setPage(p)}
+      />
     </div>
   );
 };
