@@ -29,7 +29,7 @@ export const canineApi = baseApi.injectEndpoints({
         url: `/canines/${canineId}`,
         method: "GET",
       }),
-      providesTags: ( arg) => [{ type: "Canine", id: arg }],
+      providesTags: (arg) => [{ type: "Canine", id: arg }],
     }),
 
     // ৭. Update Canine
@@ -39,7 +39,7 @@ export const canineApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ( arg) => [
+      invalidatesTags: (arg) => [
         "Canine",
         { type: "Canine", id: arg.canineId },
       ],
@@ -71,6 +71,17 @@ export const canineApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Canine"],
     }),
+
+    getCaninesByOwnerId: builder.query({
+      query: ({ ownerId, ...params }) => ({
+        url: `/canines/owner/${ownerId}`,
+        method: "GET",
+        params, // page, limit, search, breedId, gender, tier, etc.
+      }),
+      providesTags: ({ ownerId }) => [
+        { type: "Canine", id: `OWNER_LIST_${ownerId}` },
+      ],
+    }),
   }),
 });
 
@@ -81,5 +92,6 @@ export const {
   useUpdateCanineMutation,
   useDeleteCanineMutation,
   useGetMyCaninesQuery,
-  useGetOwnerStatsQuery
+  useGetOwnerStatsQuery,
+  useGetCaninesByOwnerIdQuery
 } = canineApi;

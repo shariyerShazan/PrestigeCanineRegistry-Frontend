@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -5,9 +6,9 @@ import { Bell, Settings, Award, Clock, Ban } from "lucide-react";
 import { LuDog } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import AllPublishedDogs from "./_components/AllPublishedDogs";
-import ownerProfile from "@/assets/ownerDetails/profile.jpg";
 import OwnerRecentUpdate from "./_components/recent-update/OwnerRecentUpdate";
 import { useGetOwnerStatsQuery } from "@/redux/features/canine/canine.api";
+import { useGetMeQuery } from "@/redux/features/auth/authApi"; // Import updated
 
 const tabs = [
   { label: "All Published", value: "all" },
@@ -15,14 +16,9 @@ const tabs = [
   { label: "Blue Verified", value: "blue" },
   { label: "Pending", value: "pending" },
   { label: "Canceled", value: "canceled" },
-  // { label: "Certificates", value: "certificates" },
-  // { label: "Transferred Ownership", value: "transferred" },
 ];
 
-const actions = [
-  { Icon: Bell, path: "/owner/dashboard/profile/123" },
-  { Icon: Settings, path: "/owner/dashboard/profile/123" },
-];
+
 
 const tabTriggerClass =
   "rounded-none border-0 border-b-2 border-transparent px-4 pb-3 pt-0 font-medium text-gray-600 " +
@@ -32,9 +28,14 @@ const OwnerDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
 
+  // 1. Logic: Fetch User Data for Header
+  const { data: userData } = useGetMeQuery(undefined);
+  const user = userData?.data;
+
+  const actions = [{ Icon: Settings, path: `/owner/dashboard/profile` }];
+
   // Real-time stats from API
-  const { data: statsResponse, isLoading: statsLoading } =
-    useGetOwnerStatsQuery(undefined);
+  const { data: statsResponse, isLoading: statsLoading } = useGetOwnerStatsQuery(undefined);
   const apiData = statsResponse?.data;
 
   const stats = [
@@ -83,15 +84,20 @@ const OwnerDashboard = () => {
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* HEADER */}
+        {/* HEADER - Now Dynamic */}
         <div className="flex justify-between mb-6">
           <div className="flex gap-4">
-            <img
-              src={ownerProfile}
-              className="w-12 h-12 rounded-full object-cover"
-            />
+            <div className="relative">
+              <img
+                src={user?.profileImage?.url || "[https://github.com/shadcn.png](https://github.com/shadcn.png)"} // Fallback image
+                className="w-12 h-12 rounded-full border border-gray-200 object-cover shadow-sm"
+                alt="Profile"
+              />
+            </div>
             <div>
-              <h2 className="text-xl font-semibold">Welcome Sarah Johnson!</h2>
+              <h2 className="text-xl font-semibold">
+                Welcome {user?.fullName || "Owner"}!
+              </h2>
               <p className="text-sm text-gray-600">
                 Manage your registered dogs and account
               </p>
@@ -107,7 +113,7 @@ const OwnerDashboard = () => {
                 onClick={() => navigate(path)}
                 className="w-10 h-10 bg-black text-white hover:bg-gray-800 hover:text-white cursor-pointer"
               >
-                <Icon className="w-8 h-8" />
+                <Icon className="w-5 h-5" />
               </Button>
             ))}
           </div>
@@ -175,7 +181,7 @@ const OwnerDashboard = () => {
           ))}
         </Tabs>
 
-        <div>
+        <div className="mt-8">
           <OwnerRecentUpdate />
         </div>
       </div>

@@ -10,9 +10,14 @@ export interface User {
   state?: string;
   zipCode?: string;
   country?: string;
-  status: "PENDING" | "ACTIVE" | "SUSPENDED";
+  status: "PENDING" | "ACTIVE" | "SUSPENDED" | "DEACTIVATED" | "REJECTED";
   isVerified: boolean;
-  roleType: "USER" | "ADMIN" | "SUPER_ADMIN";
+  roleType: "OWNER" | "ADMIN" | "SUPER_ADMIN";
+  membership: any;
+  membershipId: string;
+  profileImage: {
+    url: string
+  }
 }
 
 export interface AuthResponse {
@@ -119,6 +124,14 @@ export const authApi = baseApi.injectEndpoints({
         body,
       }),
     }),
+
+    getUserProfile: builder.query({
+      query: (userId: string) => ({
+        url: `/auth/profile/${userId}`,
+        method: "GET",
+      }),
+      providesTags: (userId) => [{ type: "User", id: userId }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -132,4 +145,5 @@ export const {
   useGetMeQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useGetUserProfileQuery,
 } = authApi;

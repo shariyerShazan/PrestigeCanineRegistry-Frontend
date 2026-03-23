@@ -38,7 +38,7 @@ export const breedApi = baseApi.injectEndpoints({
         url: `/admin/breeds/${breedId}`,
         method: "GET",
       }),
-      providesTags: (result, error, arg) => [{ type: "Breed", id: arg }],
+      providesTags: (arg) => [{ type: "Breed", id: arg }],
     }),
 
     // ৭. Update Breed
@@ -48,7 +48,7 @@ export const breedApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (result, error, arg) => [
+      invalidatesTags: (arg) => [
         "Breed",
         { type: "Breed", id: arg.breedId },
       ],

@@ -24,15 +24,31 @@ const handleLoginSubmit = async (data: any) => {
   try {
     const res = await login(data).unwrap();
 
+    // 1. Show success message
     toast.success(res.message || "Login successful");
 
-    const userRole: any = res.user?.roleType;
+    const user = res.user;
+    const userRole = user?.roleType;
+    const hasMembership = !!user?.membershipId; // Boolean check for membership
+
+    // 2. logic: Role-based Navigation with Membership Check
     if (userRole === "ADMIN" || userRole === "SUPER_ADMIN") {
       navigate("/admin/dashboard");
     } else if (userRole === "OWNER") {
-      navigate("/owner/dashboard");
+      // Check if Owner has a membership plan
+      if (hasMembership) {
+        navigate("/owner/dashboard");
+      } else {
+        toast.info("Please choose a membership plan to activate your account.");
+        navigate("/become-member");
+      }
     } else if (userRole === "USER") {
-      navigate("/");
+      // Logic for regular users
+      if (hasMembership) {
+        navigate("/");
+      } else {
+        navigate("/become-member");
+      }
     } else {
       navigate("/");
     }

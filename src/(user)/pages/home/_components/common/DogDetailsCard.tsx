@@ -12,7 +12,8 @@ interface DogDetailsCardProps {
   ownerName: string;
   ownerAvatar?: string;
   verifyType?: string;
-  status?: string; // এপিআই থেকে আসা স্ট্যাটাস (e.g., "APPROVED", "PENDING")
+  status?: string;
+  ownerId: string
 }
 
 const DogDetailsCard = ({
@@ -25,6 +26,7 @@ const DogDetailsCard = ({
   ownerAvatar,
   verifyType,
   status,
+  ownerId,
 }: DogDetailsCardProps) => {
   const navigate = useNavigate();
 
@@ -102,7 +104,7 @@ const DogDetailsCard = ({
               </AvatarFallback>
             </Avatar>
             <span
-              onClick={() => navigate(`/owner-details/${id}`)}
+              onClick={() => navigate(`/owner-details/${ownerId}`)}
               className="text-md font-semibold cursor-pointer hover:underline text-gray-800"
             >
               {ownerName}

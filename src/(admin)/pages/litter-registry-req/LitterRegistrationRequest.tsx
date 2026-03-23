@@ -46,9 +46,9 @@ const LitterRegistrationRequest: React.FC = () => {
     try {
       await updateLitter({ id, data: payload }).unwrap();
       toast.success("Successfully updated!");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      toast.error("Failed to update.");
+      toast.error(err.data?.message || "Failed to update status");
     }
   };
 

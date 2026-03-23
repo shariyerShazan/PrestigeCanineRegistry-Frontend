@@ -1,108 +1,53 @@
-
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import DogDetailsCard from "./common/DogDetailsCard"
-import dog1 from "@/assets/home/allGoldDog/dog1.png"
-import dog2 from "@/assets/home/allGoldDog/dog2.png"
-import dog3 from "@/assets/home/allGoldDog/dog3.jpg"
-import owner from "@/assets/home/allDogs/owner.jpg"
-import owner2 from "@/assets/home/allDogs/owner2.jpg"
-
-
-const goldVerifiedDogsData = [
-  {
-    id: "1",
-    name: "Max Thunder",
-    breed: "Origin:German Shepherd",
-    pcrId: "#PCR-LR-2024-009876",
-    imageUrl: dog1,
-    ownerName: "Dylan Hodges",
-    ownerAvatar: owner,
-    verifyType: "gold"
-  },
-  {
-    id: "2",
-    name: "Bella Daisy",
-    breed: "Origin:Golden Retriever",
-    pcrId: "#PCR-LR-009876",
-    imageUrl: dog2,
-    ownerName: "Iris Barrows",
-    ownerAvatar: owner2,
-      verifyType: "gold"
-  },
-  {
-    id: "3",
-    name: "Tina",
-    breed: "Origin:Poodle",
-    pcrId: "#PCR-LR-2024-009876",
-    imageUrl: dog3,
-    ownerName: "Madonna",
-    ownerAvatar:owner,
-      verifyType: "gold"
-  },
-  {
-    id: "4",
-    name: "Rocky",
-    breed: "Origin:Rottweiler",
-    pcrId: "#PCR-LR-2024-009877",
-    imageUrl: dog1,
-    ownerName: "John Smith",
-    ownerAvatar: owner2,
-      verifyType: "gold"
-  },
-  {
-    id: "5",
-    name: "Sophie",
-    breed: "Origin:Labrador",
-    pcrId: "#PCR-LR-2024-009878",
-    imageUrl: dog3,
-    ownerName: "Emma Wilson",
-    ownerAvatar: owner,
-      verifyType: "gold"
-  },
-  {
-    id: "6",
-    name: "Duke",
-    breed: "Origin:Beagle",
-    pcrId: "#PCR-LR-2024-009879",
-    imageUrl: dog2,
-    ownerName: "Michael Brown",
-    ownerAvatar: owner2,
-      verifyType: "gold"
-  },
-]
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import DogDetailsCard from "./common/DogDetailsCard";
+import { useGetAllCaninesQuery } from "@/redux/features/canine/canine.api";
 
 const AllGoldVerifiedDogs = () => {
-  const [currentPage, setCurrentPage] = useState(0)
-  const dogsPerPage = 3
-  const totalPages = Math.ceil(goldVerifiedDogsData.length / dogsPerPage)
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 3;
 
-  const currentDogs = goldVerifiedDogsData.slice(currentPage * dogsPerPage, (currentPage + 1) * dogsPerPage)
+  // 1. Logic: Fetch only GOLD tier dogs from API
+  const queryParams = {
+    page: currentPage,
+    limit: ITEMS_PER_PAGE,
+    tier: "GOLD", // Fixed to Gold only
+    status: "APPROVED",
+  };
+
+  const { data, isLoading, isFetching } = useGetAllCaninesQuery(queryParams);
+
+  const totalPages = data?.meta?.totalPages || 0;
 
   const handlePrevious = () => {
-    setCurrentPage((prev) => Math.max(0, prev - 1))
-  }
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  };
 
   const handleNext = () => {
-    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))
-  }
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+  };
 
   return (
     <section className="py-16 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">All Gold Verified</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              All Gold Verified
+            </h2>
             <p className="text-gray-600">Premium DNA & microchip verified</p>
           </div>
+
+          {/* Navigation Controls */}
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="icon"
               onClick={handlePrevious}
-              disabled={currentPage === 0}
-              className="bg-gray-200 hover:bg-gray-300 disabled:opacity-50 cursor-pointer"
+              disabled={currentPage === 1 || isLoading}
+              className="bg-gray-200 hover:bg-gray-300 disabled:opacity-50 cursor-pointer border-none"
             >
               <ChevronLeft className="w-4 h-4" />
             </Button>
@@ -110,22 +55,56 @@ const AllGoldVerifiedDogs = () => {
               variant="outline"
               size="icon"
               onClick={handleNext}
-              disabled={currentPage === totalPages - 1}
-              className="bg-[#D4AF37] hover:bg-[#C4A137] text-white border-none cursor-pointer" 
+              disabled={currentPage === totalPages || isLoading}
+              className="bg-[#D4AF37] hover:bg-[#C4A137] text-white border-none cursor-pointer shadow-sm"
             >
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentDogs.map((dog) => (
-            <DogDetailsCard key={dog.id} {...dog} />
-          ))}
-        </div>
+        {/* 2. Content Handling: Loading, Empty, and Grid */}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="animate-spin text-[#D4AF37] mb-2" size={40} />
+            <p className="text-gray-500 font-medium">
+              Fetching gold verified dogs...
+            </p>
+          </div>
+        ) : (
+          <div
+            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity duration-300 ${
+              isFetching ? "opacity-50" : "opacity-100"
+            }`}
+          >
+            {data?.data?.length > 0 ? (
+              data.data.map((dog: any) => (
+                <DogDetailsCard
+                  key={dog.id}
+                  id={dog.id}
+                  name={dog.name}
+                  breed={dog.breedRelation?.name || "N/A"}
+                  pcrId={dog.pcrId}
+                  imageUrl={dog.images?.[0]?.url || ""}
+                  ownerName={dog.owner?.fullName || "Private Owner"}
+                  ownerAvatar={dog?.owner?.profileImage?.url}
+                  verifyType={dog.tier} // This will be "GOLD"
+                  status={dog.status}
+                  ownerId={dog?.owner?.id}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10">
+                <p className="text-gray-400 text-lg">
+                  No gold verified dogs found.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default AllGoldVerifiedDogs
+export default AllGoldVerifiedDogs;

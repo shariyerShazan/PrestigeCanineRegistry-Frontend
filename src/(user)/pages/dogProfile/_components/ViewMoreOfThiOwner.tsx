@@ -1,60 +1,58 @@
 
-import dog1 from "@/assets/home/allDogs/dog1.png"
-import dog2 from "@/assets/home/allDogs/dog2.png"
-import dog3 from "@/assets/home/allDogs/dog3.png"
-import DogDetailsCard from "../../home/_components/common/DogDetailsCard"
-import owner from "@/assets/gogDetails/owner.jpg"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useGetCaninesByOwnerIdQuery } from "@/redux/features/canine/canine.api";
+import DogDetailsCard from "../../home/_components/common/DogDetailsCard";
+import { Loader2 } from "lucide-react";
 
-const dogsData = [
-  {
-    id: "1",
-    name: "Bella Daisy",
-    breed: "Origin:Golden Retriever",
-    pcrId: "#PCR-LR-009876",
-    imageUrl: dog1,
-    ownerName: "Sarah Johnson",
-    ownerAvatar: owner,
-    isGoldVerified: true,
-        verifyType: "gold"
-  },
-  {
-    id: "2",
-    name: "Charlie",
-    breed: "Origin:French Bulldog",
-    pcrId: "#PCR-LR-2024-009876",
-    imageUrl: dog2,
-    ownerName: "Sarah Johnson",
-    ownerAvatar: owner,
-    isGoldVerified: true,
-        verifyType: "blue"
-  },
-  {
-    id: "3",
-    name: "Luna Cooper",
-    breed: "Origin:German Shepherd",
-    pcrId: "#PCR-LR-2024-009876",
-    imageUrl: dog3,
-    ownerName: "Sarah Johnson",
-    ownerAvatar: owner,
-    isGoldVerified: true,
-        verifyType: "gold"
-  },
-]
+const ViewMoreOfThiOwner = ({ ownerId }: { ownerId: string }) => {
+  // 1. Logic: Fetch dynamic data based on ownerId
+  const { data: response, isLoading } = useGetCaninesByOwnerIdQuery({
+    ownerId,
+    status: "APPROVED",
+    limit: 6, // Ekhon limited results dekhano hobe
+  });
 
-const ViewMoreOfThiOwner = () => {
+  const dogsData = response?.data || [];
+  const ownerName = response?.ownerInfo?.fullName || "This Owner";
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="animate-spin text-[#2B4C8A]" size={40} />
+      </div>
+    );
+  }
+
+  // 2. Logic: Render only if data exists
+  if (dogsData.length === 0) return null;
+
   return (
-    <section className="py-16 px-4 ">
+    <section className="py-16 px-4 bg-slate-50/30">
       <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center my-8 text-gray-900 ">View More of This Owner</h2>
+        <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 ">
+          View More of {ownerName}
+        </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {dogsData.map((dog) => (
-            <DogDetailsCard key={dog.id} {...dog} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          {dogsData.map((dog: any) => (
+            <DogDetailsCard
+              key={dog.id}
+              id={dog.id}
+              name={dog.name}
+              breed={dog.breedRelation?.name || "N/A"}
+              pcrId={dog.pcrId}
+              imageUrl={dog.images?.[0]?.url || ""}
+              ownerName={dog.owner?.fullName}
+              ownerAvatar={dog?.owner?.profileImage?.url}
+              verifyType={dog.tier}
+              status={dog.status}
+              ownerId={dog?.owner?.id}
+            />
           ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default ViewMoreOfThiOwner
+export default ViewMoreOfThiOwner;

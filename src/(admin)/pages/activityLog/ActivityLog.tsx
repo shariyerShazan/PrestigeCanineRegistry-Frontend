@@ -21,11 +21,63 @@ import {
   useMarkSingleReadMutation,
 } from "@/redux/features/notification/notificationsApi";
 
+import { FiUser, FiShield, FiFlag, FiFileText, FiBell } from "react-icons/fi";
+import { LuDog } from "react-icons/lu";
+
+
+
 const ActivityLog: React.FC = () => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all"); // 'all', 'read', 'unread'
   const [page, setPage] = useState(1);
   const limit = 10;
+
+  const getCategoryStyles = (type: string) => {
+    switch (type) {
+      case "USER":
+        return {
+          icon: <FiUser className="text-green-500" />,
+          bg: "bg-green-50",
+          border: "border-green-100",
+          text: "text-green-700",
+        };
+      case "CANINE":
+        return {
+          icon: <LuDog className="text-orange-400" />,
+          bg: "bg-orange-50",
+          border: "border-orange-100",
+          text: "text-orange-700",
+        };
+      case "REPORT":
+        return {
+          icon: <FiFlag className="text-red-500" />,
+          bg: "bg-red-50",
+          border: "border-red-100",
+          text: "text-red-700",
+        };
+      case "MEMBERSHIP":
+        return {
+          icon: <FiShield className="text-blue-500" />,
+          bg: "bg-blue-50",
+          border: "border-blue-100",
+          text: "text-blue-700",
+        };
+      case "CERTIFICATE":
+        return {
+          icon: <FiFileText className="text-purple-500" />,
+          bg: "bg-purple-50",
+          border: "border-purple-100",
+          text: "text-purple-700",
+        };
+      default:
+        return {
+          icon: <FiBell className="text-slate-400" />,
+          bg: "bg-slate-50",
+          border: "border-slate-100",
+          text: "text-slate-600",
+        };
+    }
+  };
 
   // 1. RTK Query for List (Real-time update logic slice e thakle ekhane auto hobe)
   const { data: response, isLoading } = useGetNotificationsQuery({
@@ -96,11 +148,23 @@ const ActivityLog: React.FC = () => {
     },
     {
       header: "CATEGORY",
-      render: (row) => (
-        <span className="bg-blue-50 text-[#2B4C8A] px-3 py-1 rounded-full text-[11px] font-bold border border-blue-100 uppercase tracking-tight">
-          {row.category || "System"}
-        </span>
-      ),
+      render: (row) => {
+        const style = getCategoryStyles(row.category);
+        return (
+          <div className="flex items-center gap-2">
+            <div
+              className={`p-1.5 rounded-md ${style.bg} border ${style.border}`}
+            >
+              {style.icon}
+            </div>
+            <span
+              className={`${style.text} px-2 py-1 rounded-full text-[11px] font-bold uppercase tracking-tight`}
+            >
+              {row.category || "System"}
+            </span>
+          </div>
+        );
+      },
     },
     {
       header: "STATUS",
@@ -145,7 +209,7 @@ const ActivityLog: React.FC = () => {
   ];
 
   return (
-    <div className="p-6 space-y-6 bg-white min-h-[600px]">
+    <div className="p-4 space-y-6  rounded-md min-h-[600px]">
       {/* Header & Filters */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">

@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/select";
 import { FiSearch, FiDownload, FiEye, FiTrash2, FiEdit } from "react-icons/fi";
 import CommonTable, { type Column } from "@/(admin)/_components/CommonTable";
-import { 
-  useDeleteAdminCanineMutation, 
-  useGetAdminCaninesQuery, 
-  useUpdateAdminCanineMutation 
+import {
+  useDeleteAdminCanineMutation,
+  useGetAdminCaninesQuery,
+  useUpdateAdminCanineMutation,
 } from "@/redux/features/admin-canine/admin.canine.api";
 import { toast } from "react-toastify";
 import CommonPagination from "@/components/common/pagination/CommonPagination";
@@ -46,32 +46,31 @@ const DogRegistrationRequest: React.FC = () => {
     try {
       await updateCanine({ id, data: payload }).unwrap();
       toast.success("Successfully updated!");
-    } catch (err) {
-      console.log(err)
-      toast.error("Failed to update.");
+    } catch (err: any) {
+      console.log(err, "k");
+      toast.error(err.data?.message || "Failed to update status");
     }
   };
 
   const handleDelete = async (id: string) => {
-
     const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#E7000B",
-          cancelButtonColor: "#64748b",
-          confirmButtonText: "Yes, delete it!",
-        });
-    
-        if (result.isConfirmed) {
-          try {
-            await deleteCanine(id).unwrap();
-            Swal.fire("Deleted!", "User has been removed.", "success");
-          } catch (err: any) {
-            toast.error(err.data?.message || "Delete failed");
-          }
-        }
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#E7000B",
+      cancelButtonColor: "#64748b",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteCanine(id).unwrap();
+        Swal.fire("Deleted!", "User has been removed.", "success");
+      } catch (err: any) {
+        toast.error(err.data?.message || "Delete failed");
+      }
+    }
   };
 
   // 4. Column Definitions
@@ -106,7 +105,11 @@ const DogRegistrationRequest: React.FC = () => {
     },
     {
       header: "Gender",
-      render: (row) => <span className="font-medium">{row.gender=== "MALE" ? "Male" : "Female"}</span>,
+      render: (row) => (
+        <span className="font-medium">
+          {row.gender === "MALE" ? "Male" : "Female"}
+        </span>
+      ),
     },
     {
       header: "Assign Tier",
@@ -245,10 +248,12 @@ const DogRegistrationRequest: React.FC = () => {
               }}
             />
           </div>
-          <Select onValueChange={(val) => {
-            setStatusFilter(val);
-            setCurrentPage(1);
-          }}>
+          <Select
+            onValueChange={(val) => {
+              setStatusFilter(val);
+              setCurrentPage(1);
+            }}
+          >
             <SelectTrigger className="w-32 h-10 border-[#2B4C8A] text-[#2B4C8A] font-medium">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -285,16 +290,16 @@ const DogRegistrationRequest: React.FC = () => {
 
       {/* View Dialog */}
       <CanineViewDialog
-        id={viewId} 
-        open={!!viewId} 
-        onOpenChange={(open) => !open && setViewId(null)} 
+        id={viewId}
+        open={!!viewId}
+        onOpenChange={(open) => !open && setViewId(null)}
       />
 
       {/* Edit Dialog */}
       <CanineEditDialog
-        canine={editData} 
-        open={!!editData} 
-        onOpenChange={(open) => !open && setEditData(null)} 
+        canine={editData}
+        open={!!editData}
+        onOpenChange={(open) => !open && setEditData(null)}
       />
     </div>
   );

@@ -1,4 +1,5 @@
 import ActivityLog from "@/(admin)/pages/activityLog/ActivityLog";
+import AdminPaymentPreview from "@/(admin)/pages/AdminPaymentPreview/AdminPaymentPreview";
 import PrestigeCertificate from "@/(admin)/pages/certificate/Certificate";
 import CertificateReqDetails from "@/(admin)/pages/certificateRequest/_components/CertificateReqDetails";
 import CertificateRequest from "@/(admin)/pages/certificateRequest/CertificateRequest";
@@ -6,6 +7,7 @@ import AdminDashboard from "@/(admin)/pages/dashboard/AdminDashboard";
 import DogRegistrationRequest from "@/(admin)/pages/dogRegistrationRequest/DogRegistrationRequest";
 // import DogRegistryPage from "@/(admin)/pages/dogRegistryPage/DogRegistryPage";
 import LitterRegistrationRequest from "@/(admin)/pages/litter-registry-req/LitterRegistrationRequest";
+import MembershipPlanManage from "@/(admin)/pages/membership-plan/MembershipPlanManage";
 import ReportManagement from "@/(admin)/pages/reportManagement/ReportManagement";
 import ReportManagementView from "@/(admin)/pages/reportManagement/reportView/ReportManagementView";
 import RoleAndPermission from "@/(admin)/pages/roleAndPermission/RoleAndPermission";
@@ -28,12 +30,15 @@ import DogProfilePage from "@/(user)/pages/dogProfile/DogProfilePage";
 import HomePage from "@/(user)/pages/home/HomePage";
 import OwnerDetailsPage from "@/(user)/pages/ownerDetailsPage/OwnerDetailsPage";
 import DogSearchPage from "@/(user)/pages/searchDog/SearchDogs";
+import PricingPage from "@/(user)/pages/subscription-plan/PricingPage";
 // import GoldCertificate from "@/components/common/certificate/GoldCertificate";
 import NotFoundPage from "@/components/common/error/NotFoundPage";
 import AdminLayout from "@/Layout/AdminLayout";
 import MainLayout from "@/Layout/MainLayout";
 import OwnerLayout from "@/Layout/OwnerLayout";
 import { createBrowserRouter } from "react-router";
+import PrivateRoute from "./PrivateRoute";
+import BreedArchive from "@/(user)/pages/BreedArchive/BreedArchive";
 
 export const Router = createBrowserRouter([
   {
@@ -65,11 +70,19 @@ export const Router = createBrowserRouter([
         path: "contact",
         element: <ContactPage />,
       },
+      {
+        path: "breed-archive",
+        element: <BreedArchive />
+      },
     ],
   },
   {
     path: "/admin/dashboard",
-    element: <AdminLayout />,
+    element: (
+      <PrivateRoute>
+        <AdminLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
@@ -119,11 +132,23 @@ export const Router = createBrowserRouter([
         path: "settings",
         element: <ADsetting />,
       },
+      {
+        path: "membership-plan-management",
+        element: <MembershipPlanManage />,
+      },
+      {
+        path: "subscription-buy-list",
+        element: <AdminPaymentPreview />,
+      },
     ],
   },
   {
     path: "/owner/dashboard",
-    element: <OwnerLayout />,
+    element: (
+      <PrivateRoute>
+        <OwnerLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
@@ -138,7 +163,7 @@ export const Router = createBrowserRouter([
         element: <OwnerDogRegistration />,
       },
       {
-        path: "profile/:ownerId",
+        path: "profile",
         element: <OwnerProfile />,
       },
       {
@@ -166,6 +191,10 @@ export const Router = createBrowserRouter([
   {
     path: "verify-otp",
     element: <VerifyOtp />,
+  },
+  {
+    path: "become-member",
+    element: <PricingPage />,
   },
   {
     path: "cert",

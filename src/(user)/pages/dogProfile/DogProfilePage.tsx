@@ -26,11 +26,16 @@ import { useSendHealthRequestMutation } from "@/redux/features/health-request/he
 import { toast } from "react-toastify";
 import { HealthSummaryOfOwnerDog } from "@/(owner)/pages/ownerDogPreview/_components/HealthSummary";
 import CanineReportDialog from "./_components/CanineReportDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { HealthSummaryOfOwnerDog } from "./_components/HealthSummaryOfOwnerDog";
 
 const DogProfilePage = () => {
   const { canineId } = useParams();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [canineId]);
+
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -324,7 +329,7 @@ const DogProfilePage = () => {
         </div>
       </div>
 
-      <ViewMoreOfThiOwner />
+      <ViewMoreOfThiOwner ownerId={canine?.owner?.id}/>
 
       <CanineReportDialog
         isOpen={isReportModalOpen}

@@ -24,6 +24,8 @@ export const baseApi = createApi({
     "HealthRequest",
     "Certificates",
     "Notification",
+    "Membership",
+    "Subscriptions",
   ],
   endpoints: () => ({}),
 });
