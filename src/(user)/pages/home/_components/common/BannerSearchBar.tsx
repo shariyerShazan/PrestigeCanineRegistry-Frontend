@@ -63,7 +63,7 @@ const BannerSearchBar = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="bg-white border-0 flex-1 h-12 w-full"
           />
-          <Button onClick={handleSearch} className="bg-[#D4AF37] hover:bg-yellow-600 text-black h-12 px-6">
+          <Button onClick={handleSearch} className="bg-[#D4AF37] hover:bg-yellow-600 text-black h-12 px-6 cursor-pointer">
             <Search className="w-4 h-4 mr-2" /> Search
           </Button>
         </div>

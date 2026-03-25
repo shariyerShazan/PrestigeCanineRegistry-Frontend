@@ -58,7 +58,7 @@ const AdminStats = () => {
   ];
 
   return (
-    <div className="p-6 space-y-8 bg-[#F8FAFC] min-h-screen">
+    <div className="p-6 space-y-8 bg-[#F8FAFC] ">
       {/* 1. Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((card, i) => (

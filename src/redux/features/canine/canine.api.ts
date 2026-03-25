@@ -74,7 +74,7 @@ export const canineApi = baseApi.injectEndpoints({
 
     getCaninesByOwnerId: builder.query({
       query: ({ ownerId, ...params }) => ({
-        url: `/canines/owner/${ownerId}`,
+        url: `/canines/owner/canines/${ownerId}`,
         method: "GET",
         params, // page, limit, search, breedId, gender, tier, etc.
       }),

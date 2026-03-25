@@ -56,7 +56,7 @@ const OverViewAdmin = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 min-h-screen">
+    <div className="p-6 space-y-6 ">
       {/* Stats Section (Static or you can connect to another API) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* ... Stats mapping (ager motoi thakbe) ... */}

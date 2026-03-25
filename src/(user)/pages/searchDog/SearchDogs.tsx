@@ -194,10 +194,16 @@ const DogSearchPage = () => {
               {data?.data?.map((dog: any) => (
                 <DogDetailsCard
                   key={dog.id}
-                  {...dog}
-                  breed={dog.breedRelation?.name}
-                  imageUrl={dog.images?.[0]?.url}
-                  verifyType={dog.tier}
+                  id={dog.id}
+                  name={dog.name}
+                  breed={dog.breedRelation?.name || "N/A"}
+                  pcrId={dog.pcrId}
+                  imageUrl={dog.images?.[0]?.url || ""}
+                  ownerName={dog.owner?.fullName || "Private Owner"}
+                  ownerAvatar={dog?.owner?.profileImage?.url}
+                  verifyType={dog.tier} // This will be "BLUE"
+                  status={dog.status}
+                  ownerId={dog?.owner?.id}
                 />
               ))}
             </div>

@@ -69,7 +69,7 @@ export const litterApi = baseApi.injectEndpoints({
 
     getMyLitters: builder.query({
       query: (params) => ({
-        url: "/litters/my-litters",
+        url: "/litters/my-litters/own",
         method: "GET",
         params: {
           page: params?.page || 1,
