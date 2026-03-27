@@ -74,9 +74,9 @@ const WebNavbar = () => {
           <NavLink to="/" end className={navLinkClass}>
             Home
           </NavLink>
-          <NavLink to="/breed-archive" className={navLinkClass}>
+          {/* <NavLink to="/breed-archive" className={navLinkClass}>
             Breed Archive
-          </NavLink>
+          </NavLink> */}
           <NavLink to="/about" className={navLinkClass}>
             About
           </NavLink>

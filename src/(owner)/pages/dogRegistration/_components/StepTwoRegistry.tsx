@@ -35,10 +35,10 @@ export default function StepTwoRegistry({
   nextStep,
 }: StepTwoProps) {
   
-  const isDesigner = formData.selectedBreed?.type === "DESIGNER";
-  const eligibleGens = formData.selectedBreed?.eligibleGen
-    ? formData.selectedBreed.eligibleGen.split(",").map((g: string) => g.trim())
-    : [];
+  // const isDesigner = formData.selectedBreed?.type === "DESIGNER";
+  // const eligibleGens = formData.selectedBreed?.eligibleGen
+    // ? formData.selectedBreed.eligibleGen.split(",").map((g: string) => g.trim())
+    // : [];
 
   const handleDocUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
@@ -184,7 +184,7 @@ const removeDoc = (idx: any) => {
       </div>
 
       {/* Generation Selection - Fixed logic here */}
-      {isDesigner && (
+      {/* {isDesigner && (
         <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
           <label className="block text-sm font-bold text-gray-800 mb-3">Generation Selection *</label>
           <div className="flex flex-wrap gap-2">
@@ -205,7 +205,7 @@ const removeDoc = (idx: any) => {
           </div>
           <p className="text-[10px] text-gray-500 mt-3 italic">Generation is required for designer breeds to determine registration tier.</p>
         </div>
-      )}
+      )} */}
 
       {/* Health Notes */}
       <div>

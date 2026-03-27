@@ -38,7 +38,7 @@ import MainLayout from "@/Layout/MainLayout";
 import OwnerLayout from "@/Layout/OwnerLayout";
 import { createBrowserRouter } from "react-router";
 import PrivateRoute from "./PrivateRoute";
-import BreedArchive from "@/(user)/pages/BreedArchive/BreedArchive";
+// import BreedArchive from "@/(user)/pages/BreedArchive/BreedArchive";
 
 export const Router = createBrowserRouter([
   {
@@ -70,10 +70,10 @@ export const Router = createBrowserRouter([
         path: "contact",
         element: <ContactPage />,
       },
-      {
-        path: "breed-archive",
-        element: <BreedArchive />
-      },
+      // {
+      //   path: "breed-archive",
+      //   element: <BreedArchive />
+      // },
     ],
   },
   {

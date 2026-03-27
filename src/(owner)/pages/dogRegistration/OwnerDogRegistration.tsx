@@ -8,12 +8,13 @@ import RegistryPreview from "./_components/RegistryPreview";
 import subtract from "@/assets/search/Subtract.svg";
 import { toast } from "react-toastify";
 import { useRegisterCanineMutation } from "@/redux/features/canine/canine.api";
+import { useNavigate } from "react-router";
 
 export default function OwnerDogRegistration() {
   const [currentStep, setCurrentStep] = useState(1);
   const [registerCanine, { isLoading: isSubmitting }] =
     useRegisterCanineMutation();
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<any>({
     name: "",
     breedId: "",
@@ -67,14 +68,10 @@ export default function OwnerDogRegistration() {
       data.append("generation", formData.generation);
     }
 
-    // --- FIX STARTS HERE ---
-    // JSON.stringify bad diye loop kore append korte hobe
     if (formData.vaccinations && formData.vaccinations.length > 0) {
       formData.vaccinations.forEach((v: string) =>
         data.append("vaccinations[]", v),
       );
-      // Note: Jodi backend 'vaccinations[]' na chine sudhu 'vaccinations' chine,
-      // tobe append("vaccinations", v) use korun.
     }
 
     if (formData.healthClearances && formData.healthClearances.length > 0) {
@@ -94,7 +91,13 @@ export default function OwnerDogRegistration() {
 
     try {
       const res = await registerCanine(data).unwrap();
-      toast.success(res?.message || "Canine registered successfully!");
+      if (res?.url) {
+        toast.info("Redirecting to payment...");
+        window.location.href = res.url;
+      } else {
+        toast.success(res?.message || "Registered successfully!");
+        navigate("/owner/dashboard");
+      }
     } catch (error: any) {
       const errorData = error?.data?.message;
       const errorMsg = Array.isArray(errorData)
