@@ -1,4 +1,3 @@
-
 import WebFooter from "@/components/common/footer/WebFooter";
 import WebNavbar from "@/components/common/navbar/WebNavbar";
 import { Outlet } from "react-router";
@@ -27,9 +26,12 @@ const OwnerLayout = () => {
         return (
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
             <Clock className="text-yellow-500 mb-4" size={64} />
-            <h1 className="text-2xl font-bold text-slate-800">Account Pending</h1>
+            <h1 className="text-2xl font-bold text-slate-800">
+              Account Pending
+            </h1>
             <p className="text-slate-600 mt-2 max-w-md">
-              Your account is currently under review. Please wait for the administrator to approve your access.
+              Your account is currently under review. Please wait for the
+              administrator to approve your access.
             </p>
           </div>
         );
@@ -38,9 +40,12 @@ const OwnerLayout = () => {
         return (
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
             <Ban className="text-red-500 mb-4" size={64} />
-            <h1 className="text-2xl font-bold text-slate-800">Account Restricted</h1>
+            <h1 className="text-2xl font-bold text-slate-800">
+              Account Restricted
+            </h1>
             <p className="text-slate-600 mt-2 max-w-md">
-              Your account has been {user.status.toLowerCase()}. Please contact support for further information.
+              Your account has been {user.status.toLowerCase()}. Please contact
+              support for further information.
             </p>
           </div>
         );
@@ -48,9 +53,12 @@ const OwnerLayout = () => {
         return (
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
             <AlertCircle className="text-orange-500 mb-4" size={64} />
-            <h1 className="text-2xl font-bold text-slate-800">Access Rejected</h1>
+            <h1 className="text-2xl font-bold text-slate-800">
+              Access Rejected
+            </h1>
             <p className="text-slate-600 mt-2 max-w-md">
-              Unfortunately, your account application was not approved at this time.
+              Unfortunately, your account application was not approved at this
+              time.
             </p>
           </div>
         );
@@ -70,11 +78,7 @@ const OwnerLayout = () => {
 
       {/* Page Content */}
       <main className={`${NAVBAR_HEIGHT} flex-1`}>
-        {isActive ? (
-          <Outlet />
-        ) : (
-          renderStatusMessage()
-        )}
+        {isActive ? <Outlet /> : renderStatusMessage()}
       </main>
 
       {/* Footer */}
@@ -84,3 +88,54 @@ const OwnerLayout = () => {
 };
 
 export default OwnerLayout;
+
+
+
+
+
+
+export const useCalculatePricing = () => {
+  const { data: userData } = useGetMeQuery(undefined);
+  const user = (userData as any)?.data; // Backend structure onujayi data access
+  const membership = user?.membership;
+  const counts = user?._count;
+
+  const getPrice = (type: "CANINE_REG" | "LITTER_REG") => {
+    if (!membership) return 0;
+
+    // 1. Service Pricing theke base price khuje ber kora
+    const service = membership.servicePricings?.find(
+      (s: any) => s.serviceType === type,
+    );
+    const basePrice = service?.price || 0;
+
+    // 2. Pricing Logic based on Service Type
+    if (type === "CANINE_REG") {
+      const currentCanines = counts?.canines || 0;
+      const limit = membership.canineLimit || 0;
+
+      // Canine: Limit-er niche thakle free, upore hole paid
+      if (currentCanines < limit) return 0;
+
+      // Discount apply for Extra Canine
+      const discount = membership.canineRegDiscount || 0;
+      return basePrice - basePrice * (discount / 100);
+    }
+
+    if (type === "LITTER_REG") {
+      // Litter: Sob somoi paid, kono limit check nai
+      const discount = membership.litterRegDiscount || 0;
+      return basePrice - basePrice * (discount / 100);
+    }
+
+    return basePrice;
+  };
+
+  return {
+    caninePrice: getPrice("CANINE_REG"),
+    litterPrice: getPrice("LITTER_REG"),
+    membershipName: membership?.name || "Standard",
+    canineUsed: counts?.canines || 0,
+    canineLimit: membership?.canineLimit || 0,
+  };
+};

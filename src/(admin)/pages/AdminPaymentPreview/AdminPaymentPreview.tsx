@@ -10,8 +10,6 @@ import {
   FiDollarSign,
   FiCalendar,
   FiUser,
-  FiInfo,
-  FiActivity,
   FiArrowUpRight,
 } from "react-icons/fi";
 import CommonTable, { type Column } from "@/(admin)/_components/CommonTable";
@@ -54,7 +52,7 @@ const AdminPaymentPreview: React.FC = () => {
       year: selectedYear,
     },
   );
-
+console.log(rawStats);
   // Chart
   const chartData = useMemo(() => {
     if (!rawStats?.graphData) return [];

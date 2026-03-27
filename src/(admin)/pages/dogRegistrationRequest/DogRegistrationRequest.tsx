@@ -21,15 +21,23 @@ import CommonPagination from "@/components/common/pagination/CommonPagination";
 import CanineViewDialog from "./_components/CanineViewDialog";
 import CanineEditDialog from "./_components/CanineEditDialog";
 import Swal from "sweetalert2";
+import { useSearchParams } from "react-router";
 
 const DogRegistrationRequest: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchParams] = useSearchParams();
   const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [viewId, setViewId] = useState<string | null>(null);
   const [editData, setEditData] = useState<any | null>(null);
   const limit = 10;
 
+  React.useEffect(() => {
+    const pcrIdFromUrl = searchParams.get("pcrId");
+    if (pcrIdFromUrl) {
+      setSearchTerm(pcrIdFromUrl);
+    }
+  }, [searchParams]);
   // 1. RTK Query hooks
   const { data, isLoading } = useGetAdminCaninesQuery({
     page: currentPage,

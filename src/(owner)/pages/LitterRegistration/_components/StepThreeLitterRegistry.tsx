@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -7,14 +8,14 @@ import {
   Dna,
   MapPin,
   Calendar,
-  Palette,
-  VenusAndMars,
+  Users,
 } from "lucide-react";
 import { LuDna } from "react-icons/lu";
 import { DataBox, InfoItem } from "@/(user)/pages/dogProfile/DogProfilePage";
 import { Label } from "@radix-ui/react-label";
 import { Progress } from "@/components/ui/progress";
 import LitterRegistryHealthSummaryDog from "./LitterRegistryHealthSummaryDog";
+import { useCalculatePricing } from "@/Layout/OwnerLayout";
 
 type StepThreeProps = {
   formData: any;
@@ -29,15 +30,20 @@ export default function StepThreeLitterRegistry({
   handleSubmit,
   isLoading,
 }: StepThreeProps) {
-  // Logic to handle date formatting
+  // Date formatting logic
   const formatDate = (d: string) => {
     if (!d) return "-";
     try {
-      return new Date(d).toLocaleDateString();
+      return new Date(d).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
     } catch {
       return d;
     }
   };
+    const { litterPrice } = useCalculatePricing();
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -45,8 +51,8 @@ export default function StepThreeLitterRegistry({
         {/* 1. Header & Primary Info */}
         <div className="border-b pb-4">
           <div className="flex items-center gap-3 mb-4 text-lg font-semibold text-gray-900">
-            <Label className="text-gray-500">Registry Name:</Label>
-            <h1 className="text-2xl">{formData.name || "-"}</h1>
+            <Label className="text-gray-500">Litter Name:</Label>
+            <h1 className="text-2xl">{formData.litterName || "-"}</h1>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 text-gray-600">
@@ -56,14 +62,9 @@ export default function StepThreeLitterRegistry({
               value={formData.breedName || "-"}
             />
             <InfoItem
-              icon={<Palette size={18} />}
-              label="Color"
-              value={formData.color || "-"}
-            />
-            <InfoItem
-              icon={<VenusAndMars size={18} />}
-              label="Sex"
-              value={formData.gender || "-"} // Changed from sex to gender to match Step 1
+              icon={<Users size={18} />}
+              label="Total Puppies"
+              value={`${formData.puppies?.length || 0} Puppies`}
             />
             <InfoItem
               icon={<Calendar size={18} />}
@@ -73,7 +74,7 @@ export default function StepThreeLitterRegistry({
             <InfoItem
               icon={<ShieldCheck size={18} />}
               label="Health Status"
-              value={formData.healthStatus || "-"}
+              value={formData.healthNotes ? "Notes Provided" : "Standard"}
             />
 
             <div className="flex items-start gap-2 col-span-full">
@@ -89,7 +90,39 @@ export default function StepThreeLitterRegistry({
           </div>
         </div>
 
-        {/* 2. Gallery Preview */}
+        {/* 2. Puppies Detailed List (New Section for Clarity) */}
+        <div className="space-y-3">
+          <h4 className="font-semibold text-sm text-gray-700 uppercase tracking-wider">
+            Puppies in this Litter
+          </h4>
+          <div className="grid grid-cols-1 gap-3">
+            {formData.puppies?.map((puppy: any, idx: number) => (
+              <div
+                key={idx}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100"
+              >
+                <div>
+                  <p className="font-bold text-gray-800">
+                    {puppy.name || `Puppy #${idx + 1}`}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {puppy.gender} • {puppy.color}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-[#2B4C8A]">
+                    {puppy.weight} lbs
+                  </p>
+                  <p className="text-[10px] text-gray-400">
+                    {puppy.microchipId || "No Microchip"}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. Gallery Preview */}
         {formData.uploadedImages?.length > 0 && (
           <div>
             <h4 className="font-semibold mb-2 text-sm text-gray-700">
@@ -112,31 +145,26 @@ export default function StepThreeLitterRegistry({
           </div>
         )}
 
-        {/* 3. Numerical Data Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <DataBox
-            label="Microchip"
-            value={formData.microchipId || "-"}
-            valueColor="text-[#2B4C8A]"
-          />
-          <DataBox
-            label="Weight"
-            value={`${formData.weight || "0"} lbs`}
-            valueColor="text-[#2B4C8A]"
-          />
+        {/* 4. Numerical Data Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           <DataBox
             label="Generation"
             value={formData.generation || "-"}
             valueColor="text-[#2B4C8A]"
           />
           <DataBox
-            label="DNA %"
-            value={`${formData.primaryBreedDNA || "0"}%`} // Changed from primaryBreedPercent to primaryBreedDNA
+            label="Mother ID"
+            value={formData.motherPcrId || "N/A"}
+            valueColor="text-[#2B4C8A]"
+          />
+          <DataBox
+            label="Father ID"
+            value={formData.fatherPcrId || "N/A"}
             valueColor="text-[#2B4C8A]"
           />
         </div>
 
-        {/* 4. Genetic Composition Card */}
+        {/* 5. Genetic Composition Card */}
         <div className="bg-[#1A1A1A] text-white rounded-xl p-6 shadow-xl">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-3">
@@ -145,9 +173,7 @@ export default function StepThreeLitterRegistry({
               </div>
               <div>
                 <h4 className="font-bold text-lg">Genetic Composition</h4>
-                <p className="text-xs text-gray-500">
-                  Based on provided DNA report
-                </p>
+                <p className="text-xs text-gray-500">Confirmed Breed Lineage</p>
               </div>
             </div>
             <Badge
@@ -165,33 +191,18 @@ export default function StepThreeLitterRegistry({
                   Primary Breed ({formData.breedName})
                 </span>
                 <span className="text-yellow-500 font-bold">
-                  {formData.primaryBreedDNA || 0}%
+                  {formData.primaryBreedDNA || 100}%
                 </span>
               </div>
               <Progress
-                value={Number(formData.primaryBreedDNA) || 0}
+                value={Number(formData.primaryBreedDNA) || 100}
                 className="h-2 bg-gray-800"
               />
             </div>
-
-            {formData.secondaryBreedDNA && (
-              <div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-400">
-                    Secondary Breed DNA ({formData.secondaryBreedDNA})
-                  </span>
-                </div>
-                {/* Visual indicator for secondary DNA if needed */}
-                <Progress
-                  value={100 - (Number(formData.primaryBreedDNA) || 0)}
-                  className="h-2 bg-gray-800"
-                />
-              </div>
-            )}
           </div>
         </div>
 
-        {/* 5. Health Summary & Files */}
+        {/* 6. Health Summary */}
         <div className="w-full">
           <LitterRegistryHealthSummaryDog
             vaccinations={formData.vaccinations}
@@ -199,7 +210,7 @@ export default function StepThreeLitterRegistry({
           />
         </div>
 
-        {/* 6. Document Names Preview */}
+        {/* 7. Document Names Preview */}
         {formData.uploadedDocs?.length > 0 && (
           <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
             <h4 className="text-sm font-semibold text-gray-700 mb-2">
@@ -213,7 +224,7 @@ export default function StepThreeLitterRegistry({
           </div>
         )}
 
-        {/* 7. Action Buttons */}
+        {/* 8. Action Buttons */}
         <div className="flex justify-between items-center mt-10 pt-6 border-t">
           <button
             type="button"
@@ -229,7 +240,9 @@ export default function StepThreeLitterRegistry({
             disabled={isLoading}
             className="px-10 py-2.5 bg-[#D4AF37] text-white rounded-lg font-bold hover:bg-[#b8952e] shadow-lg shadow-yellow-900/10 transition-all disabled:opacity-50 flex items-center gap-2"
           >
-            {isLoading ? "Submitting..." : "Complete Registration"}
+            {isLoading
+              ? "Submitting..."
+              : `Pay $${litterPrice.toFixed(2)} for Regisster`}
           </button>
         </div>
       </div>

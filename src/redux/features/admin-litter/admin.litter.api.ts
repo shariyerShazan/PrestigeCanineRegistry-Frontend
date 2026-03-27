@@ -31,7 +31,7 @@ export const litterApi = baseApi.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ({ id }) => [
-        "Litter",
+        "Litter", "Canine",
         { type: "Litter", id },
       ],
     }),

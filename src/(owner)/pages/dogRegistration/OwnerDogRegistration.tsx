@@ -28,7 +28,6 @@ export default function OwnerDogRegistration() {
     zipCode: "",
     country: "USA",
     microchipId: "",
-    generation: "",
     primaryBreedDNA: "",
     secondaryBreedDNA: "",
     healthStatus: "Excellent",
@@ -39,18 +38,18 @@ export default function OwnerDogRegistration() {
     rawImages: [],
     uploadedDocs: [],
     rawDocs: [],
-    selectedBreed: null, // Breed type check korar jonno
   });
 
   const updateFormData = (data: any) =>
     setFormData((prev: any) => ({ ...prev, ...data }));
+
   const handleSubmit = async () => {
     const data = new FormData();
 
-    // Standard fields
+    // Mapping fields exactly as per RegisterCanineDto
     data.append("name", formData.name);
     data.append("breedId", formData.breedId);
-    data.append("gender", formData.gender.toUpperCase());
+    data.append("gender", formData.gender); // Ensure it's MALE or FEMALE
     data.append("dateOfBirth", formData.dateOfBirth);
     data.append("color", formData.color);
     data.append("weight", formData.weight.toString());
@@ -60,33 +59,35 @@ export default function OwnerDogRegistration() {
     data.append("country", formData.country);
     data.append("microchipId", formData.microchipId);
     data.append("primaryBreedDNA", formData.primaryBreedDNA);
-    data.append("secondaryBreedDNA", formData.secondaryBreedDNA || "");
+
+    if (formData.secondaryBreedDNA) {
+      data.append("secondaryBreedDNA", formData.secondaryBreedDNA);
+    }
+
     data.append("healthStatus", formData.healthStatus);
     data.append("healthNotes", formData.healthNotes || "");
 
-    if (formData.selectedBreed?.type === "DESIGNER" && formData.generation) {
-      data.append("generation", formData.generation);
-    }
-
-    if (formData.vaccinations && formData.vaccinations.length > 0) {
+    // Arrays: Backend expects multiple appends for the same key or vaccinations[]
+    if (formData.vaccinations?.length > 0) {
       formData.vaccinations.forEach((v: string) =>
-        data.append("vaccinations[]", v),
+        data.append("vaccinations", v),
       );
     }
 
-    if (formData.healthClearances && formData.healthClearances.length > 0) {
+    if (formData.healthClearances?.length > 0) {
       formData.healthClearances.forEach((h: string) =>
-        data.append("healthClearances[]", h),
+        data.append("healthClearances", h),
       );
     }
-    // --- FIX ENDS HERE ---
 
-    // Files
-    if (formData.rawImages) {
+    // File fields (images and DNAdocuments as per DTO)
+    if (formData.rawImages?.length > 0) {
       formData.rawImages.forEach((file: File) => data.append("images", file));
     }
-    if (formData.rawDocs) {
-      formData.rawDocs.forEach((file: File) => data.append("docs", file));
+    if (formData.rawDocs?.length > 0) {
+      formData.rawDocs.forEach((file: File) =>
+        data.append("DNAdocuments", file),
+      );
     }
 
     try {
@@ -99,14 +100,11 @@ export default function OwnerDogRegistration() {
         navigate("/owner/dashboard");
       }
     } catch (error: any) {
-      const errorData = error?.data?.message;
-      const errorMsg = Array.isArray(errorData)
-        ? errorData[0]
-        : errorData || "Registration failed";
-
-      toast.error(errorMsg);
+      const errorMsg = error?.data?.message || "Registration failed";
+      toast.error(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
     }
   };
+
   return (
     <div className="min-h-screen relative py-8 px-4">
       <div

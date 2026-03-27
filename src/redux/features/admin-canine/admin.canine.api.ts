@@ -9,7 +9,7 @@ export const adminApi = baseApi.injectEndpoints({
         url: "/admin-canine/get-canines",
         params,
       }),
-      providesTags: ["Canine"],
+      providesTags: ["Canine", "Litter"],
     }),
     getAdminCanineById: builder.query({
       query: (id) => `/admin-canine/${id}`,
@@ -21,10 +21,7 @@ export const adminApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ({ id }) => [
-        "Canine",
-        { type: "Canine", id },
-      ],
+      invalidatesTags: ({ id }) => ["Canine", { type: "Canine", id }],
     }),
     deleteAdminCanine: builder.mutation({
       query: (id) => ({

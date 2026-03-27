@@ -42,15 +42,35 @@ const LitterRegistrationRequest: React.FC = () => {
   const [deleteLitter] = useDeleteAdminLitterMutation();
 
   // 3. Handlers
-  const handleUpdate = async (id: string, payload: any) => {
-    try {
-      await updateLitter({ id, data: payload }).unwrap();
-      toast.success("Successfully updated!");
-    } catch (err: any) {
-      console.error(err);
-      toast.error(err.data?.message || "Failed to update status");
+const handleUpdate = async (id: string, payload: any) => {
+  try {
+    // 1. Database row theke existing data khuje ber koro (Validation pass korar jonno)
+    const currentRow = data?.data?.find((item: any) => item.id === id);
+
+    // 2. Payload-e missing mandatory fields (country, name) add koro
+    // and current status/tier-ke fallback hishebe rakho
+    const payloadUp = {
+      name: currentRow?.name,
+      country: currentRow?.country || "USA",
+      status:
+        payload.status !== undefined ? payload.status : currentRow?.status,
+      tier: payload.tier !== undefined ? payload.tier : currentRow?.tier,
+    };
+
+    const res = await updateLitter({
+      id,
+      data: payloadUp,
+    }).unwrap();
+
+    if (res.success) {
+      toast.success(res.message || "Successfully updated!");
     }
-  };
+  } catch (err: any) {
+    console.error("Update Error:", err);
+    const errorMessage = err?.data?.message || "Failed to update";
+    toast.error(Array.isArray(errorMessage) ? errorMessage[0] : errorMessage);
+  }
+};
 
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
@@ -167,7 +187,8 @@ const LitterRegistrationRequest: React.FC = () => {
 
         return (
           <Select
-            defaultValue={row.status}
+            // defaultValue bodole value use koro jate sync thake
+            value={row.status}
             onValueChange={(val) => handleUpdate(row.id, { status: val })}
           >
             <SelectTrigger

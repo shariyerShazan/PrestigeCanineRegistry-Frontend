@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { LuCrown, LuDog, LuShield, LuUsers } from "react-icons/lu";
 import { FaRegChartBar } from "react-icons/fa6";
 import { AiOutlineUserSwitch } from "react-icons/ai";
@@ -7,8 +7,9 @@ import { GrFlag } from "react-icons/gr";
 import { FiActivity, FiCreditCard } from "react-icons/fi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Home, LogOut } from "lucide-react";
-import { useGetMeQuery } from "@/redux/features/auth/authApi";
+import { useGetMeQuery, useLogoutMutation } from "@/redux/features/auth/authApi";
 import logo from "@/assets/login/logo.png";
+import { toast } from "react-toastify";
 
 // Menu items with ResourceType mapping
 const items = [
@@ -92,7 +93,18 @@ export function AdminAppSidebar({
   collapsed?: boolean;
 }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const pathname = location?.pathname ?? "/";
+  const [logout] = useLogoutMutation();
+  const handleLogout = async () => {
+    try {
+      await logout(undefined).unwrap();
+      toast.success("Logged out successfully");
+      navigate("/login");
+    } catch (error) {
+      toast.error("Logout failed");
+    }
+  };
 
   const { data: userRes } = useGetMeQuery(undefined);
   const user = userRes?.data;
@@ -180,6 +192,7 @@ export function AdminAppSidebar({
         </a>
 
         <button
+          onClick={handleLogout}
           className={`w-full cursor-pointer flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors ${
             collapsed ? "justify-center" : ""
           }`}

@@ -13,6 +13,7 @@ import { DataBox, InfoItem } from "@/(user)/pages/dogProfile/DogProfilePage";
 import { Label } from "@radix-ui/react-label";
 import { Progress } from "@/components/ui/progress";
 import RegistryHealthSummaryDog from "./RegistryHealthSummaryDog";
+import { useCalculatePricing } from "@/Layout/OwnerLayout";
 
 type StepThreeProps = {
   formData: any;
@@ -40,6 +41,7 @@ export default function StepThreeRegistry({
       return d;
     }
   };
+  const { caninePrice } = useCalculatePricing();
 
   const renderImage = (src: any, i: number) => {
     const imageUrl = src instanceof File ? URL.createObjectURL(src) : src;
@@ -251,9 +253,9 @@ export default function StepThreeRegistry({
             type="button"
             disabled={isSubmitting}
             onClick={handleSubmit}
-            className="px-10 py-2 bg-[#D4AF37] disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-bold hover:bg-[#C19B2E] shadow-lg transition-all transform hover:-translate-y-0.5"
+            className="px-10 py-2 bg-[#D4AF37] cursor-pointer disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-bold hover:bg-[#C19B2E] shadow-lg transition-all transform hover:-translate-y-0.5"
           >
-            {isSubmitting ? "Submiting..." : " Submit Application"}
+            {isSubmitting ? "Submitting..." : `Pay $${caninePrice.toFixed(2)} for Regisster`}
           </button>
         </div>
       </div>

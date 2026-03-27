@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// @/components/admin/litter/LitterViewDialog.tsx
 import React from "react";
 import {
   Dialog,
@@ -10,13 +9,19 @@ import {
 import { useGetAdminLitterByIdQuery } from "@/redux/features/admin-litter/admin.litter.api";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import {
   FiGrid,
   FiUsers,
   FiLayers,
   FiActivity,
   FiCamera,
+  FiMapPin,
+  FiExternalLink,
+  FiArrowRight,
 } from "react-icons/fi";
+import { format } from "date-fns";
+import { useNavigate } from "react-router";
 
 interface Props {
   id: string | null;
@@ -25,165 +30,218 @@ interface Props {
 }
 
 const LitterViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
+  const navigate = useNavigate();
   const { data: response, isLoading } = useGetAdminLitterByIdQuery(
     id as string,
-    {
-      skip: !id,
-    },
+    { skip: !id || !open },
   );
 
   const litter = response?.data;
 
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return "N/A";
+    try {
+      return format(new Date(dateString), "PPP");
+    } catch {
+      return "Invalid Date";
+    }
+  };
+
+  const handleRedirect = (pcrId: string | undefined) => {
+    if (!pcrId) return;
+    onOpenChange(false);
+    navigate(`/admin/dashboard/canine-management?pcrId=${pcrId}`);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-none shadow-2xl">
-        <div className="bg-[#2B4C8A] p-6 text-white relative">
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <FiLayers size={80} />
+      <DialogContent className="sm:max-w-[850px] h-[90vh] p-0 overflow-hidden border-0 rounded-2xl shadow-xl bg-white">
+        {/* ✅ HEADER (UNCHANGED) */}
+        <div className="bg-[#2B4C8A] p-8  text-white relative">
+          <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+            <FiLayers size={100} />
           </div>
           <DialogHeader>
-            <DialogTitle className="text-white flex items-center gap-2 text-2xl tracking-tight font-bold">
-              <FiLayers className="text-[#D4AF37]" />
-              Litter Group Details
-            </DialogTitle>
-            <p className="text-blue-100/70 text-sm mt-1">
-              Complete Genealogy and Puppy Registry
-            </p>
+            <div className="flex items-center gap-4">
+              <div className="bg-[#D4AF37] p-3 rounded-xl shadow-lg">
+                <FiLayers className="text-[#2B4C8A] size-7" />
+              </div>
+              <div>
+                <DialogTitle className="text-white text-3xl font-black tracking-tight">
+                  Litter Group Profile
+                </DialogTitle>
+                <p className="text-blue-100/70 text-sm uppercase tracking-[0.2em] font-bold mt-1">
+                  Official Genealogy & Bloodline Record
+                </p>
+              </div>
+            </div>
           </DialogHeader>
         </div>
 
         {isLoading ? (
-          <div className="h-64 flex flex-col items-center justify-center gap-3">
-            <div className="w-8 h-8 border-4 border-[#2B4C8A]/20 border-t-[#2B4C8A] rounded-full animate-spin" />
-            <p className="text-slate-500 font-medium">
-              Retrieving litter data...
+          <div className="h-[500px] flex flex-col items-center justify-center gap-4 bg-white">
+            <div className="w-10 h-10 border-4 border-slate-100 border-t-[#2B4C8A] rounded-full animate-spin" />
+            <p className="text-slate-400 text-xs font-black tracking-widest uppercase">
+              Synchronizing Registry...
             </p>
           </div>
         ) : (
-          <ScrollArea className="max-h-[75vh] bg-white">
-            <div className="p-6 space-y-8">
-              {/* Media Gallery */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-[#2B4C8A] font-bold text-xs uppercase tracking-widest border-b pb-2">
-                  <FiCamera /> Media Gallery
-                </div>
-                <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                  {litter?.images?.length > 0 ? (
-                    litter.images.map((img: any, idx: number) => (
-                      <img
-                        key={idx}
-                        src={img.url}
-                        alt="Litter"
-                        className="w-28 h-28 rounded-xl object-cover border-2 border-slate-100 shadow-sm flex-shrink-0"
-                      />
-                    ))
-                  ) : (
-                    <div className="w-full h-24 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-400 text-sm italic">
-                      No media uploaded
-                    </div>
-                  )}
-                </div>
+          <ScrollArea className="max-h-[85vh] pb-22  bg-[#FDFDFD]">
+            <div className="p-8 space-y-10">
+              {/* Metrics */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <MetricItem label="Litter Name" value={litter?.name} />
+                <MetricItem label="PCR ID" value={litter?.pcrId} isMono />
+                <MetricItem
+                  label="Whelping Date"
+                  value={formatDate(litter?.dateOfBirth)}
+                />
+                <MetricItem
+                  label="Registry Tier"
+                  value={litter?.tier ? `${litter.tier} Tier` : "—"}
+                  highlight
+                />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Basic Info */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-[#2B4C8A] font-bold text-xs uppercase tracking-widest border-b pb-2">
-                    <FiGrid /> Record Identity
-                  </div>
-                  <div className="space-y-3">
-                    <DataRow label="Litter Name" value={litter?.name} />
-                    <DataRow
-                      label="PCR Group ID"
-                      value={litter?.pcrId}
+              <Separator />
+
+              {/* Details + Lineage */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
+                <div className="space-y-5">
+                  <SectionTitle
+                    title="Registry Specifications"
+                    icon={<FiGrid size={18} />}
+                  />
+                  <div className="bg-white border rounded-xl p-5 space-y-4">
+                    <DetailRow
+                      label="Breed Group"
+                      value={litter?.breedRelation?.name}
+                    />
+                    <DetailRow
+                      label="Generation"
+                      value={litter?.generation}
+                      highlight
+                    />
+                    <DetailRow
+                      label="PCR Breed Code"
+                      value={litter?.breedRelation?.pcrCode}
                       isMono
                     />
-                    <DataRow
-                      label="Breed & Generation"
-                      value={`${litter?.breedRelation?.name} (${litter?.generation})`}
-                    />
-                    <div className="pt-1 flex gap-2">
-                      <Badge
-                        className={`${litter?.tier === "GOLD" ? "bg-[#D4AF37] text-black" : "bg-[#2B4C8A]"} border-none font-bold`}
-                      >
-                        {litter?.tier} TIER
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-blue-600 bg-blue-50 border-blue-100"
-                      >
-                        {litter?.status}
-                      </Badge>
+                    <div className="flex items-center justify-between pt-2">
+                      <span className="text-xs font-bold text-slate-400 uppercase">
+                        Location
+                      </span>
+                      <span className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                        <FiMapPin className="text-[#D4AF37]" />
+                        {litter?.city}, {litter?.state}
+                      </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Parentage */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-[#2B4C8A] font-bold text-xs uppercase tracking-widest border-b pb-2">
-                    <FiUsers /> Pedigree (Parentage)
-                  </div>
-                  <div className="grid grid-cols-1 gap-2">
-                    <div className="flex items-center gap-3 p-3 bg-pink-50/50 rounded-lg border border-pink-100">
-                      <div className="w-2 h-10 bg-pink-400 rounded-full" />
-                      <div>
-                        <p className="text-[10px] text-pink-600 font-black uppercase">
-                          Dam (Mother)
-                        </p>
-                        <p className="text-sm font-bold text-slate-700">
-                          {litter?.mother?.name || "Unregistered"}
-                        </p>
-                        <p className="text-[10px] font-mono text-pink-500">
-                          {litter?.mother?.pcrId || "N/A"}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-blue-50/50 rounded-lg border border-blue-100">
-                      <div className="w-2 h-10 bg-blue-400 rounded-full" />
-                      <div>
-                        <p className="text-[10px] text-blue-600 font-black uppercase">
-                          Sire (Father)
-                        </p>
-                        <p className="text-sm font-bold text-slate-700">
-                          {litter?.father?.name || "Unregistered"}
-                        </p>
-                        <p className="text-[10px] font-mono text-blue-500">
-                          {litter?.father?.pcrId || "N/A"}
-                        </p>
-                      </div>
-                    </div>
+                <div className="space-y-5">
+                  <SectionTitle
+                    title="Direct Lineage"
+                    icon={<FiUsers size={18} />}
+                  />
+                  <div className="space-y-3">
+                    <ParentCard
+                      label="Sire (Father)"
+                      name={litter?.father?.name}
+                      pcrId={litter?.father?.pcrId}
+                      onClick={() => handleRedirect(litter?.father?.pcrId)}
+                    />
+                    <ParentCard
+                      label="Dam (Mother)"
+                      name={litter?.mother?.name}
+                      pcrId={litter?.mother?.pcrId}
+                      onClick={() => handleRedirect(litter?.mother?.pcrId)}
+                    />
                   </div>
                 </div>
               </div>
 
-              {/* Puppies Section */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between text-[#2B4C8A] border-b pb-2">
-                  <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest">
-                    <FiActivity /> Registered Puppies
-                  </div>
-                  <Badge className="bg-[#2B4C8A] text-[10px] h-5">
-                    {litter?.puppies?.length || 0} TOTAL
+              {/* Puppies */}
+              <div className="space-y-5">
+                <div className="flex justify-between items-center border-b pb-3">
+                  <SectionTitle
+                    title="Offspring Inventory"
+                    icon={<FiActivity size={18} />}
+                  />
+                  <Badge className="bg-[#2B4C8A] text-white text-[10px] px-3">
+                    {litter?.puppies?.length || 0}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {litter?.puppies?.length > 0 ? (
-                    litter.puppies.map((pup: any, i: number) => (
+
+                <div className="border rounded-xl overflow-hidden bg-white">
+                  <table className="w-full text-sm">
+                    <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+                      <tr>
+                        <th className="p-4 text-left">Name</th>
+                        <th className="p-4 text-left">PCR ID</th>
+                        <th className="p-4 text-center">Gender</th>
+                        <th className="p-4 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {litter?.puppies?.length ? (
+                        litter.puppies.map((pup: any, i: number) => (
+                          <tr
+                            key={i}
+                            className="border-t hover:bg-slate-50 cursor-pointer"
+                            onClick={() => handleRedirect(pup.pcrId)}
+                          >
+                            <td className="p-4 font-semibold">{pup.name}</td>
+                            <td className="p-4 font-mono text-blue-600 text-xs">
+                              {pup.pcrId}
+                            </td>
+                            <td className="p-4 text-center">
+                              <Badge variant="secondary">{pup.gender}</Badge>
+                            </td>
+                            <td className="p-4 text-right">
+                              <span className="text-xs font-bold text-slate-400 flex justify-end items-center gap-1">
+                                View <FiArrowRight />
+                              </span>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan={4}
+                            className="p-10 text-center text-slate-400"
+                          >
+                            No puppies found
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Media */}
+              <div className="space-y-5">
+                <SectionTitle
+                  title="Media Assets"
+                  icon={<FiCamera size={18} />}
+                />
+                <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+                  {litter?.images?.length ? (
+                    litter.images.map((img: any, idx: number) => (
                       <div
-                        key={i}
-                        className="group hover:border-[#D4AF37] transition-all p-3 border border-slate-100 rounded-xl bg-slate-50/50 flex flex-col"
+                        key={idx}
+                        className="aspect-square rounded-lg overflow-hidden border"
                       >
-                        <span className="text-xs font-black text-slate-700 truncate group-hover:text-[#2B4C8A]">
-                          {pup.name}
-                        </span>
-                        <span className="text-[10px] font-mono text-slate-400 group-hover:text-[#D4AF37]">
-                          {pup.pcrId}
-                        </span>
+                        <img
+                          src={img.url}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                     ))
                   ) : (
-                    <div className="col-span-3 py-6 text-center text-slate-400 text-xs bg-slate-50 rounded-xl border-2 border-dashed border-slate-200">
-                      No puppies registered in this litter yet.
+                    <div className="col-span-full text-center text-slate-400 text-xs py-8 border rounded-xl border-dashed">
+                      No media available
                     </div>
                   )}
                 </div>
@@ -196,26 +254,55 @@ const LitterViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
   );
 };
 
-// Helper component for clean data rows
-const DataRow = ({
-  label,
-  value,
-  isMono = false,
-}: {
-  label: string;
-  value: string | undefined;
-  isMono?: boolean;
-}) => (
-  <div className="flex flex-col">
-    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-tight">
+export default LitterViewDialog;
+
+/* ---------- Components ---------- */
+
+const MetricItem = ({ label, value, isMono, highlight }: any) => (
+  <div>
+    <p className="text-[10px] uppercase tracking-wider text-slate-400">
       {label}
-    </span>
-    <span
-      className={`text-sm font-semibold text-slate-700 ${isMono ? "font-mono text-blue-600" : ""}`}
+    </p>
+    <p
+      className={`text-sm font-semibold mt-1 ${
+        highlight ? "text-amber-500" : "text-slate-800"
+      } ${isMono ? "font-mono text-blue-600" : ""}`}
     >
-      {value || "Not Recorded"}
+      {value || "—"}
+    </p>
+  </div>
+);
+
+const SectionTitle = ({ icon, title }: any) => (
+  <div className="flex items-center gap-2 text-slate-800">
+    <span className="text-[#D4AF37]">{icon}</span>
+    <span className="text-sm font-bold uppercase tracking-wide">{title}</span>
+  </div>
+);
+
+const DetailRow = ({ label, value, isMono, highlight }: any) => (
+  <div className="flex justify-between border-b pb-2">
+    <span className="text-xs text-slate-400 uppercase">{label}</span>
+    <span
+      className={`text-sm font-medium ${
+        highlight ? "text-[#2B4C8A]" : "text-slate-700"
+      } ${isMono ? "font-mono text-blue-600" : ""}`}
+    >
+      {value || "N/A"}
     </span>
   </div>
 );
 
-export default LitterViewDialog;
+const ParentCard = ({ label, name, pcrId, onClick }: any) => (
+  <div
+    onClick={onClick}
+    className="border rounded-xl p-4 flex justify-between items-center cursor-pointer hover:border-[#D4AF37] transition"
+  >
+    <div>
+      <p className="text-[10px] uppercase text-slate-400">{label}</p>
+      <p className="font-semibold text-slate-800">{name || "Pending"}</p>
+      <p className="text-xs font-mono text-blue-600">{pcrId || "N/A"}</p>
+    </div>
+    <FiExternalLink className="text-slate-300" />
+  </div>
+);

@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -15,99 +16,138 @@ export default function LitterRegistration() {
   const [registerLitter, { isLoading }] = useRegisterLitterMutation();
 
   const [formData, setFormData] = useState({
-    // Basic Info
-    name: "",
+    // 1. Basic Info (Matches CreateLitterDto)
+    litterName: "",
+    dateOfBirth: "",
     breedId: "",
-    breedName: "",
-    selectedBreed: null as any,
+    breedName: "", // For UI
+    selectedBreed: null as any, // For UI
     generation: "",
-    microchipId: "",
-
-    // Parentage
+    
+    // 2. Parentage
     motherPcrId: "",
     fatherPcrId: "",
 
-    // DNA
-    dateOfBirth: "",
+    // 3. Multi-Puppy Support (Matches PuppyDetailDto[])
+    puppies: [
+      { name: "", gender: "MALE", color: "", weight: 0, microchipId: "" }
+    ],
 
-    // Location
-    city: "",
-    state: "",
-    zipCode: "",
-    country: "",
-
-    // Health
-    healthStatus: "Excellent",
-    gender: "MALE", // Default value
-    color: "",
-    weight: 0,
+    // 4. Health & Common (Litter Level)
     vaccinations: [] as string[],
     healthClearances: [] as string[],
     healthNotes: "",
 
-    // Files (Images)
-    uploadedImages: [] as string[], // For previews
-    rawImages: [] as File[], // Actual files
+    // 5. Location
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "USA",
 
-    // Files (Documents)
-    uploadedDocs: [] as string[], // Names for UI preview
-    rawDocs: [] as File[], // Actual files for backend
+    // 6. Media Previews & Raw Files
+    uploadedImages: [] as string[], // Previews
+    rawImages: [] as File[],        // Physical Files (images)
+    uploadedDocs: [] as string[],   // Filenames
+    rawDocs: [] as File[],          // Physical Files (DNAdocuments)
   });
 
   const updateFormData = (data: Partial<typeof formData>) =>
     setFormData((prev) => ({ ...prev, ...data }));
 
-  const handleSubmit = async () => {
-    try {
-      const submissionData = new FormData();
+const handleSubmit = async () => {
+  try {
+    const submissionData = new FormData();
 
-      // 1. Data processing
-      const skipKeys = [
-        "rawImages",
-        "uploadedImages",
-        "rawDocs",
-        "uploadedDocs",
-        "selectedBreed",
-        "breedName",
-      ];
+    // 1. Simple Strings/Numbers
+    submissionData.append("litterName", formData.litterName);
+    submissionData.append("dateOfBirth", formData.dateOfBirth);
+    submissionData.append("breedId", formData.breedId);
+    submissionData.append("city", formData.city);
+    submissionData.append("state", formData.state);
+    submissionData.append("zipCode", formData.zipCode);
+    submissionData.append("country", formData.country);
+    submissionData.append("healthNotes", formData.healthNotes || "");
 
-      Object.entries(formData).forEach(([key, value]) => {
-        if (skipKeys.includes(key)) return;
+    if (formData.motherPcrId)
+      submissionData.append("motherPcrId", formData.motherPcrId);
+    if (formData.fatherPcrId)
+      submissionData.append("fatherPcrId", formData.fatherPcrId);
 
-        // Array format handle (e.g. vaccinations, healthClearances)
-        if (Array.isArray(value)) {
-          // Backend jodi direct array na nite pare, tahole JSON stringify kora lagte pare
-          // Normally FormData te same key multiple bar append korle array hisebe jay
-          value.forEach((val) => submissionData.append(key, val));
-        } else if (value !== undefined && value !== null && value !== "") {
-          submissionData.append(key, value.toString());
-        }
-      });
+    // 2. Arrays (Enums) - NestJS style multiple append
+    formData.vaccinations.forEach((v) =>
+      submissionData.append("vaccinations[]", v),
+    );
+    formData.healthClearances.forEach((h) =>
+      submissionData.append("healthClearances[]", h),
+    );
 
-      // 2. Append Physical Image Files
-      formData.rawImages.forEach((file) => {
-        submissionData.append("images", file);
-      });
+    // 3. Nested Puppies Fix (Backend syntax: puppies[0][name])
+    formData.puppies.forEach((pup, index) => {
+      submissionData.append(`puppies[${index}][name]`, pup.name);
+      submissionData.append(`puppies[${index}][gender]`, pup.gender);
+      submissionData.append(`puppies[${index}][color]`, pup.color);
+      submissionData.append(`puppies[${index}][weight]`, String(pup.weight));
+      submissionData.append(`puppies[${index}][microchipId]`, pup.microchipId);
+    });
 
-      // 3. Append Physical Document Files
-      formData.rawDocs.forEach((file) => {
-        submissionData.append("documents", file);
-      });
+    // 4. Physical Files (Field name must match Backend Interceptor)
+    formData.rawImages.forEach((file) => {
+      submissionData.append("images", file);
+    });
 
-      const res = await registerLitter(submissionData).unwrap();
+    // BACKEND-E docs NAAM-E INTERCEPTOR CHHILO, TAI docs HOBE
+    formData.rawDocs.forEach((file) => {
+      submissionData.append("docs", file);
+    });
+
+    const res = await registerLitter(submissionData).unwrap();
+
+    // 5. Payment Redirect Logic
+    if (res?.url) {
+      // Jodi payment session URL ashe, tobe redirect koro
+      window.location.href = res.url;
+    } else {
       toast.success(res?.message || "Litter registered successfully!");
-
-      // 4. Reset on Success
-      setCurrentStep(1);
-      // setFormData (reset logi placeholder)
-    } catch (error: any) {
-      const errorMsg = error?.data?.message || "Registration failed";
-      toast.error(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
+      // Reset logic only for free registration
+      resetForm();
     }
-  };
+  } catch (error: any) {
+    const errorMsg = error?.data?.message || "Registration failed";
+    toast.error(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
+  }
+};
+
+const resetForm = () => {
+  setCurrentStep(1);
+  setFormData({
+    litterName: "",
+    dateOfBirth: "",
+    breedId: "",
+    breedName: "",
+    selectedBreed: null,
+    generation: "",
+    motherPcrId: "",
+    fatherPcrId: "",
+    puppies: [
+      { name: "", gender: "MALE", color: "", weight: 0, microchipId: "" },
+    ],
+    vaccinations: [],
+    healthClearances: [],
+    healthNotes: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "USA",
+    uploadedImages: [],
+    rawImages: [],
+    uploadedDocs: [],
+    rawDocs: [],
+  });
+};
 
   return (
     <div className="min-h-screen relative py-8 px-4">
+      {/* Background Decor */}
       <div
         className="fixed inset-0 bg-contain bg-no-repeat pointer-events-none -z-10 opacity-30"
         style={{ backgroundImage: `url(${subtract})` }}
@@ -116,12 +156,13 @@ export default function LitterRegistration() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Real dogs, real verification
+            Litter Group Registration
           </h1>
-          <p className="text-gray-600">Complete the form for verified PCR ID</p>
+          <p className="text-gray-600">Register multiple puppies under one verified litter profile.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Main Form Area */}
           <div className="md:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <LitterRegistryStepIndicator currentStep={currentStep} />
 
