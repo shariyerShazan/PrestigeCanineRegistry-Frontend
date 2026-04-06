@@ -1,27 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useGetAdminLitterByIdQuery } from "@/redux/features/admin-litter/admin.litter.api";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import {
-  FiGrid,
-  FiUsers,
-  FiLayers,
-  FiActivity,
-  FiCamera,
-  FiMapPin,
-  FiExternalLink,
-  FiArrowRight,
-} from "react-icons/fi";
+import { Layers, Activity, MapPin as MapPinIcon, Component, Loader2, Users } from "lucide-react";
+import { FiArrowRight } from "react-icons/fi";
 import { format } from "date-fns";
 import { useNavigate } from "react-router";
+
+export const DataBox = ({ label, value, valueColor, icon: Icon }: any) => (
+  <div className="bg-slate-50 p-4 rounded-xl border shadow-sm flex flex-col justify-between">
+    <div className="flex justify-between items-start mb-2">
+      <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">
+        {label}
+      </p>
+      {Icon && <Icon className="text-slate-400" size={16} />}
+    </div>
+    <p className={`text-sm md:text-base font-bold truncate ${valueColor}`}>{value || "N/A"}</p>
+  </div>
+);
 
 interface Props {
   id: string | null;
@@ -31,11 +28,7 @@ interface Props {
 
 const LitterViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
   const navigate = useNavigate();
-  const { data: response, isLoading } = useGetAdminLitterByIdQuery(
-    id as string,
-    { skip: !id || !open },
-  );
-
+  const { data: response, isLoading } = useGetAdminLitterByIdQuery(id as string, { skip: !id || !open });
   const litter = response?.data;
 
   const formatDate = (dateString: string | undefined) => {
@@ -55,108 +48,86 @@ const LitterViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[850px] h-[90vh] p-0 overflow-hidden border-0 rounded-2xl shadow-xl bg-white">
-        {/* ✅ HEADER (UNCHANGED) */}
-        <div className="bg-[#2B4C8A] p-8  text-white relative">
-          <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-            <FiLayers size={100} />
-          </div>
-          <DialogHeader>
-            <div className="flex items-center gap-4">
-              <div className="bg-[#D4AF37] p-3 rounded-xl shadow-lg">
-                <FiLayers className="text-[#2B4C8A] size-7" />
-              </div>
-              <div>
-                <DialogTitle className="text-white text-3xl font-black tracking-tight">
-                  Litter Group Profile
-                </DialogTitle>
-                <p className="text-blue-100/70 text-sm uppercase tracking-[0.2em] font-bold mt-1">
-                  Official Genealogy & Bloodline Record
-                </p>
-              </div>
-            </div>
-          </DialogHeader>
-        </div>
-
+      <DialogContent className="sm:max-w-[1000px] p-0 overflow-hidden border-0 rounded-2xl shadow-xl bg-white">
         {isLoading ? (
-          <div className="h-[500px] flex flex-col items-center justify-center gap-4 bg-white">
-            <div className="w-10 h-10 border-4 border-slate-100 border-t-[#2B4C8A] rounded-full animate-spin" />
-            <p className="text-slate-400 text-xs font-black tracking-widest uppercase">
-              Synchronizing Registry...
-            </p>
+          <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
+            <Loader2 className="w-10 h-10 animate-spin text-[#2B4C8A]" />
+            <p className="text-xs uppercase tracking-widest text-slate-400">Loading registry data...</p>
           </div>
         ) : (
-          <ScrollArea className="max-h-[85vh] pb-22  bg-[#FDFDFD]">
-            <div className="p-8 space-y-10">
-              {/* Metrics */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <MetricItem label="Litter Name" value={litter?.name} />
-                <MetricItem label="PCR ID" value={litter?.pcrId} isMono />
-                <MetricItem
-                  label="Whelping Date"
-                  value={formatDate(litter?.dateOfBirth)}
-                />
-                <MetricItem
-                  label="Registry Tier"
-                  value={litter?.tier ? `${litter.tier} Tier` : "—"}
-                  highlight
-                />
-              </div>
-
-              <Separator />
-
-              {/* Details + Lineage */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 ">
-                <div className="space-y-5">
-                  <SectionTitle
-                    title="Registry Specifications"
-                    icon={<FiGrid size={18} />}
-                  />
-                  <div className="bg-white border rounded-xl p-5 space-y-4">
-                    <DetailRow
-                      label="Breed Group"
-                      value={litter?.breedRelation?.name}
-                    />
-                    <DetailRow
-                      label="Generation"
-                      value={litter?.generation}
-                      highlight
-                    />
-                    <DetailRow
-                      label="PCR Breed Code"
-                      value={litter?.breedRelation?.pcrCode}
-                      isMono
-                    />
-                    <div className="flex items-center justify-between pt-2">
-                      <span className="text-xs font-bold text-slate-400 uppercase">
-                        Location
-                      </span>
-                      <span className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                        <FiMapPin className="text-[#D4AF37]" />
-                        {litter?.city}, {litter?.state}
-                      </span>
+          <ScrollArea className="max-h-[90vh]">
+            <div className="p-6 md:p-10 space-y-10">
+              
+              {/* Header Info Style */}
+              <div className="flex flex-col md:flex-row gap-8 items-start mb-8">
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden border-4 border-slate-100 bg-slate-200 shrink-0">
+                     {litter?.images?.[0]?.url ? (
+                       <img src={litter.images[0].url} className="w-full h-full object-cover" />
+                     ) : (
+                       <div className="w-full h-full flex items-center justify-center text-slate-400">
+                         <Layers size={40} />
+                       </div>
+                     )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 flex-wrap mb-2">
+                      <h1 className="text-3xl font-bold text-slate-900 tracking-tight">{litter?.name || "Unnamed Litter"}</h1>
+                      {litter?.tier && (
+                        <Badge className="bg-[#D4AF37] text-black">
+                          {litter.tier} Tier
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm font-medium text-slate-500">
+                       <p className="flex items-center gap-1.5 font-bold"><Component size={16} /> Breed Group: {litter?.breedRelation?.name || "N/A"}</p>
+                       <p className="flex items-center gap-1.5"><MapPinIcon size={16} /> {litter?.city}, {litter?.state}</p>
                     </div>
                   </div>
-                </div>
+              </div>
 
-                <div className="space-y-5">
-                  <SectionTitle
-                    title="Direct Lineage"
-                    icon={<FiUsers size={18} />}
-                  />
-                  <div className="space-y-3">
-                    <ParentCard
-                      label="Sire (Father)"
-                      name={litter?.father?.name}
-                      pcrId={litter?.father?.pcrId}
-                      onClick={() => handleRedirect(litter?.father?.pcrId)}
-                    />
-                    <ParentCard
-                      label="Dam (Mother)"
-                      name={litter?.mother?.name}
-                      pcrId={litter?.mother?.pcrId}
-                      onClick={() => handleRedirect(litter?.mother?.pcrId)}
-                    />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
+                 <DataBox label="PCR ID" value={litter?.pcrId} valueColor="text-blue-600 font-mono" icon={Component} />
+                 <DataBox label="Whelping Date" value={formatDate(litter?.dateOfBirth)} valueColor="text-slate-800" icon={Activity} />
+                 <DataBox label="Generation" value={litter?.generation || "PUREBRED"} valueColor="text-slate-800" icon={Layers} />
+                 <DataBox label="Total Pups" value={litter?.puppies?.length || 0} valueColor="text-[#E17100]" icon={Users} />
+              </div>
+
+              {/* Lineage */}
+              <div>
+                <div className="mb-4 border-b pb-2">
+                  <h3 className="text-sm font-semibold tracking-wide text-slate-700 uppercase">Direct Lineage</h3>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div
+                    onClick={() => handleRedirect(litter?.father?.pcrId)}
+                    className="bg-slate-50 border rounded-xl p-5 flex justify-between items-center cursor-pointer hover:border-[#D4AF37] hover:shadow-md transition-all group"
+                  >
+                    <div>
+                      <div className="flex gap-2 items-center mb-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Sire (Father)</p>
+                      </div>
+                      <p className="font-bold text-slate-800 text-lg">{litter?.father?.name || "Unknown Lineage"}</p>
+                      <p className="text-sm font-mono text-blue-600 mt-1">{litter?.father?.pcrId || "—"}</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:bg-amber-100 group-hover:text-amber-600 transition-colors">
+                       <FiArrowRight size={18} />
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => handleRedirect(litter?.mother?.pcrId)}
+                    className="bg-slate-50 border rounded-xl p-5 flex justify-between items-center cursor-pointer hover:border-[#D4AF37] hover:shadow-md transition-all group"
+                  >
+                    <div>
+                      <div className="flex gap-2 items-center mb-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Dam (Mother)</p>
+                      </div>
+                      <p className="font-bold text-slate-800 text-lg">{litter?.mother?.name || "Unknown Lineage"}</p>
+                      <p className="text-sm font-mono text-blue-600 mt-1">{litter?.mother?.pcrId || "—"}</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:bg-amber-100 group-hover:text-amber-600 transition-colors">
+                       <FiArrowRight size={18} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -164,88 +135,35 @@ const LitterViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
               {/* Puppies */}
               <div className="space-y-5">
                 <div className="flex justify-between items-center border-b pb-3">
-                  <SectionTitle
-                    title="Offspring Inventory"
-                    icon={<FiActivity size={18} />}
-                  />
+                  <h3 className="text-sm font-semibold tracking-wide text-slate-700 uppercase">Offspring Inventory</h3>
                   <Badge className="bg-[#2B4C8A] text-white text-[10px] px-3">
                     {litter?.puppies?.length || 0}
                   </Badge>
                 </div>
 
-                <div className="border rounded-xl overflow-hidden bg-white">
-                  <table className="w-full text-sm">
-                    <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-                      <tr>
-                        <th className="p-4 text-left">Name</th>
-                        <th className="p-4 text-left">PCR ID</th>
-                        <th className="p-4 text-center">Gender</th>
-                        <th className="p-4 text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {litter?.puppies?.length ? (
-                        litter.puppies.map((pup: any, i: number) => (
-                          <tr
-                            key={i}
-                            className="border-t hover:bg-slate-50 cursor-pointer"
-                            onClick={() => handleRedirect(pup.pcrId)}
-                          >
-                            <td className="p-4 font-semibold">{pup.name}</td>
-                            <td className="p-4 font-mono text-blue-600 text-xs">
-                              {pup.pcrId}
-                            </td>
-                            <td className="p-4 text-center">
-                              <Badge variant="secondary">{pup.gender}</Badge>
-                            </td>
-                            <td className="p-4 text-right">
-                              <span className="text-xs font-bold text-slate-400 flex justify-end items-center gap-1">
-                                View <FiArrowRight />
-                              </span>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan={4}
-                            className="p-10 text-center text-slate-400"
-                          >
-                            No puppies found
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                   {litter?.puppies?.length > 0 ? (
+                     litter.puppies.map((pup: any, i: number) => (
+                        <div
+                          key={i}
+                          onClick={() => handleRedirect(pup.pcrId)}
+                          className="bg-slate-50 border rounded-xl p-4 flex flex-col sm:flex-row justify-between sm:items-center gap-3 cursor-pointer hover:border-[#D4AF37] hover:bg-white hover:shadow-sm transition-all"
+                        >
+                           <div>
+                              <p className="font-bold text-slate-800 text-base">{pup.name}</p>
+                              <p className="text-xs font-mono text-blue-600 mt-1">{pup.pcrId}</p>
+                           </div>
+                           <Badge variant="secondary" className="w-max">{pup.gender}</Badge>
+                        </div>
+                     ))
+                   ) : (
+                      <div className="col-span-full py-10 text-center text-slate-400 text-sm bg-slate-50 rounded-xl border-2 border-dashed">
+                        No puppies found.
+                      </div>
+                   )}
                 </div>
               </div>
 
-              {/* Media */}
-              <div className="space-y-5">
-                <SectionTitle
-                  title="Media Assets"
-                  icon={<FiCamera size={18} />}
-                />
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                  {litter?.images?.length ? (
-                    litter.images.map((img: any, idx: number) => (
-                      <div
-                        key={idx}
-                        className="aspect-square rounded-lg overflow-hidden border"
-                      >
-                        <img
-                          src={img.url}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))
-                  ) : (
-                    <div className="col-span-full text-center text-slate-400 text-xs py-8 border rounded-xl border-dashed">
-                      No media available
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           </ScrollArea>
         )}
@@ -255,54 +173,3 @@ const LitterViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
 };
 
 export default LitterViewDialog;
-
-/* ---------- Components ---------- */
-
-const MetricItem = ({ label, value, isMono, highlight }: any) => (
-  <div>
-    <p className="text-[10px] uppercase tracking-wider text-slate-400">
-      {label}
-    </p>
-    <p
-      className={`text-sm font-semibold mt-1 ${
-        highlight ? "text-amber-500" : "text-slate-800"
-      } ${isMono ? "font-mono text-blue-600" : ""}`}
-    >
-      {value || "—"}
-    </p>
-  </div>
-);
-
-const SectionTitle = ({ icon, title }: any) => (
-  <div className="flex items-center gap-2 text-slate-800">
-    <span className="text-[#D4AF37]">{icon}</span>
-    <span className="text-sm font-bold uppercase tracking-wide">{title}</span>
-  </div>
-);
-
-const DetailRow = ({ label, value, isMono, highlight }: any) => (
-  <div className="flex justify-between border-b pb-2">
-    <span className="text-xs text-slate-400 uppercase">{label}</span>
-    <span
-      className={`text-sm font-medium ${
-        highlight ? "text-[#2B4C8A]" : "text-slate-700"
-      } ${isMono ? "font-mono text-blue-600" : ""}`}
-    >
-      {value || "N/A"}
-    </span>
-  </div>
-);
-
-const ParentCard = ({ label, name, pcrId, onClick }: any) => (
-  <div
-    onClick={onClick}
-    className="border rounded-xl p-4 flex justify-between items-center cursor-pointer hover:border-[#D4AF37] transition"
-  >
-    <div>
-      <p className="text-[10px] uppercase text-slate-400">{label}</p>
-      <p className="font-semibold text-slate-800">{name || "Pending"}</p>
-      <p className="text-xs font-mono text-blue-600">{pcrId || "N/A"}</p>
-    </div>
-    <FiExternalLink className="text-slate-300" />
-  </div>
-);

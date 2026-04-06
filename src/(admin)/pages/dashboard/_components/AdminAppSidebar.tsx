@@ -26,6 +26,12 @@ const items = [
     resource: "CANINE",
   },
   {
+    title: "Breed Management",
+    url: "/admin/dashboard/breed-management",
+    icon: LuDog,
+    resource: "SUPER_ONLY",
+  },
+  {
     title: "User Management",
     url: "/admin/dashboard/User-Management",
     icon: LuUsers,

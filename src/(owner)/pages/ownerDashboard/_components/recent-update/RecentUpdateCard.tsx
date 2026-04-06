@@ -1,8 +1,12 @@
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Loader2 } from "lucide-react";
 import { PiClockCountdownLight } from "react-icons/pi";
 import { useUpdateHealthRequestStatusMutation } from "@/redux/features/health-request/healthRequest.api";
 import { toast } from "react-toastify";
+import { jsPDF } from "jspdf";
+import domtoimage from "dom-to-image-more";
+import PrestigeCertificate from "@/(admin)/pages/certificate/Certificate";
 
 type RecentUpdate = {
   id: string;
@@ -20,6 +24,12 @@ type RecentUpdate = {
     | "UNDER_REVIEW"
     | "DECLINE";
   requester?: string;
+  // Make these optional since they may or may not come from the API payload for the card
+  breed?: string;
+  color?: string;
+  owner?: string;
+  kennel?: string;
+  dob?: string;
 };
 
 type Props = {
@@ -30,6 +40,8 @@ type Props = {
 export default function RecentUpdateCard({ data, variant }: Props) {
   const [updateStatus, { isLoading: isUpdating }] =
     useUpdateHealthRequestStatusMutation();
+
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   const variantStyles = {
     gray: "bg-[#E2E2E2] border-[#E2E2E2]",
@@ -49,11 +61,87 @@ export default function RecentUpdateCard({ data, variant }: Props) {
     }
   };
 
+  const handleDownload = async () => {
+    const element = certificateRef.current;
+    if (!element) return;
+
+    // Toast feedback that download is starting
+    toast.info("Generating your certificate...", { autoClose: 2000 });
+
+    try {
+      // Create a cloned off-screen node if necessary, but dom-to-image usually works fine.
+      const scale = 2;
+      const imgData = await domtoimage.toPng(element, {
+        height: element.offsetHeight * scale,
+        width: element.offsetWidth * scale,
+        style: {
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          width: `${element.offsetWidth}px`,
+          height: `${element.offsetHeight}px`,
+        },
+      });
+
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: "a4",
+      });
+
+      // A4 landscape dimensions: 297 x 210 mm
+      pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
+      pdf.save(`${data.dogName}_Certificate.pdf`);
+      toast.success("Downloaded Successfully");
+    } catch (error: any) {
+      toast.error(`Failed to generate PDF: ${error?.message || "Unknown error"}`);
+      console.error("PDF Gen Error:", error);
+    }
+  };
+
   return (
     <div
-      className={`rounded-2xl w-full p-5 border transition-all ${variantStyles[variant]}`}
+      className={`rounded-2xl w-full p-5 border transition-all ${variantStyles[variant]} relative overflow-hidden`}
     >
-      <div className="flex gap-4">
+      <div 
+        style={{ 
+          position: "fixed", 
+          top: "200vh", 
+          left: 0, 
+          zIndex: -9999, 
+          opacity: 0.01 
+        }}
+        id="pdf-cert-wrapper"
+      >
+        {/* Anti-Tailwind-Preflight fix for DOM capturers: strips phantom gray borders */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          #pdf-cert-wrapper * {
+            border-style: none !important;
+            border-width: 0 !important;
+            border-color: transparent !important;
+            box-shadow: none !important;
+          }
+        `}} />
+        <div ref={certificateRef}>
+          <PrestigeCertificate
+            width={1200}
+            data={{
+              name: data.dogName,
+              pcrId: data.pcrId,
+              breed: data.breed || "N/A",
+              color: data.color || "N/A",
+              sex: "N/A", 
+              microchip: data.microchipId,
+              dob: data.dob || "N/A",
+              tier: "Gold",
+              owner: data.owner || "N/A",
+              kennel: data.kennel || "N/A",
+              issueDate: data.submittedAt,
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-4 relative z-10">
         {/* Dog Image */}
         <div className="shrink-0">
           <div className="w-42.5 h-42.5 rounded-xl overflow-hidden shadow-sm">
@@ -152,7 +240,10 @@ export default function RecentUpdateCard({ data, variant }: Props) {
 
               {/* Download button ONLY shows when status is APPROVED */}
               {data.status === "APPROVED" && (
-                <Button className="bg-[#D4AF37] cursor-pointer hover:bg-[#C19B28] text-black font-semibold rounded-lg h-10 px-6 flex items-center gap-2 shadow-sm transition-transform active:scale-95">
+                <Button 
+                   onClick={handleDownload}
+                   className="bg-[#D4AF37] cursor-pointer hover:bg-[#C19B28] text-black font-semibold rounded-lg h-10 px-6 flex items-center gap-2 shadow-sm transition-transform active:scale-95"
+                >
                   <span>Download Certificate</span>
                   <Download className="w-4 h-4" />
                 </Button>

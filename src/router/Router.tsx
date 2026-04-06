@@ -14,6 +14,7 @@ import RoleAndPermission from "@/(admin)/pages/roleAndPermission/RoleAndPermissi
 import ADsetting from "@/(admin)/pages/setting/ADsetting";
 import DTransferOwnerShip from "@/(admin)/pages/transferOwnerShip/TransferOwnerShip";
 import UserManagement from "@/(admin)/pages/userManagement/UserManagement";
+import BreedManagement from "@/(admin)/pages/breedManagement/BreedManagement";
 import ForgotPasswordFlow from "@/(auth)/forgot-pass/AuthForgot";
 import Login from "@/(auth)/login/Login";
 import Register from "@/(auth)/register/Register";
@@ -99,6 +100,10 @@ export const Router = createBrowserRouter([
       {
         path: "User-Management",
         element: <UserManagement />,
+      },
+      {
+        path: "breed-management",
+        element: <BreedManagement />,
       },
       {
         path: "Roles-Permissions",

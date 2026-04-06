@@ -8,13 +8,13 @@ import logo from "@/assets/certificate/logo.png";
 import ConponentLogoBg from "@/assets/certificate/logo.png";
 
 const PrestigeCertificate = ({
-  width = 1200,
+  width = 1000,
   data = {
     name: "GHOST FACE KILLAH",
     pcrId: "PCR-G22-485-102",
     breed: "American Bully (Exotic)",
     color: "Lilac Tri Merle",
-    sex: "Male",
+    sex: "female",
     microchip: "985112345678901",
     dob: "October 12, 2023",
     tier: "Gold",
@@ -25,7 +25,7 @@ const PrestigeCertificate = ({
 }) => {
   const height = width * (650 / 900);
 
-  const s = width / 900;
+  const s = width / 900; 
 
   const containerStyle: any = {
     position: "relative",
