@@ -8,13 +8,13 @@ import logo from "@/assets/certificate/logo.png";
 import ConponentLogoBg from "@/assets/certificate/logo.png";
 
 const PrestigeCertificate = ({
-  width = 1000,
+  width = 1200,
   data = {
     name: "GHOST FACE KILLAH",
     pcrId: "PCR-G22-485-102",
     breed: "American Bully (Exotic)",
     color: "Lilac Tri Merle",
-    sex: "female",
+    sex: "Male",
     microchip: "985112345678901",
     dob: "October 12, 2023",
     tier: "Gold",

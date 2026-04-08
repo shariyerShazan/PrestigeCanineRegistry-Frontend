@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { FiSearch, FiTrash2, FiEdit, FiPlus, FiEye } from "react-icons/fi";
 import CommonTable, { type Column } from "@/(admin)/_components/CommonTable";
 import BreedDialog from "./_components/BreedDialog";
-import BreedDetailsDialog from "./_components/BreedDetailsDialog";
+// import BreedDetailsDialog from "./_components/BreedDetailsDialog";
 import { useGetBreedsWithPaginationQuery, useDeleteBreedMutation } from "@/redux/features/breed/breed.api";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import CommonPagination from "@/components/common/pagination/CommonPagination";
+import BreedDetailsDialog from "./_components/BreedDetailsDialog";
 
 const BreedManagement: React.FC = () => {
   const [page, setPage] = useState(1);

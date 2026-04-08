@@ -1,15 +1,20 @@
-# React + TypeScript + Vite
+# Purebred Canine Registry (PCR) - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend application for the Purebred Canine Registry (PCR), built with **React**, **TypeScript**, and **Vite**.
 
-Currently, two official plugins are available:
+## Documentation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Comprehensive project documentation is available in the `docs/` directory:
 
-## React Compiler
+- [**Project Structure**](docs/structured.md): Directory and file organization.
+- [**Application Routes**](docs/routes.md): List of app routes categorized by role.
+- [**Data Design**](docs/bddesign.md): Overview of Redux state and data models.
+- [**Setup & Usage**](docs/install.use.md): Instructions for installation and running the dev server.
+- [**Architecture**](docs/architecture.md): High-level system design and technical choices.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
+
+## React + TypeScript + Vite
 
 ## Expanding the ESLint configuration
 

@@ -55,7 +55,7 @@ const CanineViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[1000px] p-0 overflow-hidden border-0 rounded-2xl shadow-xl bg-white">
+      <DialogContent className="sm:max-w-250 p-0 overflow-hidden border-0 rounded-2xl shadow-xl bg-white">
         {isLoading ? (
           <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
             <Loader2 className="w-10 h-10 animate-spin text-[#2B4C8A]" />
@@ -155,7 +155,7 @@ const CanineViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
               {/* --- DNA & HEALTH SECTION --- */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                 {/* DNA REPORT SECTION */}
-                <div className="bg-[#1A1A1A] text-white rounded-xl p-6 relative overflow-hidden shadow-xl min-h-[300px]">
+                <div className="bg-[#1A1A1A] text-white rounded-xl p-6 relative overflow-hidden shadow-xl min-h-75">
                   <div className="flex justify-between items-center mb-6">
                     <div className="flex items-center gap-2">
                       <div className="p-2 bg-yellow-600/20 rounded-lg">
@@ -222,7 +222,7 @@ const CanineViewDialog: React.FC<Props> = ({ id, open, onOpenChange }) => {
                 </div>
 
                 {/* HEALTH SUMMARY SECTION */}
-                <div className="relative rounded-xl min-h-[300px] border shadow-md bg-white">
+                <div className="relative rounded-xl min-h-75 border shadow-md bg-white">
                   <HealthSummaryOfOwnerDog
                     status={canine?.healthStatus}
                     vaccinations={canine?.vaccinations || []}

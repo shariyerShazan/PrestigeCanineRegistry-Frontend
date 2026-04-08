@@ -7,9 +7,14 @@ import { GrFlag } from "react-icons/gr";
 import { FiActivity, FiCreditCard } from "react-icons/fi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Home, LogOut } from "lucide-react";
-import { useGetMeQuery, useLogoutMutation } from "@/redux/features/auth/authApi";
+import {
+  useGetMeQuery,
+  useLogoutMutation,
+} from "@/redux/features/auth/authApi";
 import logo from "@/assets/login/logo.png";
 import { toast } from "react-toastify";
+import { GiRegeneration } from "react-icons/gi";
+import { BiSolidDog } from "react-icons/bi";
 
 // Menu items with ResourceType mapping
 const items = [
@@ -28,7 +33,7 @@ const items = [
   {
     title: "Breed Management",
     url: "/admin/dashboard/breed-management",
-    icon: LuDog,
+    icon: GiRegeneration,
     resource: "SUPER_ONLY",
   },
   {
@@ -40,7 +45,7 @@ const items = [
   {
     title: "Litter Management",
     url: "/admin/dashboard/Litter-management",
-    icon: LuDog,
+    icon: BiSolidDog,
     resource: "CANINE", // Same as Canine
   },
   {
@@ -127,7 +132,9 @@ export function AdminAppSidebar({
 
     // 4. Resource based filtering
     // Assuming user.permissions is an array of objects like [{ resource: 'CANINE', action: 'VIEW' }]
-    return (user as any)?.permissions?.some((p: any) => p.resource === item.resource);
+    return (user as any)?.permissions?.some(
+      (p: any) => p.resource === item.resource,
+    );
   });
 
   return (
