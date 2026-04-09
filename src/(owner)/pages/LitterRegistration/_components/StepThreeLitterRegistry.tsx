@@ -1,15 +1,8 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  ShieldCheck,
-  Dna,
-  MapPin,
-  Calendar,
-  Users,
-} from "lucide-react";
+import { ShieldCheck, Dna, MapPin, Calendar, Users } from "lucide-react";
 import { LuDna } from "react-icons/lu";
 import { DataBox, InfoItem } from "@/(user)/pages/dogProfile/DogProfilePage";
 import { Label } from "@radix-ui/react-label";
@@ -43,7 +36,7 @@ export default function StepThreeLitterRegistry({
       return d;
     }
   };
-    const { litterPrice } = useCalculatePricing();
+  const { litterPrice } = useCalculatePricing();
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -242,7 +235,9 @@ export default function StepThreeLitterRegistry({
           >
             {isLoading
               ? "Submitting..."
-              : `Pay $${litterPrice.toFixed(2)} for Regisster`}
+              : litterPrice > 0
+                ? `Pay $${litterPrice.toFixed(2)} for Register`
+                : "Register for Free"}
           </button>
         </div>
       </div>

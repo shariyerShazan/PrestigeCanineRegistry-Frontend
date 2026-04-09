@@ -103,7 +103,6 @@
 
 // export default ReportManagement;
 
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
@@ -125,6 +124,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import CommonPagination from "@/components/common/pagination/CommonPagination";
 import ReportDetailsDialog from "./_components/ReportDetailsDialog";
+import { useNavigate } from "react-router";
 // import { ReportDetailsDialog } from "./_components/ReportDetailsDialog";
 
 const ReportManagement: React.FC = () => {
@@ -133,7 +133,7 @@ const ReportManagement: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [viewId, setViewId] = useState<string | null>(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
-console.log(search)
+  console.log(search);
   // 1. Logic to clear viewId when dialog closes to prevent stale data
   useEffect(() => {
     if (!isViewOpen) {
@@ -183,15 +183,28 @@ console.log(search)
     setViewId(id);
     setIsViewOpen(true);
   };
+  const navigate = useNavigate();
+  const handleUserClick = (pcrId: string) => {
+    if (!pcrId) return;
+    //  setOpen(false);
+    navigate(`/admin/dashboard/user-management?pcrId=${pcrId}`);
+  };
 
   const columns: Column<any>[] = [
     { header: "REPORT ID", key: "reportId" },
     {
       header: "REPORTER",
       render: (row) => (
-        <div>
-          <p className="font-bold text-slate-800">{row.reporterName}</p>
-          <p className="text-xs text-slate-400">{row.reporterEmail}</p>
+        <div
+          onClick={() => handleUserClick(row.reporter?.pcrId)}
+          className="group"
+        >
+          <p className="font-bold text-slate-800 group-hover:text-[#D4AF37] group-hover:cursor-pointer">
+            {row.reporterName}
+          </p>
+          <p className="text-xs text-slate-400 group-hover:text-[#D4AF37] group-hover:cursor-pointer">
+            {row.reporterEmail}
+          </p>
         </div>
       ),
     },

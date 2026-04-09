@@ -23,6 +23,7 @@ import {
 
 import { FiUser, FiShield, FiFlag, FiFileText, FiBell } from "react-icons/fi";
 import { LuDog } from "react-icons/lu";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 
 
 
@@ -69,6 +70,13 @@ const ActivityLog: React.FC = () => {
           border: "border-purple-100",
           text: "text-purple-700",
         };
+      case "TRANSFER_OWNERSHIP": 
+      return {
+        icon: <AiOutlineUserSwitch className="text-pink-500" />,
+        bg: "bg-purple-50",
+        border: "border-pink-100",
+        text: "text-pink-700",
+      };
       default:
         return {
           icon: <FiBell className="text-slate-400" />,
@@ -82,7 +90,7 @@ const ActivityLog: React.FC = () => {
   // 1. RTK Query for List (Real-time update logic slice e thakle ekhane auto hobe)
   const { data: response, isLoading } = useGetNotificationsQuery({
     searchTerm: search,
-    isRead: status === "all" ? undefined : status === "read",
+    isRead: status === "all" ? undefined : status === "read" ? "true" : "false",
     page,
     limit,
   });
@@ -129,20 +137,29 @@ const ActivityLog: React.FC = () => {
     {
       header: "NOTIFICATION",
       render: (row) => (
-        <div className="py-1 max-w-[400px]">
-          <div className="flex items-center gap-2">
-            {!row.isRead && (
-              <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse flex-shrink-0" />
+        <div className="py-2 w-[400px]">
+          <div className="flex items-start gap-2">
+            {!row.isRead ? (
+              <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse mt-1.5 flex-shrink-0" />
+            ) : (
+              <span className="h-2 w-2 rounded-full mt-1.5 flex-shrink-0" />
             )}
-            <p
-              className={`text-[14px] ${row.isRead ? "font-medium text-slate-600" : "font-bold text-slate-900"}`}
-            >
-              {row.title}
-            </p>
+            <div className="flex-1 min-w-0">
+              <p
+                className={`text-[14px] leading-tight ${
+                  row.isRead
+                    ? "font-medium text-slate-600"
+                    : "font-bold text-slate-900"
+                }`}
+              >
+                {row.title}
+              </p>
+              {/* break-words ebong whitespace-normal message-ke wrap korbe */}
+              <p className="text-[12px] text-slate-400 mt-1 whitespace-normal break-words leading-snug">
+                {row.message}
+              </p>
+            </div>
           </div>
-          <p className="text-[12px] text-slate-400 mt-1 line-clamp-1">
-            {row.message}
-          </p>
         </div>
       ),
     },

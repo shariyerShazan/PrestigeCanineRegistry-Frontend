@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -6,7 +5,7 @@ import { useGetMyCaninesQuery } from "@/redux/features/canine/canine.api";
 import { OwnerDogDetailsCard } from "../../_components/OwnerDogDetailsCard";
 import { useCreateCertificateRequestMutation } from "@/redux/features/certificate-request/certificate.req.api";
 import { toast } from "react-toastify";
-
+import { useCalculatePricing } from "@/Layout/OwnerLayout";
 
 const AllPublishedDogs = ({
   activeFilter = "all",
@@ -14,9 +13,10 @@ const AllPublishedDogs = ({
   activeFilter?: string;
 }) => {
   const navigate = useNavigate();
-  
+
   // RTK Mutation Hook
-  const [createRequest, { isLoading: isRequesting }] = useCreateCertificateRequestMutation();
+  const [createRequest, { isLoading: isRequesting }] =
+    useCreateCertificateRequestMutation();
 
   const queryParams: any = {
     page: 1,
@@ -31,13 +31,23 @@ const AllPublishedDogs = ({
   const { data: canineResponse, isLoading } = useGetMyCaninesQuery(queryParams);
   const dogs = canineResponse?.data || [];
 
+  const { certificatePrice } = useCalculatePricing();
   // Handler function for certificate request
   const handleRequestCertificate = async (canineId: string) => {
     try {
-      await createRequest({ canineId }).unwrap();
-      toast.success("Certificate request submitted successfully!");
+      const res = await createRequest({ canineId }).unwrap();
+
+      if (res?.url) {
+        toast.info("Redirecting to payment...");
+        window.location.href = res.url;
+      } else {
+        toast.success(
+          res?.message || "Certificate request submitted successfully!",
+        );
+      }
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to submit request");
+      const errorMsg = error?.data?.message || "Failed to submit request";
+      toast.error(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
     }
   };
 
@@ -75,9 +85,11 @@ const AllPublishedDogs = ({
                   disabled={isRequesting}
                   variant="outline"
                   size="sm"
-                  className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#1e355f] text-xs cursor-pointer disabled:opacity-50"
+                  className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] hover:text-[#D4AF37] text-white hover:bg-[#1e355f] text-xs cursor-pointer disabled:opacity-50"
                 >
-                  {isRequesting ? "Requesting..." : "Request Certificate"}
+                  {isRequesting
+                    ? "Processing..."
+                    : `Request Certificate ${certificatePrice > 0 ? `($${certificatePrice.toFixed(2)})` : "(Free)"}`}
                 </Button>
                 <Button
                   onClick={() => navigate("/owner/dashboard/transfer-owner")}

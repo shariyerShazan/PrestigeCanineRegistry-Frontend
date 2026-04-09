@@ -38,7 +38,7 @@ const items = [
   },
   {
     title: "User Management",
-    url: "/admin/dashboard/User-Management",
+    url: "/admin/dashboard/user-Management",
     icon: LuUsers,
     resource: "USER",
   },

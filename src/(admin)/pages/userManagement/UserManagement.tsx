@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +30,7 @@ import {
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import CommonPagination from "@/components/common/pagination/CommonPagination";
+import { useSearchParams } from "react-router";
 
 
 const UserManagement: React.FC = () => {
@@ -39,6 +40,15 @@ const UserManagement: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [viewUserId, setViewUserId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [searchParams] = useSearchParams();
+
+
+  useEffect(() => {
+    const pcrIdFromUrl = searchParams.get("pcrId");
+    if (pcrIdFromUrl) {
+      setSearch(pcrIdFromUrl); // Search input e PCR ID set hoye jabe
+    }
+  }, [searchParams]);
 
   const { data: usersResponse, isLoading } = useGetAllUsersQuery({
     page,
@@ -227,6 +237,7 @@ const UserManagement: React.FC = () => {
             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <Input
               className="pl-10 w-64 h-10 border-[#2B4C8A]/20"
+              value={search}
               placeholder="Search user..."
               onChange={(e) => setSearch(e.target.value)}
             />

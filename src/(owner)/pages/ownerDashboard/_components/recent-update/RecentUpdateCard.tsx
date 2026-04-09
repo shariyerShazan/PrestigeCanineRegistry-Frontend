@@ -270,7 +270,7 @@ export default function RecentUpdateCard({ data, variant }: Props) {
                 <Button
                   disabled={isUpdating || data.status !== "PENDING"}
                   onClick={() => handleStatusUpdate("APPROVED")}
-                  className={`font-medium rounded-lg h-10 px-8 shadow-sm transition-colors ${
+                  className={`font-medium rounded-lg h-10 px-8 shadow-sm transition-colors cursor-pointer ${
                     data.status === "APPROVED"
                       ? "bg-green-100 text-green-700 border border-green-200"
                       : "bg-[#00A63E] hover:bg-[#008C34] text-white disabled:bg-gray-200 disabled:text-gray-400"
@@ -288,7 +288,7 @@ export default function RecentUpdateCard({ data, variant }: Props) {
                 <Button
                   disabled={isUpdating || data.status !== "PENDING"}
                   onClick={() => handleStatusUpdate("REJECTED")}
-                  className={`font-medium rounded-lg h-10 px-8 shadow-sm transition-colors ${
+                  className={`font-medium rounded-lg h-10 px-8 shadow-sm transition-colors cursor-pointer ${
                     data.status === "REJECTED"
                       ? "bg-red-100 text-red-700 border border-red-200"
                       : "bg-[#E7000B] hover:bg-[#C10009] text-white disabled:bg-gray-200 disabled:text-gray-400"

@@ -7,11 +7,24 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { LuFingerprint, LuMail, LuShieldCheck, LuUserCog } from "react-icons/lu";
+import {
+  LuFingerprint,
+  LuMail,
+  LuShieldCheck,
+  LuUserCog,
+} from "react-icons/lu";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useNavigate } from "react-router";
 
 const ViewPermissionDialog = ({ isOpen, onClose, adminData }: any) => {
   if (!adminData) return null;
+  const navigate = useNavigate();
+
+  const handleUserClick = (pcrId: string) => {
+    if (!pcrId) return;
+    //  setOpen(false);
+    navigate(`/admin/dashboard/user-management?pcrId=${pcrId}`);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -41,7 +54,10 @@ const ViewPermissionDialog = ({ isOpen, onClose, adminData }: any) => {
                   <LuMail className="size-3.5 text-blue-200" />
                   <span className="text-xs font-medium">{adminData.email}</span>
                 </div>
-                <div className="flex items-center gap-1.5 bg-black/20 px-3 py-1 rounded-full border border-white/10">
+                <div
+                  onClick={() => handleUserClick(adminData.pcrId)}
+                  className="flex items-center gap-1.5 bg-black/20 px-3 py-1 rounded-full border border-white/10 hover:shadow hover:border-[#D4AF37] hover:cursor-pointer"
+                >
                   <LuFingerprint className="size-3.5 text-amber-200" />
                   <span className="text-xs font-medium">
                     ID: {adminData.pcrId || "N/A"}

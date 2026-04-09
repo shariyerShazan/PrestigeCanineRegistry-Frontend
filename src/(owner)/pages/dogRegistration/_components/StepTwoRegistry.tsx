@@ -77,8 +77,16 @@ export default function StepTwoRegistry({
         </label>
         <input
           type="text"
+          inputMode="numeric" // Mobile keyboard-e numeric keypad open hobe
           value={formData.microchipId}
-          onChange={(e) => updateFormData({ microchipId: e.target.value })}
+          onChange={(e) => {
+            const value = e.target.value;
+            // Shudhu numbers allow korbe ebong max 15 digit check korbe
+            if (/^\d*$/.test(value) && value.length <= 15) {
+              updateFormData({ microchipId: value });
+            }
+          }}
+          maxLength={15} // HTML level-e restrict kore dibe
           placeholder="15 digit microchip number"
           className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#D4AF37] outline-none"
         />

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,7 +32,7 @@ const DogRegistrationRequest: React.FC = () => {
   const [editData, setEditData] = useState<any | null>(null);
   const limit = 10;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const pcrIdFromUrl = searchParams.get("pcrId");
     if (pcrIdFromUrl) {
       setSearchTerm(pcrIdFromUrl);
@@ -250,6 +250,7 @@ const DogRegistrationRequest: React.FC = () => {
             <Input
               className="pl-10 w-full md:w-64 h-10 border-[#2B4C8A] focus-visible:ring-[#2B4C8A]/30"
               placeholder="Search by name/pcrId..."
+              value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1); // Reset to first page on search

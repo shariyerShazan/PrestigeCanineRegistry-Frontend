@@ -9,7 +9,7 @@ import DogRegistrationRequest from "@/(admin)/pages/dogRegistrationRequest/DogRe
 import LitterRegistrationRequest from "@/(admin)/pages/litter-registry-req/LitterRegistrationRequest";
 import MembershipPlanManage from "@/(admin)/pages/membership-plan/MembershipPlanManage";
 import ReportManagement from "@/(admin)/pages/reportManagement/ReportManagement";
-import ReportManagementView from "@/(admin)/pages/reportManagement/reportView/ReportManagementView";
+// import ReportManagementView from "@/(admin)/pages/reportManagement/reportView/ReportManagementView";
 import RoleAndPermission from "@/(admin)/pages/roleAndPermission/RoleAndPermission";
 import ADsetting from "@/(admin)/pages/setting/ADsetting";
 import DTransferOwnerShip from "@/(admin)/pages/transferOwnerShip/TransferOwnerShip";
@@ -98,7 +98,7 @@ export const Router = createBrowserRouter([
         element: <DTransferOwnerShip />,
       },
       {
-        path: "User-Management",
+        path: "user-Management",
         element: <UserManagement />,
       },
       {
@@ -129,10 +129,10 @@ export const Router = createBrowserRouter([
         path: "Reports-Management",
         element: <ReportManagement />,
       },
-      {
-        path: "Reports-Management/:reportId",
-        element: <ReportManagementView />,
-      },
+      // {
+      //   path: "Reports-Management/:reportId",
+      //   element: <ReportManagementView />,
+      // },
       {
         path: "settings",
         element: <ADsetting />,

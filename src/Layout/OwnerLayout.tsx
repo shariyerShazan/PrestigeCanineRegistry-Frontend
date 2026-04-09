@@ -100,7 +100,7 @@ export const useCalculatePricing = () => {
   const membership = user?.membership;
   const counts = user?._count;
 
-  const getPrice = (type: "CANINE_REG" | "LITTER_REG") => {
+  const getPrice = (type: "CANINE_REG" | "LITTER_REG" | "CERTIFICATE") => {
     if (!membership) return 0;
 
     // 1. Service Pricing theke base price khuje ber kora
@@ -128,12 +128,18 @@ export const useCalculatePricing = () => {
       return basePrice - basePrice * (discount / 100);
     }
 
+    if (type === "CERTIFICATE") {
+      const discount = membership.certificateDiscount || 0;
+      return basePrice * (1 - discount);
+    }
+
     return basePrice;
   };
 
   return {
     caninePrice: getPrice("CANINE_REG"),
     litterPrice: getPrice("LITTER_REG"),
+    certificatePrice: getPrice("CERTIFICATE"),
     membershipName: membership?.name || "Standard",
     canineUsed: counts?.canines || 0,
     canineLimit: membership?.canineLimit || 0,

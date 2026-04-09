@@ -21,12 +21,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 // import HealthSummaryOfOwnerDog from "./_components/HealthSummary";
 import { useGetCanineByIdQuery } from "@/redux/features/canine/canine.api";
 import { HealthSummaryOfOwnerDog } from "./_components/HealthSummary";
+import { useCalculatePricing } from "@/Layout/OwnerLayout";
+import { toast } from "react-toastify";
+import { useCreateCertificateRequestMutation } from "@/redux/features/certificate-request/certificate.req.api";
 
 const OwnerDogPreview = () => {
   const { canineId } = useParams();
   const navigate = useNavigate();
-
-  const { data: canine, isLoading, isError } = useGetCanineByIdQuery(canineId);
+const { data: canine, isLoading, isError } = useGetCanineByIdQuery(canineId);
+const [createRequest, { isLoading: isRequesting }] =
+  useCreateCertificateRequestMutation();
+const { certificatePrice } = useCalculatePricing();
 
   if (isLoading)
     return (
@@ -55,6 +60,24 @@ const OwnerDogPreview = () => {
     },
   );
 
+  const handleRequestCertificate = async (canineId: string) => {
+    try {
+      const res = await createRequest({ canineId }).unwrap();
+
+      if (res?.url) {
+        toast.info("Redirecting to payment...");
+        window.location.href = res.url;
+      } else {
+        toast.success(
+          res?.message || "Certificate request submitted successfully!",
+        );
+      }
+    } catch (error: any) {
+      const errorMsg = error?.data?.message || "Failed to submit request";
+      toast.error(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen font-sans">
       {/* --- TOP NAVIGATION --- */}
@@ -65,14 +88,14 @@ const OwnerDogPreview = () => {
         >
           <ChevronLeft size={20} /> Back
         </button>
-        <div className="flex gap-4 text-gray-500">
+        {/* <div className="flex gap-4 text-gray-500">
           <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer">
             <Flag size={16} /> Report
           </button>
           <button className="flex items-center gap-1 text-sm hover:underline cursor-pointer">
             <Share2 size={16} /> Share
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -93,12 +116,12 @@ const OwnerDogPreview = () => {
                 className="w-20 h-20 rounded-lg object-cover border"
               />
             ))}
-            <div className="w-20 h-20 rounded-lg bg-gray-100 flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200">
+            {/* <div className="w-20 h-20 rounded-lg bg-gray-100 flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200">
               <Camera size={20} />
               <span className="text-xs font-medium">
                 {canine.images?.length || 0} photos
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -188,14 +211,15 @@ const OwnerDogPreview = () => {
 
           <div className="flex gap-2 mt-4">
             <Button
-              // onClick={() =>
-              //   navigate(`/owner/dashboard/certificate/${canine.id}`)
-              // }
+              onClick={() => handleRequestCertificate(canineId!)}
+              disabled={isRequesting}
               variant="outline"
               size="sm"
-              className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#1e355f] text-xs cursor-pointer"
+              className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] text-white hover:bg-[#1e355f] text-xs cursor-pointer disabled:opacity-50"
             >
-              Request Certificate
+              {isRequesting
+                ? "Processing..."
+                : `Request Certificate ${certificatePrice > 0 ? `($${certificatePrice.toFixed(2)})` : "(Free)"}`}
             </Button>
             <Button
               onClick={() => navigate("/owner/dashboard/transfer-owner")}

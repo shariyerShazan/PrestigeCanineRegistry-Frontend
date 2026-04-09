@@ -12,6 +12,7 @@ import {
 import { LuDog } from "react-icons/lu";
 import { format } from "date-fns";
 import { useGetNotificationsQuery } from "@/redux/features/notification/notificationsApi";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 
 const OverViewAdmin = () => {
   // 1. Fetching last 5 notifications
@@ -45,6 +46,11 @@ const OverViewAdmin = () => {
       case "CERTIFICATE":
         return {
           icon: <FiFileText className="text-purple-500" />,
+          bg: "bg-purple-50",
+        };
+      case "TRANSFER_OWNERSHIP":
+        return {
+          icon: <AiOutlineUserSwitch className="text-pink-500" />,
           bg: "bg-purple-50",
         };
       default:

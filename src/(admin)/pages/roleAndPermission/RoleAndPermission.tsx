@@ -14,6 +14,7 @@ import ViewPermissionDialog from "./_components/ViewPermissionDialog";
 import { useDeleteAllPermissionsMutation, useListAdminsQuery } from "@/redux/features/admin-permission/admin.permission";
 import CommonPagination from "@/components/common/pagination/CommonPagination";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const RoleAndPermission: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -76,6 +77,13 @@ const RoleAndPermission: React.FC = () => {
     setIsDialogOpen(true);
   };
 
+  const navigate = useNavigate();
+    const handleUserClick = (pcrId: string) => {
+      if (!pcrId) return;
+      //  setOpen(false);
+      navigate(`/admin/dashboard/user-management?pcrId=${pcrId}`);
+    };
+
 const columns: Column<any>[] = [
   {
     header: "Account",
@@ -99,12 +107,20 @@ const columns: Column<any>[] = [
     ),
   },
   {
-    header: "Email Address",
-    key: "email",
-  },
-  {
-    header: "PCR ID",
-    key: "pcrId",
+    header: "User Details",
+    render: (row) => (
+      <div
+        className="cursor-pointer group"
+        onClick={() => handleUserClick(row.pcrId)}
+      >
+        <p className="font-bold text-slate-800 group-hover:text-[#D4AF37] group-hover:cursor-pointer">
+          {row.pcrId || "N/A"}
+        </p>
+        <p className="text-xs text-slate-400 group-hover:text-[#D4AF37] group-hover:cursor-pointer">
+          {row.email}
+        </p>
+      </div>
+    ),
   },
   {
     header: "Last active",

@@ -16,8 +16,8 @@ export interface User {
   membership: any;
   membershipId: string;
   profileImage: {
-    url: string
-  }
+    url: string;
+  };
 }
 
 export interface AuthResponse {
@@ -51,6 +51,18 @@ export interface VerifyOtpDto {
 export interface LoginDto {
   email: string;
   password: string;
+}
+export interface Meta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+export interface AmbassadorsResponse {
+  success: boolean;
+  meta: Meta;
+  data: User[];
 }
 
 export const authApi = baseApi.injectEndpoints({
@@ -132,6 +144,15 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: (userId) => [{ type: "User", id: userId }],
     }),
+
+    getPrestigeAmbassadors: builder.query<AmbassadorsResponse, any>({
+      query: (params) => ({
+        url: "/auth/prestige-ambassadors",
+        method: "GET",
+        params, // passes page, limit, searchTerm
+      }),
+      providesTags: ["User"],
+    }),
   }),
   overrideExisting: false,
 });
@@ -146,4 +167,5 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useGetUserProfileQuery,
+  useGetPrestigeAmbassadorsQuery,
 } = authApi;

@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button";
 import CommonPagination from "@/components/common/pagination/CommonPagination";
 import TransferDetailsModal from "./_components/TransferDetailsModal";
+import { useNavigate } from "react-router";
 
 const DTransferOwnerShip: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -38,7 +39,7 @@ const DTransferOwnerShip: React.FC = () => {
     page,
     limit,
   });
-
+// console.log(response);
   // Single Detail Query
   const { data: detailsResponse, isLoading: isDetailsLoading } =
     useGetTransferByIdQuery(selectedTransferId as string, {
@@ -113,15 +114,31 @@ const DTransferOwnerShip: React.FC = () => {
     }
   };
 
+  const navigate  = useNavigate()
+    const handleRedirect = (pcrId: string | undefined) => {
+      if (!pcrId) return;
+      // onOpenChange(false);
+      navigate(`/admin/dashboard/canine-management?pcrId=${pcrId}`);
+    };
+    const handleUserClick = (pcrId: string) => {
+      if (!pcrId) return;
+      //  setOpen(false);
+      navigate(`/admin/dashboard/user-management?pcrId=${pcrId}`);
+    };
+
+
   const columns: Column<any>[] = [
     {
       header: "Asset / Code",
       render: (row) => (
-        <div className="py-1">
-          <p className="font-bold text-slate-800 text-[14px]">
+        <div
+          onClick={() => handleRedirect(row.canine?.pcrId || row.litter?.pcrId)}
+          className="py-1 group"
+        >
+          <p className="font-bold text-slate-800 text-[14px] group-hover:text-[#D4AF37] group-hover:cursor-pointer">
             {row.canine?.name || row.litter?.name || "N/A"}
           </p>
-          <p className="text-[12px] font-mono text-blue-600 font-bold uppercase tracking-wider">
+          <p className="text-[12px] font-mono text-blue-600 font-bold uppercase tracking-wider group-hover:text-[#D4AF37] group-hover:cursor-pointer">
             {row.canine?.pcrId || row.litter?.pcrId || "N/A"}
           </p>
         </div>
@@ -130,14 +147,17 @@ const DTransferOwnerShip: React.FC = () => {
     {
       header: "Owner Details",
       render: (row) => (
-        <div className="py-1">
+        <div
+          onClick={() => handleUserClick(row.currentOwner?.pcrId)}
+          className="py-1 group"
+        >
           <p className="text-[10px] uppercase text-slate-400 font-black tracking-tighter">
             {row.status === "APPROVE" ? "Previous Owner" : "Current Owner"}
           </p>
-          <p className="font-bold text-slate-700 text-[13px] leading-tight">
+          <p className="font-bold text-slate-700 text-[13px] leading-tight group-hover:text-[#D4AF37] group-hover:cursor-pointer">
             {row.currentOwner?.fullName || "N/A"}
           </p>
-          <p className="text-[11px] text-blue-600/70 font-medium mt-0.5">
+          <p className="text-[11px] text-blue-600/70 font-medium mt-0.5 group-hover:text-[#D4AF37] group-hover:cursor-pointer">
             {row.currentOwner?.pcrId || "No ID"}
           </p>
         </div>
@@ -146,16 +166,19 @@ const DTransferOwnerShip: React.FC = () => {
     {
       header: "New Owner",
       render: (row) => (
-        <div className="py-1">
+        <div
+          onClick={() => handleUserClick(row.newOwner?.pcrId)}
+          className="py-1 group"
+        >
           {row.status === "APPROVE" && row.newOwner ? (
             <div>
               <p className="text-[10px] uppercase text-green-600 font-black tracking-tighter">
                 Transfer Complete
               </p>
-              <p className="font-extrabold text-slate-900 text-[13px] leading-tight">
+              <p className="font-extrabold text-slate-900 text-[13px] leading-tight group-hover:text-[#D4AF37] group-hover:cursor-pointer">
                 {row.newOwner?.fullName}
               </p>
-              <p className="text-[11px] text-green-700/70 font-medium mt-0.5">
+              <p className="text-[11px] text-green-700/70 font-medium mt-0.5 group-hover:text-[#D4AF37] group-hover:cursor-pointer">
                 {row.newOwner?.pcrId}
               </p>
             </div>

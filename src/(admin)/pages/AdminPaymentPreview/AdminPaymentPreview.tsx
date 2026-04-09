@@ -30,6 +30,7 @@ import {
   useGetRevenueStatsQuery,
 } from "@/redux/features/payment-api/paymentApi";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router";
 
 const AdminPaymentPreview: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -52,7 +53,7 @@ const AdminPaymentPreview: React.FC = () => {
       year: selectedYear,
     },
   );
-console.log(rawStats);
+  // console.log(rawStats);
   // Chart
   const chartData = useMemo(() => {
     if (!rawStats?.graphData) return [];
@@ -62,12 +63,22 @@ console.log(rawStats);
     }));
   }, [rawStats]);
 
+  const navigate = useNavigate();
+  const handleUserClick = (pcrId: string) => {
+    if (!pcrId) return;
+    //  setOpen(false);
+    navigate(`/admin/dashboard/user-management?pcrId=${pcrId}`);
+  };
+
   const columns: Column<any>[] = useMemo(
     () => [
       {
         header: "TRANSACTION / USER",
         render: (row) => (
-          <div className="flex items-center gap-3">
+          <div
+            onClick={() => handleUserClick(row.billingDetails?.pcrId)}
+            className="flex items-center gap-3 cursor-pointer group"
+          >
             <Avatar className="h-10 w-10 border">
               <AvatarImage src={row.billingDetails?.profileImage} />
               <AvatarFallback>
@@ -75,10 +86,17 @@ console.log(rawStats);
               </AvatarFallback>
             </Avatar>
 
-            <div className="flex flex-col">
-              <span className="font-bold text-sm">
-                {row.billingDetails?.name || "Member"}
-              </span>
+            <div className="flex flex-col group-hover:text-[#D4AF37]">
+              <div className="flex gap-2">
+                <span className="font-bold text-sm">
+                  {row.billingDetails?.name || "Member"}
+                </span>
+                <div className="flex flex-col text-sm ">
+                  <span className="font-bold text-sm">
+                    {`(${row.billingDetails?.pcrId})` || "N/A"}
+                  </span>
+                </div>
+              </div>
 
               <span className="text-[10px] text-slate-400 font-mono">
                 {row.externalId?.substring(0, 16)}...
@@ -87,6 +105,7 @@ console.log(rawStats);
           </div>
         ),
       },
+
       {
         header: "CATEGORY & DESCRIPTION",
         render: (row) => {

@@ -255,7 +255,11 @@ export default function StepThreeRegistry({
             onClick={handleSubmit}
             className="px-10 py-2 bg-[#D4AF37] cursor-pointer disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-bold hover:bg-[#C19B2E] shadow-lg transition-all transform hover:-translate-y-0.5"
           >
-            {isSubmitting ? "Submitting..." : `Pay $${caninePrice.toFixed(2)} for Regisster`}
+            {isSubmitting
+              ? "Submitting..."
+              : caninePrice > 0
+                ? `Pay $${caninePrice.toFixed(2)} for Register`
+                : "Register for Free"}
           </button>
         </div>
       </div>

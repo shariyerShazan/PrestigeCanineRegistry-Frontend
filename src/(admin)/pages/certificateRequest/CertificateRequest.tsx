@@ -69,13 +69,27 @@ const CertificateRequest: React.FC = () => {
     }
   };
 
+  const handleRedirect = (pcrId: string | undefined) => {
+    if (!pcrId) return;
+    // onOpenChange(false);
+    navigate(`/admin/dashboard/canine-management?pcrId=${pcrId}`);
+  };
+  const handleUserClick = (pcrId: string) => {
+    if (!pcrId) return;
+    //  setOpen(false);
+    navigate(`/admin/dashboard/user-management?pcrId=${pcrId}`);
+  };
+
   // 4. Table Columns
   const columns: Column<any>[] = [
     { header: "REQUEST ID", key: "requestId" },
     {
       header: "DOG NAME",
       render: (row) => (
-        <div className="flex items-center gap-3">
+        <div
+          onClick={() => handleRedirect(row.canine?.pcrId)}
+          className="flex items-center gap-3 group"
+        >
           <Avatar className="h-10 w-10 border">
             <AvatarImage
               src={row.canine?.images?.[0]?.url || row.litter?.images?.[0]?.url}
@@ -83,13 +97,11 @@ const CertificateRequest: React.FC = () => {
             />
             <AvatarFallback>DG</AvatarFallback>
           </Avatar>
-          <div>
-            <p className="font-bold text-slate-800">
+          <div className="group-hover:text-[#D4AF37] group-hover:cursor-pointer">
+            <p className="font-bold  hover:text-[#D4AF37 ">
               {row.canine?.name || "Litter Request"}
             </p>
-            <p className="text-xs text-slate-400">
-              {row.canine?.pcrId || row.litter?.pcrId}
-            </p>
+            <p className="text-xs ">{row.canine?.pcrId || row.litter?.pcrId}</p>
           </div>
         </div>
       ),
@@ -97,7 +109,10 @@ const CertificateRequest: React.FC = () => {
     {
       header: "OWNER",
       render: (row) => (
-        <div className="flex items-center gap-3">
+        <div
+          onClick={() => handleUserClick(row.owner?.pcrId)}
+          className="flex items-center gap-3 group"
+        >
           <Avatar className="h-10 w-10 border">
             <AvatarImage
               src={row.owner?.profileImage?.url}
@@ -105,9 +120,9 @@ const CertificateRequest: React.FC = () => {
             />
             <AvatarFallback>OW</AvatarFallback>
           </Avatar>
-          <div>
-            <p className="font-bold text-slate-800">{row.owner?.fullName}</p>
-            <p className="text-xs text-slate-400">{row.owner?.pcrId}</p>
+          <div className="group-hover:text-[#D4AF37] group-hover:cursor-pointer">
+            <p className="font-bold ">{row.owner?.fullName}</p>
+            <p className="text-xs ">{row.owner?.pcrId}</p>
           </div>
         </div>
       ),
