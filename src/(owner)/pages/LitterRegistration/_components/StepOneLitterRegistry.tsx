@@ -295,13 +295,19 @@ export default function StepOneLitterRegistry({
                 <label className="block text-sm font-bold text-gray-700 mb-1">
                   Microchip ID
                 </label>
+
                 <input
                   type="text"
+                  inputMode="numeric"
                   placeholder="15 digit microchip number"
                   value={puppy.microchipId}
-                  onChange={(e) =>
-                    updatePuppyField(idx, "microchipId", e.target.value)
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d*$/.test(value) && value.length <= 15) {
+                      updatePuppyField(idx, "microchipId", value);
+                    }
+                  }}
+                  maxLength={15}
                   className="w-full px-3 py-2 border rounded-md outline-none focus:border-[#D4AF37]"
                 />
               </div>
