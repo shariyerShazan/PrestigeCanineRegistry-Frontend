@@ -4,6 +4,7 @@ export interface User {
   id: string;
   email: string;
   fullName?: string;
+  pcrPrefix?: string
   pcrId: string;
   phoneNumber?: string;
   city?: string;

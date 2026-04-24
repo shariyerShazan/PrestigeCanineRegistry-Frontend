@@ -26,6 +26,8 @@ export const baseApi = createApi({
     "Notification",
     "Membership",
     "Subscriptions",
+    "BreederProfile",
+    "BlogLitter",
   ],
   endpoints: () => ({}),
 });

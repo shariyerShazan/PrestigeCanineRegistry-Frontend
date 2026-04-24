@@ -1,6 +1,6 @@
 import ActivityLog from "@/(admin)/pages/activityLog/ActivityLog";
 import AdminPaymentPreview from "@/(admin)/pages/AdminPaymentPreview/AdminPaymentPreview";
-import PrestigeCertificate from "@/(admin)/pages/certificate/Certificate";
+// import PrestigeCertificate from "@/(admin)/pages/certificate/Certificate";
 import CertificateReqDetails from "@/(admin)/pages/certificateRequest/_components/CertificateReqDetails";
 import CertificateRequest from "@/(admin)/pages/certificateRequest/CertificateRequest";
 import AdminDashboard from "@/(admin)/pages/dashboard/AdminDashboard";
@@ -39,6 +39,10 @@ import MainLayout from "@/Layout/MainLayout";
 import OwnerLayout from "@/Layout/OwnerLayout";
 import { createBrowserRouter } from "react-router";
 import PrivateRoute from "./PrivateRoute";
+import CertificateTestPage from "@/(admin)/pages/certificate/CertificateTestPage";
+import BreederProgramPage from "@/(owner)/pages/breederProgramPa/breederProgram";
+import PaDetails from "@/(user)/pages/ownerDetailsPage/_components/PaPage";
+import LittersPage from "@/(user)/pages/ownerDetailsPage/LittersPage";
 // import BreedArchive from "@/(user)/pages/BreedArchive/BreedArchive";
 
 export const Router = createBrowserRouter([
@@ -75,6 +79,14 @@ export const Router = createBrowserRouter([
       //   path: "breed-archive",
       //   element: <BreedArchive />
       // },
+      {
+        path: "pa-details/:ownerId",
+        element: <PaDetails />
+      },
+      {
+        path: "pa-details/:ownerId/litters",
+        element: <LittersPage />
+      }
     ],
   },
   {
@@ -179,6 +191,10 @@ export const Router = createBrowserRouter([
         path: "transfer-owner",
         element: <TransferOwner />,
       },
+      {
+        path: "pa-blog-management" ,
+        element: <BreederProgramPage />
+      }
     ],
   },
   {
@@ -203,6 +219,6 @@ export const Router = createBrowserRouter([
   },
   {
     path: "cert",
-    element: <PrestigeCertificate />,
+    element: <CertificateTestPage />,
   },
 ]);

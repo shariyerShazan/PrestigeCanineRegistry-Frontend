@@ -133,6 +133,18 @@ const CertificateRequest: React.FC = () => {
         row.createdAt ? new Date(row.createdAt).toLocaleDateString() : "N/A",
     },
     {
+    header: "TYPE",
+    render: (row) => (
+      <span className={`px-2 py-1 rounded-md text-[10px] font-bold ${
+        row.certificateType === 'PEDIGREE' 
+          ? 'bg-purple-100 text-purple-700' 
+          : 'bg-indigo-100 text-indigo-700'
+      }`}>
+        {row.certificateType === 'PEDIGREE' ? 'PEDIGREE' : 'PCR CERT'}
+      </span>
+    ),
+  },
+    {
       header: "STATUS",
       render: (row) => {
         const getStatusStyles = (status: string) => {

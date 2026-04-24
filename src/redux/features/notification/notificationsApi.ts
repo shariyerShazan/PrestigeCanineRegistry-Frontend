@@ -15,6 +15,7 @@ export const adminNotificationsApi = baseApi.injectEndpoints({
         arg,
         { dispatch, cacheDataLoaded, cacheEntryRemoved },
       ) {
+        console.log(arg)
         try {
           await cacheDataLoaded;
           const socket = socketService.connect();
@@ -65,7 +66,7 @@ export const adminNotificationsApi = baseApi.injectEndpoints({
     // 4. Get Single Notification Details
     getSingleNotification: builder.query<any, string>({
       query: (id) => `/notifications/${id}`,
-      providesTags: (result, error, id) => [{ type: "Notification", id }],
+      providesTags: ( id) => [{ type: "Notification", id }],
     }),
 
     // 5. Manual Single Mark as Read

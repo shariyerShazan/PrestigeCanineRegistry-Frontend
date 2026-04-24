@@ -2,13 +2,14 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Bell, Settings, Award, Clock, Ban } from "lucide-react";
+import {Settings, Award, Clock, Ban } from "lucide-react";
 import { LuDog } from "react-icons/lu";
 import { useNavigate } from "react-router";
 import AllPublishedDogs from "./_components/AllPublishedDogs";
 import OwnerRecentUpdate from "./_components/recent-update/OwnerRecentUpdate";
 import { useGetOwnerStatsQuery } from "@/redux/features/canine/canine.api";
 import { useGetMeQuery } from "@/redux/features/auth/authApi"; // Import updated
+import pa from "@/assets/ambasedor/pa.svg"
 
 const tabs = [
   { label: "All Published", value: "all" },
@@ -86,6 +87,13 @@ const OwnerDashboard = () => {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* HEADER - Now Dynamic */}
         <div className="flex justify-between mb-6">
+
+           {
+            user?.pcrPrefix === "PA" && <div className="h-12 w-12  overflow-hidden group">
+                                  <img src={pa} alt="" className="3"/>
+                                </div>
+           }
+
           <div className="flex gap-4">
             <div className="relative">
               <img
@@ -116,6 +124,19 @@ const OwnerDashboard = () => {
                 <Icon className="w-5 h-5" />
               </Button>
             ))}
+
+            <div>
+              {/* pa-blog-management */}
+             {user?.pcrPrefix === "PA" &&   <button
+                onClick={() => navigate("/owner/dashboard/pa-blog-management")}
+                className="group flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-black text-white rounded-md cursor-pointer transition-all duration-300 shadow-md hover:shadow-xl border border-slate-700 active:scale-95"
+              >
+                <div className="flex items-center justify-center w-6 h-6 bg-amber-500 rounded-full group-hover:rotate-12 transition-transform">
+                  <span className="text-[10px] font-black text-slate-900">PA</span>
+                </div>
+                <span className="text-sm font-bold tracking-wide uppercase">Page</span>
+              </button>}
+            </div>
           </div>
         </div>
 
