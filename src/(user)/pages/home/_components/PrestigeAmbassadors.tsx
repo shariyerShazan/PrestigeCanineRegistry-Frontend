@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { PiCrown } from "react-icons/pi";
+// import { PiCrown } from "react-icons/pi";
 import { useGetPrestigeAmbassadorsQuery } from "@/redux/features/auth/authApi"; // Path check kore nio
 import { Skeleton } from "@/components/ui/skeleton";
+import pa from "@/assets/ambasedor/pa.svg"
+import { useNavigate } from "react-router";
 
 const SLIDE_COUNT = 4; // Protite slide-e koita card dekhabe
 
@@ -15,6 +17,7 @@ const PrestigeAmbassadors = () => {
     limit: SLIDE_COUNT,
   });
 
+  const navigate = useNavigate()
   const ambassadors = data?.data || [];
   const totalSlides = data?.meta?.totalPage || 0;
 
@@ -75,6 +78,7 @@ const PrestigeAmbassadors = () => {
               ))
             : ambassadors.map((item: any) => (
                 <div
+                onClick={() => navigate(`/owner-details/${item.id}`)}
                   key={item.id}
                   className="rounded-[24px] p-4 transition-all duration-300  group cursor-pointer"
                 >
@@ -93,10 +97,9 @@ const PrestigeAmbassadors = () => {
 
                   <div className="text-left px-1">
                     <div className="flex gap-2 items-center">
-                      <PiCrown
-                        size={22}
-                        className="text-[#D4AF37] transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110"
-                      />
+                      <div className="h-6 w-6  overflow-hidden group">
+                        <img src={pa} alt="" className="group-hover:scale-103"/>
+                      </div>
                       <h3 className="text-lg text-white font-semibold truncate group-hover:text-[#D4AF37] transition-colors">
                         {item.fullName}
                       </h3>
@@ -104,6 +107,9 @@ const PrestigeAmbassadors = () => {
                     <p className="text-sm text-white/90 group-hover:text-white transition-colors">
                       PCR ID: {item.pcrId}
                     </p>
+                    <p className="text-xs text-white/70 group-hover:text-white transition-colors">
+                        {item.city || 'Unknown city'}, {item.country || 'Unknown country'}
+                      </p>
                   </div>
                 </div>
               ))}

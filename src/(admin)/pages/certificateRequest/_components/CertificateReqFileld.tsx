@@ -11,21 +11,22 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const CertificateReqField = () => {
-  // formData state definition
-  const [formData, setFormData] = useState({
-    pcrId: "PCR-G25-004-001",
-    microchipId: "2654 65145",
-    canineName: "Max Thunder",
-    breed: "german-shepard",
-    sex: "Male",
-    dob: "2025 JAN 16",
-    colorMarking: "Golden/Black",
-    ties: "golden",
-    ownerName: "Micheal Chan",
-    kennelName: "PAWHALLA KENNELS LLC",
-  });
+const CertificateReqField = ({ initialData }: { initialData: any }) => {
+  const canine = initialData?.canine;
+  const owner = initialData?.owner;
 
+  const [formData, setFormData] = useState({
+    pcrId: canine?.pcrId || "",
+    microchipId: canine?.microchipId || "",
+    canineName: canine?.name || "",
+    breed: canine?.breedRelation?.name || "german-shepard",
+    sex: canine?.gender || "Male",
+    dob: canine?.dateOfBirth || "",
+    colorMarking: canine?.color || "",
+    ties: canine?.tier?.toLowerCase() || "golden",
+    ownerName: owner?.fullName || owner?.name || "",
+    kennelName: `${canine?.city || ""}, ${canine?.country || ""}`.trim().replace(/^,/, "") || "",
+  });
   // Helper function to update state
   const updateFormData = (newData : any) => {
     setFormData((prev) => ({ ...prev, ...newData }));

@@ -3,17 +3,17 @@ import { Button } from "@/components/ui/button";
 import dog from "@/assets/dogSearchPage/dog1.jpg"
 import DP from "@/assets/ownerDetails/profile.jpg"
 
-const ViewCertifSidebar = () => {
+const ViewCertifSidebar = ({ canine, owner }: { canine: any; owner: any }) => {
   const canineData = {
-    name: "Max Thunder",
-    pcrId: "PCR-DG-001234",
-    image: dog, 
+    name: canine?.name || "N/A",
+    pcrId: canine?.pcrId || "N/A",
+    image: canine?.image || dog, 
   };
 
   const ownerData = {
-    name: "Michael Chen",
-    pcrId: "PCR-OW-008765",
-    image:  DP , 
+    name: owner?.fullName || owner?.name || "N/A",
+    pcrId: owner?.pcrId || "N/A",
+    image: owner?.image || DP, 
   };
 
   const cardContainerStyle = "bg-gray-50 border border-[#E5E7EB] rounded-[14px] p-5 shadow-sm mb-5";
@@ -23,7 +23,7 @@ const ViewCertifSidebar = () => {
   const btnStyle = "w-full h-12 rounded-xl border-[#2B4C8A] text-[#2B4C8A] font-semibold hover:bg-blue-50 transition-colors cursor-pointer";
 
   return (
-    <div className="w-[380px] p-4 bg-gray-50 min-h-screen">
+    <div className="w-[380px]  p-4 bg-gray-50 min-h-screen">
 
       <div className={cardContainerStyle}>
         <div className="relative w-full h-[180px] rounded-xl overflow-hidden mb-4">

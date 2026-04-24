@@ -46,7 +46,7 @@ const DogDetailsCard = ({
       ? "text-[#2B4C8A]"
       : "text-gray-600";
 
-  const badgeText = `${isGold ? "Gold" : isBlue ? "Blue" : ""} ${isApproved ? "Verified" : ""}`;
+  const badgeText = `${isGold ? "Gold Tier" : isBlue ? "Blue Tier" : ""} ${isApproved ? "" : ""}`;
 
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
@@ -83,10 +83,10 @@ const DogDetailsCard = ({
 
         <div className="py-4">
           <div className="mb-3">
-            <h3 className="font-semibold text-xl text-gray-900 mb-1">
+            <h3 className="font-semibold text-xl amiri-font text-gray-900 mb-1">
               Name: {name}
             </h3>
-            <p className={`text-md font-medium mb-1 ${textColor}`}>{breed}</p>
+            <p className={`text-md font-medium mb-1 ${textColor}`}>Origin: {breed}</p>
             <p className="text-md text-gray-600 font-mono">PCR ID: {pcrId}</p>
           </div>
 

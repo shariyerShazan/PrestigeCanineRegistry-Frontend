@@ -148,8 +148,9 @@ const PrestigeCertificate = ({
                 display: "block",
                 color: "#1C1C1C",
                 fontSize: `${28 * s}px`,
-                fontFamily: "'SignPainter', 'Brush Script MT', cursive",
-                fontWeight: "550",
+                // CSS-e je nam diyecho shetai ekhane string hisebe dite hobe
+                fontFamily: "'SignPainterHouse', cursive",
+                fontWeight: "normal", // Script font-e 550 weight kaj na-o korte pare
                 lineHeight: `${36 * s}px`,
                 textTransform: "none",
                 marginBottom: `${8 * s}px`,

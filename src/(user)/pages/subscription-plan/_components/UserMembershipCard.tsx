@@ -22,7 +22,7 @@ const UserMembershipCard = ({ plan }: UserPlanProps) => {
     switch (tier?.toUpperCase()) {
       case "FOUNDATIONAL":
         return "bg-[#8E8E8E] text-white";
-      case "CORE":
+      case "REGISTRY":
         return "bg-[#2B4C8A] text-white";
       case "PRESTIGE":
         return "bg-gradient-to-b from-[#D4AF37] to-[#2B4C8A] text-white";
@@ -35,7 +35,7 @@ const UserMembershipCard = ({ plan }: UserPlanProps) => {
   const getButtonStyles = (tier: string) => {
     if (tier?.toUpperCase() === "PRESTIGE")
       return "bg-[#D4AF37] text-[#2B4C8A] hover:bg-[#C4A137]";
-    if (tier?.toUpperCase() === "CORE")
+    if (tier?.toUpperCase() === "REGISTRY")
       return "bg-[#4A6FB4] text-white hover:bg-[#3A5FA4]";
     return "bg-white text-black hover:bg-gray-100";
   };
@@ -54,16 +54,32 @@ const UserMembershipCard = ({ plan }: UserPlanProps) => {
     <Card
       className={`relative overflow-hidden border-none transition-all duration-300 hover:shadow-2xl w-125 h-155  flex flex-col ${getTierStyles(plan.tier)}`}
     >
-      <CardHeader className="pt-10 px-8">
-        <div className="text-sm font-bold uppercase tracking-widest opacity-90 mb-2">
-          {plan.name}
+      <CardHeader className="pt-6 px-8">
+        <div className="text-xl font-bold uppercase tracking-widest opacity-90 mb-2 amiri-font">
+       {  (plan.tier?.toUpperCase() === "FOUNDATIONAL")? "REGISTRY ACCESS" : (plan.tier?.toUpperCase() === "REGISTRY")?"CORE " : "PRESTIGE AMBASSADOR" }
         </div>
-        <CardTitle className="text-5xl font-bold tracking-tight">
-          {plan.currentPrice === 0 ? "Free" : `$${plan.currentPrice}`}
-        </CardTitle>
-        {plan.currentPrice > 0 && (
-          <span className="text-sm opacity-80 mt-1">/per year</span>
-        )}
+      <div
+        className="text-md"
+        style={{ fontFamily: "'Amiri', serif" }}
+      >
+        {plan.tier === "FOUNDATIONAL"
+        ? "Designed for Buyers & Breeders Seeking PCR’s Genetically Verified Canines"
+        : plan.tier === "REGISTRY"
+        ? "Designed for Active Breeders & Emerging Breeding Programs"
+        : "Designed for Elite Breeding Programs aligned with PCR’s Standards and Long Term Vision"}
+      </div>
+           <div>
+            <CardTitle className="text-5xl font-bold tracking-tight">
+                {plan.currentPrice === 0 ? "Free" : `$${plan.currentPrice}`}
+                  {plan.currentPrice > 0 && (
+                  <span className="text-base mt-1">/per year  <span className="text-black font-semibold ml-2">{(plan.tier?.toUpperCase() === "PRESTIGE") && " (Must meet all PCR PA Requirements)" }</span></span>
+                )}
+                </CardTitle>
+              
+           </div>
+           <div>
+             {  (plan.tier?.toUpperCase() === "FOUNDATIONAL")? "" : (plan.tier?.toUpperCase() === "REGISTRY")?"(Kennel Name Reservation Incl.)" : "(Kennel Name Reservation and PA Welcome Kit incl.)" }
+           </div>
       </CardHeader>
 
       <CardContent className="space-y-5 px-8 grow mt-6">
@@ -89,7 +105,7 @@ const UserMembershipCard = ({ plan }: UserPlanProps) => {
         <Button
           disabled={isLoading}
           onClick={handleSubscribe}
-          className={`w-full cursor-pointer h-14 text-lg font-bold rounded-xl transition-all duration-300 shadow-lg ${getButtonStyles(plan.tier)}`}
+          className={`w-full cursor-pointer h-14 text-md font-bold rounded-xl transition-all duration-300 shadow-lg ${getButtonStyles(plan.tier)}`}
         >
           {isLoading ? (
             <>
@@ -97,7 +113,7 @@ const UserMembershipCard = ({ plan }: UserPlanProps) => {
               Processing...
             </>
           ) : (
-            `Become a ${plan.name}`
+             (plan.tier?.toUpperCase() === "FOUNDATIONAL")? "Get Instant Registry Access" : (plan.tier?.toUpperCase() === "REGISTRY")?"Apply for Core Status " : "Apply for Prestige Ambassador Status" 
           )}
         </Button>
         

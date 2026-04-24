@@ -67,7 +67,7 @@ export default function StepThreeRegistry({
           <div className="flex items-center gap-3 mb-6">
             <Label className="text-gray-500 font-medium">Registering:</Label>
             <h1 className="text-2xl font-bold text-gray-900">
-              {form.dogName || "Unnamed Dog"}
+              {form.name || "Unnamed Dog"}
             </h1>
           </div>
 

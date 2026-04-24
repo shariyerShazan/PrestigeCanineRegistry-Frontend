@@ -36,7 +36,7 @@ export const adminUserApi = baseApi.injectEndpoints({
         url: `/admin-user/get-users/${userId}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "User", id }],
+      providesTags: (id) => [{ type: "User", id }],
     }),
 
     // 4. Approve User

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import dog1 from "@/assets/home/allDogs/dog1.png";
 import owner from "@/assets/ownerDetails/profile.jpg";
-import { FiX } from "react-icons/fi";
+// import { FiX } from "react-icons/fi";
 
 type Props = {
   formData: any;
@@ -20,7 +20,7 @@ export default function RegistryPreview({ formData }: Props) {
 
       <div className="shadow-md rounded-lg overflow-hidden border border-gray-100">
         {/* Dog Image Section */}
-        <div className="relative h-48 bg-gray-100">
+        <div className="relative bg-gray-100">
           <img
             src={imagePreview}
             alt="Dog preview"
@@ -29,9 +29,9 @@ export default function RegistryPreview({ formData }: Props) {
           {formData.uploadedImages?.length > 0 && (
             <button
               type="button"
-              className="absolute top-2 right-2 w-8 h-8 bg-white/70 hover:bg-white rounded-full transition-all flex items-center justify-center shadow-sm"
+              className=""
             >
-              <FiX className="w-5 h-5 text-red-500" />
+              {/* <FiX className="w-5 h-5 text-red-500" /> */}
             </button>
           )}
         </div>

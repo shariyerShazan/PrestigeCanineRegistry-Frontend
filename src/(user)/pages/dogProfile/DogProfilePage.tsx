@@ -7,7 +7,7 @@ import {
   MapPin,
   Calendar,
   ShieldCheck,
-  Camera,
+  // Camera,
   Palette,
   VenusAndMars,
   Loader2,
@@ -117,12 +117,12 @@ const DogProfilePage = () => {
                 className="w-20 h-20 rounded-lg object-cover border"
               />
             ))}
-            <div className="w-20 h-20 rounded-lg bg-gray-100 flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200">
+            {/* <div className="w-20 h-20 rounded-lg bg-gray-100 flex flex-col items-center justify-center text-gray-500 cursor-pointer hover:bg-gray-200">
               <Camera size={20} />
               <span className="text-xs font-medium">
                 {canine.images?.length || 0} photos
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -130,12 +130,12 @@ const DogProfilePage = () => {
         <div className="flex flex-col gap-6">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <h1 className="text-4xl font-bold text-gray-900 capitalize">
+              <h1 className="text-4xl font-bold text-gray-900 capitalize amiri-font">
                 {canine.name}
               </h1>
               <Badge className="bg-[#2B4C8A] hover:bg-[#2B4C8A] flex gap-1 items-center py-1">
                 <ShieldCheck size={20} className="text-yellow-500" />{" "}
-                {canine.tier} Verified
+                {canine.tier} Tier
               </Badge>
             </div>
 
@@ -198,7 +198,7 @@ const DogProfilePage = () => {
           </div>
 
           {/* OWNER CARD */}
-          <div className="bg-[#2B4C8A] rounded-xl p-6 text-white shadow-lg">
+          <div className="bg-[#D4AF37] rounded-xl p-6 text-white shadow-lg">
             <p className="text-sm font-medium opacity-80 mb-4">
               Owner Information
             </p>

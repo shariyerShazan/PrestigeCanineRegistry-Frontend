@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/select";
 import { FiSearch, FiEye } from "react-icons/fi";
 import CommonTable, { type Column } from "@/(admin)/_components/CommonTable";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import {
-  useApproveTransferMutation,
-  useDeclineTransferMutation,
+  // useApproveTransferMutation,
+  // useDeclineTransferMutation,
   useGetAllTransfersQuery,
   useGetTransferByIdQuery,
 } from "@/redux/features/admin-ow-transfer/adminOwnerTransferApi";
@@ -39,7 +39,7 @@ const DTransferOwnerShip: React.FC = () => {
     page,
     limit,
   });
-// console.log(response);
+console.log(response);
   // Single Detail Query
   const { data: detailsResponse, isLoading: isDetailsLoading } =
     useGetTransferByIdQuery(selectedTransferId as string, {
@@ -48,71 +48,71 @@ const DTransferOwnerShip: React.FC = () => {
 
   const details = detailsResponse;
 
-  const [approveTransfer] = useApproveTransferMutation();
-  const [declineTransfer] = useDeclineTransferMutation();
+  // const [approveTransfer] = useApproveTransferMutation();
+  // const [declineTransfer] = useDeclineTransferMutation();
 
   // Approve Logic
-  const handleApprove = async (userId: string, userName: string) => {
-    const modalElement =
-      document.querySelector('[role="dialog"]') || document.body;
-    const result = await Swal.fire({
-      title: `Approve for ${userName}?`,
-      text: "Ownership will be transferred permanently!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#00A63E",
-      confirmButtonText: "Yes, Approve",
-      target: modalElement as HTMLElement,
-      willOpen: () => {
-        const container = Swal.getContainer();
-        if (container) {
-          container.style.zIndex = "99999";
-          container.style.position = "absolute";
-        }
-      },
-    });
+  // const handleApprove = async (userId: string, userName: string) => {
+  //   const modalElement =
+  //     document.querySelector('[role="dialog"]') || document.body;
+  //   const result = await Swal.fire({
+  //     title: `Approve for ${userName}?`,
+  //     text: "Ownership will be transferred permanently!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#00A63E",
+  //     confirmButtonText: "Yes, Approve",
+  //     target: modalElement as HTMLElement,
+  //     willOpen: () => {
+  //       const container = Swal.getContainer();
+  //       if (container) {
+  //         container.style.zIndex = "99999";
+  //         container.style.position = "absolute";
+  //       }
+  //     },
+  //   });
 
-    if (result.isConfirmed && selectedTransferId) {
-      try {
-        await approveTransfer({
-          id: selectedTransferId,
-          selectedUserId: userId,
-        }).unwrap();
-        Swal.fire("Success", "Ownership transferred!", "success");
-        setSelectedTransferId(null);
-      } catch (error) {
-        console.log(error);
-        Swal.fire("Error", "Action failed", "error");
-      }
-    }
-  };
+  //   if (result.isConfirmed && selectedTransferId) {
+  //     try {
+  //       await approveTransfer({
+  //         id: selectedTransferId,
+  //         selectedUserId: userId,
+  //       }).unwrap();
+  //       Swal.fire("Success", "Ownership transferred!", "success");
+  //       setSelectedTransferId(null);
+  //     } catch (error) {
+  //       console.log(error);
+  //       Swal.fire("Error", "Action failed", "error");
+  //     }
+  //   }
+  // };
 
   // Decline Logic
-  const handleDeclineTransfer = async (transferId: string) => {
-    const result = await Swal.fire({
-      title: "Reject Transfer?",
-      text: "This will invalidate this transfer code for everyone.",
-      icon: "error",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      confirmButtonText: "Yes, Reject All",
-    });
+  // const handleDeclineTransfer = async (transferId: string) => {
+  //   const result = await Swal.fire({
+  //     title: "Reject Transfer?",
+  //     text: "This will invalidate this transfer code for everyone.",
+  //     icon: "error",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#d33",
+  //     confirmButtonText: "Yes, Reject All",
+  //   });
 
-    if (result.isConfirmed) {
-      try {
-        await declineTransfer(transferId).unwrap();
-        Swal.fire(
-          "Rejected",
-          "The transfer request has been cancelled.",
-          "success",
-        );
-        setSelectedTransferId(null);
-      } catch (error) {
-        console.log(error);
-        Swal.fire("Error", "Failed to cancel transfer", "error");
-      }
-    }
-  };
+  //   if (result.isConfirmed) {
+  //     try {
+  //       await declineTransfer(transferId).unwrap();
+  //       Swal.fire(
+  //         "Rejected",
+  //         "The transfer request has been cancelled.",
+  //         "success",
+  //       );
+  //       setSelectedTransferId(null);
+  //     } catch (error) {
+  //       console.log(error);
+  //       Swal.fire("Error", "Failed to cancel transfer", "error");
+  //     }
+  //   }
+  // };
 
   const navigate  = useNavigate()
     const handleRedirect = (pcrId: string | undefined) => {
@@ -311,8 +311,8 @@ const DTransferOwnerShip: React.FC = () => {
         onClose={() => setSelectedTransferId(null)}
         isLoading={isDetailsLoading}
         details={details}
-        onApprove={handleApprove}
-        onDeclineTransfer={handleDeclineTransfer}
+        // onApprove={handleApprove}
+        // onDeclineTransfer={handleDeclineTransfer}
       />
     </div>
   );

@@ -6,19 +6,29 @@ import { RefreshCcw, Loader2, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useClaimTransferMutation } from "@/redux/features/transfer-owner/transfer-owner.api";
 import { toast } from "react-toastify";
+import { useCalculatePricing } from "@/Layout/OwnerLayout";
 
 const AddOtherOwner = () => {
   const [inputCode, setInputCode] = useState("");
   const [claimData, setClaimData] = useState<any>(null);
   const [claim, { isLoading }] = useClaimTransferMutation();
-
-  const handleRequestOwnership = async () => {
+  const { transferPrice } = useCalculatePricing();
+const handleRequestOwnership = async () => {
     try {
       const res = await claim({ transferCode: inputCode }).unwrap();
+      
+      if (res?.url) {
+        toast.info("Redirecting to payment...");
+        window.location.href = res.url;
+        return; 
+      }
+
       setClaimData(res);
-      toast.success("Verification successful! Awaiting admin approval.");
+      toast.success("Transfer processed successfully!");
+      
     } catch (err: any) {
-      toast.error(err?.data?.message || "Invalid or expired code");
+      const errorMsg = err?.data?.message || "Invalid or expired code";
+      toast.error(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
     }
   };
 
@@ -91,26 +101,32 @@ const AddOtherOwner = () => {
         </div>
       )}
 
-      <div className="flex justify-between items-center pt-6">
-        <Button
-          variant="outline"
-          onClick={handleClear}
-          className="text-[#2B4C8A] border-[#2B4C8A] flex gap-2"
-        >
-          <RefreshCcw size={16} /> Clear
-        </Button>
-        <Button
-          className="bg-[#D4AF37] hover:bg-[#e3b82b] text-white px-8"
-          onClick={handleRequestOwnership}
-          disabled={inputCode.length < 5 || isLoading || !!claimData}
-        >
-          {isLoading ? (
-            <Loader2 className="animate-spin" />
-          ) : (
-            "Verify & Request"
-          )}
-        </Button>
-      </div>
+              <div className="flex justify-between items-center pt-6">
+          <Button
+            variant="outline"
+            onClick={handleClear}
+            className="text-[#2B4C8A] border-[#2B4C8A] flex gap-2 cursor-pointer"
+          >
+            <RefreshCcw size={16} /> Clear
+          </Button>
+          
+          <Button
+            className="bg-[#D4AF37] hover:bg-[#e3b82b] text-white px-8 cursor-pointer"
+            onClick={handleRequestOwnership}
+            disabled={inputCode.length < 5 || isLoading || !!claimData}
+          >
+            {isLoading ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <>
+                Verify & Claim 
+                <span className="ml-1 opacity-90">
+                  {transferPrice > 0 ? `($${transferPrice.toFixed(2)})` : "(Free)"}
+                </span>
+              </>
+            )}
+          </Button>
+        </div>
     </div>
   );
 };

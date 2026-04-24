@@ -5,7 +5,7 @@ export const certificateApi = baseApi.injectEndpoints({
     // 1. User: Submit a new certificate request
     createCertificateRequest: builder.mutation<
       any,
-      { canineId?: string; litterId?: string; note?: string }
+      { canineId?: string; litterId?: string; note?: string ; certificateType: "CERTIFICATE" | "PEDIGREE";}
     >({
       query: (body) => ({
         url: "/certificate-request/create",
@@ -61,6 +61,11 @@ export const certificateApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Certificates"],
     }),
+
+    getMySingleCertificateRequest: builder.query<any, string>({
+      query: (id) => `/certificate-request/my-single/${id}`,
+      providesTags: ( id) => [{ type: "Certificates", id }],
+    })
   }),
 });
 
@@ -71,4 +76,5 @@ export const {
   useAdminGetCertificateRequestByIdQuery,
   useAdminUpdateCertificateStatusMutation,
   useAdminDeleteCertificateRequestMutation,
+  useGetMySingleCertificateRequestQuery,
 } = certificateApi;

@@ -7,6 +7,10 @@ import { useCreateCertificateRequestMutation } from "@/redux/features/certificat
 import { toast } from "react-toastify";
 import { useCalculatePricing } from "@/Layout/OwnerLayout";
 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
+
 const AllPublishedDogs = ({
   activeFilter = "all",
 }: {
@@ -17,7 +21,7 @@ const AllPublishedDogs = ({
   // RTK Mutation Hook
   const [createRequest, { isLoading: isRequesting }] =
     useCreateCertificateRequestMutation();
-
+const [isOpen, setIsOpen] = useState(false);
   const queryParams: any = {
     page: 1,
     limit: 10,
@@ -33,23 +37,24 @@ const AllPublishedDogs = ({
 
   const { certificatePrice } = useCalculatePricing();
   // Handler function for certificate request
-  const handleRequestCertificate = async (canineId: string) => {
-    try {
-      const res = await createRequest({ canineId }).unwrap();
+  const handleRequest = async (canineId: string, type: "CERTIFICATE" | "PEDIGREE") => {
+  try {
+    const res = await createRequest({ 
+      canineId, 
+      certificateType: type 
+    }).unwrap();
 
-      if (res?.url) {
-        toast.info("Redirecting to payment...");
-        window.location.href = res.url;
-      } else {
-        toast.success(
-          res?.message || "Certificate request submitted successfully!",
-        );
-      }
-    } catch (error: any) {
-      const errorMsg = error?.data?.message || "Failed to submit request";
-      toast.error(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
+    if (res?.url) {
+      toast.info("Redirecting to payment...");
+      window.location.href = res.url;
+    } else {
+      toast.success(res?.message || "Request submitted successfully!");
     }
-  };
+  } catch (error: any) {
+    const errorMsg = error?.data?.message || "Failed to submit request";
+    toast.error(Array.isArray(errorMsg) ? errorMsg[0] : errorMsg);
+  }
+};
 
   if (isLoading) {
     return (
@@ -80,17 +85,41 @@ const AllPublishedDogs = ({
                 status={dog.status}
               />
               <div className="flex gap-2 mt-2">
-                <Button
-                  onClick={() => handleRequestCertificate(dog.id)}
-                  disabled={isRequesting}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] hover:text-[#D4AF37] text-white hover:bg-[#1e355f] text-xs cursor-pointer disabled:opacity-50"
-                >
-                  {isRequesting
-                    ? "Processing..."
-                    : `Request Certificate ${certificatePrice > 0 ? `($${certificatePrice.toFixed(2)})` : "(Free)"}`}
-                </Button>
+  <DropdownMenu onOpenChange={setIsOpen}>
+    <DropdownMenuTrigger asChild>
+      <Button
+        disabled={isRequesting}
+        variant="outline"
+        size="sm"
+        className="flex-1 bg-[#2B4C8A] border-[#2B4C8A] hover:text-[#D4AF37] text-white hover:bg-[#1e355f] text-xs cursor-pointer disabled:opacity-50 gap-2 px-4"
+      >
+        {isRequesting ? "Processing..." : "Request Certificate"}
+        {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+      </Button>
+    </DropdownMenuTrigger>
+    
+    <DropdownMenuContent className="w-64 bg-white border-gray-200 shadow-lg">
+      <DropdownMenuItem 
+        className="text-[#2B4C8A] cursor-pointer hover:bg-gray-100 py-3 border-b border-gray-100 flex justify-between items-center"
+        onClick={() => handleRequest(dog.id, "CERTIFICATE")}
+      >
+        <span>Request PCR Certificate</span>
+        <span className="font-bold text-gray-500 ml-2">
+          {certificatePrice > 0 ? `($${certificatePrice.toFixed(2)})` : "(Free)"}
+        </span>
+      </DropdownMenuItem>
+      
+      <DropdownMenuItem 
+        className="text-[#2B4C8A] cursor-pointer hover:bg-gray-100 py-3 flex justify-between items-center"
+        onClick={() => handleRequest(dog.id, "PEDIGREE")}
+      >
+        <span>Request Pedigree Certificate</span>
+        <span className="font-bold text-gray-500 ml-2">
+          {certificatePrice > 0 ? `($${certificatePrice.toFixed(2)})` : "(Free)"}
+        </span>
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
                 <Button
                   onClick={() => navigate("/owner/dashboard/transfer-owner")}
                   variant="outline"

@@ -35,8 +35,8 @@ export const OwnerDogDetailsCard = ({
     : isBlue
       ? "text-[#2B4C8A]"
       : "text-gray-600";
-  const badgeText = isGold ? "Gold" : isBlue ? "Blue" : "";
-  const verifyText = status === "APPROVED" ? "Verified" :  ""
+  const badgeText = isGold ? "Gold Tier" : isBlue ? "Blue Tier" : "";
+  const verifyText = status === "APPROVED" ? "" :  ""
 
   return (
     <div className="bg-white rounded-lg overflow-hidden">
@@ -74,10 +74,10 @@ export const OwnerDogDetailsCard = ({
 
       <div className="py-4">
         <div className="mb-1">
-          <h3 className="font-semibold text-xl text-gray-900 mb-1">
+          <h3 className="font-semibold amiri-font text-xl text-gray-900 mb-1">
             Name: {name}
           </h3>
-          <p className={`text-md font-medium mb-1 ${textColor}`}>{breed}</p>
+          <p className={`text-md font-medium mb-1 ${textColor}`}>Origin: {breed}</p>
           <p className="text-md text-gray-600 font-mono">PCR ID: {pcrId}</p>
         </div>
       </div>

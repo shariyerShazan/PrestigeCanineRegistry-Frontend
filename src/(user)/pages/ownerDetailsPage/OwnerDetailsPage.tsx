@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MapPin, Calendar, Award, Loader2, Clock } from "lucide-react";
+import { MapPin, Calendar, Award, Loader2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import OwnerDogs from "./_components/OwnerDogs";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { format } from "date-fns";
 import { useGetUserProfileQuery } from "@/redux/features/auth/authApi";
 import { useEffect } from "react";
 
 const OwnerDetailsPage = () => {
+  const navigate = useNavigate()
   const { ownerId } = useParams();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -47,8 +48,8 @@ const OwnerDetailsPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto mt-12 p-4 md:p-8 min-h-screen font-sans">
-      {/* 3. Logic: Banner Section with Prestige Badge */}
-      <div className="relative h-[300px] md:h-[400px] w-full rounded-3xl overflow-hidden shadow-lg mb-10">
+          {/* 3. Logic: Banner Section with Prestige Badge */}
+          <div className="relative h-[300px] md:h-[400px] w-full rounded-3xl overflow-hidden shadow-lg mb-10">
         <img
           src={
             owner.coverImage?.url ||
@@ -58,7 +59,7 @@ const OwnerDetailsPage = () => {
           className="w-full h-full object-cover brightness-75"
         />
         {owner.pcrPrefix === "PA" && (
-          <div className="absolute top-6 right-6">
+          <div onClick={() => navigate(`/pa-details/${owner.id}`)} className=" cursor-pointer absolute top-6 right-6">
             <Badge className="bg-[#D4AF37] hover:bg-[#B8962E] text-white px-4 py-2 flex items-center gap-2 border-none text-sm font-semibold rounded-lg shadow-md">
               <Award size={20} />
               {"Prestige Ambassador"}
@@ -138,20 +139,20 @@ const OwnerDetailsPage = () => {
 };
 
 // Dummy ShieldCheck icon component reference
-const ShieldCheck = ({ size }: { size: number }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    <path d="m9 12 2 2 4-4" />
-  </svg>
-);
+// const ShieldCheck = ({ size }: { size: number }) => (
+//   <svg
+//     width={size}
+//     height={size}
+//     viewBox="0 0 24 24"
+//     fill="none"
+//     stroke="currentColor"
+//     strokeWidth="2"
+//     strokeLinecap="round"
+//     strokeLinejoin="round"
+//   >
+//     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+//     <path d="m9 12 2 2 4-4" />
+//   </svg>
+// );
 
 export default OwnerDetailsPage;

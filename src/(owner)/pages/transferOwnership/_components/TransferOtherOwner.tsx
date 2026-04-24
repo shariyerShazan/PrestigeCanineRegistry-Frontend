@@ -81,7 +81,7 @@ export const TransferOtherOwner = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="canine">Canine</SelectItem>
-              <SelectItem value="litter">Litter</SelectItem>
+              {/* <SelectItem value="litter">Litter</SelectItem> */}
             </SelectContent>
           </Select>
         </div>
@@ -96,17 +96,13 @@ export const TransferOtherOwner = () => {
               />
             </SelectTrigger>
             <SelectContent>
-              {selectedType === "canine"
-                ? canines?.data?.map((dog: any) => (
+                {
+                 canines?.data?.map((dog: any) => (
                     <SelectItem key={dog.id} value={dog.id}>
                       {dog.name}
                     </SelectItem>
-                  ))
-                : litters?.data?.map((l: any) => (
-                    <SelectItem key={l.id} value={l.id}>
-                      {l.name || `Litter ${l.pcrId}`}
-                    </SelectItem>
                   ))}
+
             </SelectContent>
           </Select>
         </div>
